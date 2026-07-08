@@ -1073,6 +1073,7 @@ function SettingsAdminTab({ initialSettings, showToast }: {
   showToast: (msg: string, type: "success" | "error") => void
 }) {
   const [discordUrl, setDiscordUrl] = useState(initialSettings["discordUrl"] || "https://dsc.gg/lexis");
+  const [releasesWebhookUrl, setReleasesWebhookUrl] = useState(initialSettings["RELEASES_WEBHOOK_URL"] || "");
   const [loading, setLoading] = useState(false);
 
   const handleSave = async (key: string, value: string) => {
@@ -1112,7 +1113,28 @@ function SettingsAdminTab({ initialSettings, showToast }: {
             disabled={loading}
             className="btn-primary py-2 px-4 whitespace-nowrap cursor-pointer"
           >
-            {loading ? "Сохранение..." : "Сохранить"}
+            {loading ? "..." : "Сохранить"}
+          </button>
+        </div>
+      </div>
+
+      <div className="bg-white/5 p-4 rounded-xl border border-white/10 max-w-lg">
+        <label className="block text-sm font-bold text-gray-300 mb-2">Discord Webhook для новых Релизов</label>
+        <p className="text-xs text-gray-500 mb-3">Сюда будут автоматически отправляться уведомления о новых релизах.</p>
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={releasesWebhookUrl}
+            onChange={e => setReleasesWebhookUrl(e.target.value)}
+            placeholder="https://discord.com/api/webhooks/..."
+            className="flex-1 bg-black/40 border border-white/10 text-white rounded-lg p-2 outline-none focus:border-[#5865F2] text-sm font-mono"
+          />
+          <button
+            onClick={() => handleSave("RELEASES_WEBHOOK_URL", releasesWebhookUrl)}
+            disabled={loading}
+            className="btn-primary py-2 px-4 whitespace-nowrap cursor-pointer"
+          >
+            {loading ? "..." : "Сохранить"}
           </button>
         </div>
       </div>
