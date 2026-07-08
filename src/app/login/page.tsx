@@ -13,25 +13,26 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0B] flex flex-col items-center justify-center p-4 relative overflow-hidden">
-      {/* Background decorations */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/20 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/20 rounded-full blur-[120px] pointer-events-none" />
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden z-0">
+      {/* Background decorations - made more visible */}
+      <div className="absolute top-[10%] left-[-10%] w-[50%] h-[50%] bg-blue-500/30 rounded-full blur-[100px] pointer-events-none -z-10" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-500/30 rounded-full blur-[100px] pointer-events-none -z-10" />
+      <div className="absolute top-[40%] left-[40%] w-[30%] h-[30%] bg-[#00F0FF]/20 rounded-full blur-[120px] pointer-events-none -z-10" />
 
       {/* Main Card */}
       <div className="w-full max-w-md relative z-10">
-        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl overflow-hidden relative">
+        <div className="bg-[#121215]/60 backdrop-blur-2xl border border-white/20 rounded-3xl p-8 shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden relative">
           
           {/* Shine effect */}
-          <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+          <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/40 to-transparent" />
 
           {/* Logo / Header */}
           <div className="text-center mb-10">
-            <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-2 tracking-tight">
+            <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-[#00F0FF] to-purple-500 mb-2 tracking-tight">
               LEXIS
             </h1>
-            <p className="text-gray-400 text-sm">
-              Sign in to access your dashboard and tools
+            <p className="text-gray-300 text-sm">
+              Войдите, чтобы получить доступ к панели и инструментам
             </p>
           </div>
 
@@ -39,7 +40,7 @@ export default function LoginPage() {
           <button
             onClick={handleDiscordLogin}
             disabled={isLoading}
-            className="w-full relative group overflow-hidden rounded-2xl bg-[#5865F2] hover:bg-[#4752C4] transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:hover:scale-100"
+            className="w-full relative group overflow-hidden rounded-2xl bg-[#5865F2] hover:bg-[#4752C4] shadow-[0_0_20px_rgba(88,101,242,0.4)] transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:hover:scale-100"
           >
             {/* Button subtle glow */}
             <div className="absolute inset-0 bg-white/20 group-hover:bg-transparent transition-all duration-300 opacity-0 group-hover:opacity-100" />
@@ -58,7 +59,7 @@ export default function LoginPage() {
                 </svg>
               )}
               <span className="text-white font-semibold text-lg">
-                {isLoading ? "Connecting..." : "Continue with Discord"}
+                {isLoading ? "Подключение..." : "Войти через Discord"}
               </span>
             </div>
           </button>
@@ -67,9 +68,9 @@ export default function LoginPage() {
           <div className="mt-8 text-center">
             <Link 
               href="/" 
-              className="text-gray-500 hover:text-gray-300 text-sm font-medium transition-colors duration-200"
+              className="text-gray-400 hover:text-gray-200 text-sm font-medium transition-colors duration-200"
             >
-              &larr; Back to home
+              &larr; На главную
             </Link>
           </div>
         </div>
