@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.1.x", "debian-openssl-3.0.x", "rhel-openssl-3.0.x", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Preset {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  author      String
+  discordId   String?
+  data        String
+  downloads       Int            @default(0)
+  isVerified      Boolean        @default(false)
+  serverProjectId String?
+  serverProject   ServerProject? @relation(fields: [serverProjectId], references: [id])
+  createdAt       DateTime       @default(now())
+}
+
+model ServerProject {
+  id             String   @id @default(cuid())
+  name           String
+  iconUrl        String
+  discordRoleId  String?  // Discord role ID to ping when a preset is posted
+  webhookUrl     String?  // Discord channel webhook URL for autopost
+  presets        Preset[]
+  createdAt      DateTime @default(now())
+}
+
+model User {
+  id          String    @id @default(cuid())
+  discordId   String    @unique
+  username    String
+  avatar      String?
+  role        String    @default("user") // "admin", "moderator", "user"
+  badges      String    @default("[]")   // Serialized JSON array, e.g. ["Staff", "Premium"]
+  canUpload   Boolean   @default(true)
+  isPremium   Boolean   @default(false)
+  premiumUntil DateTime?
+  createdAt   DateTime  @default(now())
+}
+
+model Notification {
+  id          String   @id @default(cuid())
+  discordId   String   // Discord ID of the recipient
+  message     String   // Message body
+  read        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model AppSetting {
+  key   String @id
+  value String
+}
+
+model Promocode {
+  id        String   @id @default(cuid())
+  code      String   @unique
+  days      Int      @default(30)
+  uses      Int      @default(0)
+  maxUses   Int      @default(1)
+  createdAt DateTime @default(now())
+}
+
+model ExamSession {
+  id               String       @id @default(cuid())
+  creatorId        String       // Discord ID of the creator
+  serverId         String       // e.g., "crystal"
+  faction          String       // LSPD, GOV, EMS, etc.
+  difficulty       String       // "easy", "medium", "hard"
+  questionCount    Int          // 5-20
+  questionsData    String       // JSON string of questions and correct answers
+  showAnswersAtEnd Boolean      @default(true)
+  isActive         Boolean      @default(true)
+  createdAt        DateTime     @default(now())
+  results          ExamResult[]
+}
+
+model ExamResult {
+  id                String      @id @default(cuid())
+  examSessionId     String
+  examSession       ExamSession @relation(fields: [examSessionId], references: [id], onDelete: Cascade)
+  candidateDiscordId String
+  candidateName     String
+  candidateAvatar   String?
+  score             Int
+  totalQuestions    Int
+  answersData       String      // JSON string of user's chosen options
+  createdAt         DateTime    @default(now())
+}
+
+model AIPromptLog {
+  id        String   @id @default(cuid())
+  discordId String
+  createdAt DateTime @default(now())
+}
