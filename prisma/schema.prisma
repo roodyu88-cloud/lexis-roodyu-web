@@ -105,6 +105,8 @@ model Release {
   version     String   @unique
   title       String
   description String
-  downloadUrl String
+  downloadUrl String?
+  fileData    String?
+  fileName    String?
   createdAt   DateTime @default(now())
 }

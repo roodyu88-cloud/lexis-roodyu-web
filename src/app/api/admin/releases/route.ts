@@ -11,10 +11,14 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { version, title, description, downloadUrl } = body;
+    const { version, title, description, downloadUrl, fileData, fileName } = body;
 
-    if (!version || !title || !downloadUrl) {
+    if (!version || !title) {
       return new NextResponse("Missing required fields", { status: 400 });
+    }
+
+    if (!downloadUrl && !fileData) {
+      return new NextResponse("You must provide a file or a download URL", { status: 400 });
     }
 
     const release = await prisma.release.create({
@@ -22,7 +26,9 @@ export async function POST(req: Request) {
         version,
         title,
         description: description || "",
-        downloadUrl,
+        downloadUrl: downloadUrl || null,
+        fileData: fileData || null,
+        fileName: fileName || null,
       },
     });
 

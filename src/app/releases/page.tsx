@@ -13,13 +13,6 @@ export default async function ReleasesPage() {
 
   return (
     <div className="min-h-screen text-white p-6 md:p-12 relative overflow-hidden z-0">
-      {/* Background decorations - enhanced for better visibility */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none -z-10">
-        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-blue-500/20 rounded-full blur-[150px]" />
-        <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-purple-500/20 rounded-full blur-[150px]" />
-        <div className="absolute top-[40%] left-[30%] w-[40%] h-[40%] bg-[#00F0FF]/10 rounded-full blur-[150px]" />
-      </div>
-
       <div className="max-w-4xl mx-auto z-10 relative">
         <header className="mb-16 text-center relative">
           <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-[#00F0FF] to-purple-500 mb-4 tracking-tight">
@@ -76,9 +69,7 @@ export default async function ReleasesPage() {
                   
                   <div className="mt-auto">
                     <a
-                      href={release.downloadUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      href={`/api/releases/download/${release.id}`}
                       className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(79,70,229,0.3)] hover:shadow-[0_0_30px_rgba(79,70,229,0.5)] transform hover:scale-[1.02] active:scale-[0.98]"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

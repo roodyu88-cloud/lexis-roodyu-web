@@ -14,11 +14,6 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden z-0">
-      {/* Background decorations - made more visible */}
-      <div className="absolute top-[10%] left-[-10%] w-[50%] h-[50%] bg-blue-500/30 rounded-full blur-[100px] pointer-events-none -z-10" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-500/30 rounded-full blur-[100px] pointer-events-none -z-10" />
-      <div className="absolute top-[40%] left-[40%] w-[30%] h-[30%] bg-[#00F0FF]/20 rounded-full blur-[120px] pointer-events-none -z-10" />
-
       {/* Main Card */}
       <div className="w-full max-w-md relative z-10">
         <div className="bg-[#121215]/60 backdrop-blur-2xl border border-white/20 rounded-3xl p-8 shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden relative">

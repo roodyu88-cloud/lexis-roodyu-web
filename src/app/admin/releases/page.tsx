@@ -13,6 +13,8 @@ export default function AdminReleasesPage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [downloadUrl, setDownloadUrl] = useState("");
+  const [fileData, setFileData] = useState("");
+  const [fileName, setFileName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -21,15 +23,41 @@ export default function AdminReleasesPage() {
     }
   }, [status, session, router]);
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 4.5 * 1024 * 1024) {
+        alert("Файл слишком большой! Ограничение Vercel — 4.5 МБ. Загрузите файл на другой хостинг (например, Google Drive или GitHub) и укажите ссылку.");
+        e.target.value = "";
+        return;
+      }
+      setFileName(file.name);
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const base64String = (event.target?.result as string).split(",")[1];
+        setFileData(base64String);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setFileName("");
+      setFileData("");
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!downloadUrl && !fileData) {
+      alert("Пожалуйста, прикрепите файл ИЛИ укажите ссылку на скачивание!");
+      return;
+    }
+    
     setIsLoading(true);
 
     try {
       const res = await fetch("/api/admin/releases", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ version, title, description, downloadUrl }),
+        body: JSON.stringify({ version, title, description, downloadUrl, fileData, fileName }),
       });
 
       if (!res.ok) throw new Error("Failed to create release");
@@ -39,8 +67,9 @@ export default function AdminReleasesPage() {
       setTitle("");
       setDescription("");
       setDownloadUrl("");
+      setFileData("");
+      setFileName("");
       
-      // Redirect back to releases page
       router.push("/releases");
     } catch (error) {
       console.error(error);
@@ -54,10 +83,6 @@ export default function AdminReleasesPage() {
 
   return (
     <div className="min-h-screen text-white p-8 relative overflow-hidden z-0">
-      {/* Background decorations */}
-      <div className="absolute top-[10%] left-[10%] w-[40%] h-[40%] bg-blue-500/20 rounded-full blur-[120px] pointer-events-none -z-10" />
-      <div className="absolute bottom-[10%] right-[10%] w-[40%] h-[40%] bg-purple-500/20 rounded-full blur-[120px] pointer-events-none -z-10" />
-
       <div className="max-w-2xl mx-auto z-10 relative">
         <Link href="/releases" className="text-gray-400 hover:text-white mb-6 inline-block transition-colors">
           &larr; Назад к релизам
@@ -92,16 +117,37 @@ export default function AdminReleasesPage() {
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">Ссылка на скачивание (URL)</label>
-            <input
-              type="url"
-              required
-              value={downloadUrl}
-              onChange={(e) => setDownloadUrl(e.target.value)}
-              placeholder="Например: https://example.com/download.exe"
-              className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-            />
+          <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
+            <h3 className="text-sm font-bold text-blue-300 mb-3">Способ загрузки файла</h3>
+            <p className="text-xs text-gray-400 mb-4">Вы можете загрузить файл прямо на сайт (до 4.5 МБ) или указать внешнюю ссылку на скачивание, если файл большой.</p>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Загрузить файл (до 4.5 МБ)</label>
+                <input
+                  type="file"
+                  onChange={handleFileChange}
+                  className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-500/20 file:text-blue-300 hover:file:bg-blue-500/30 transition-all cursor-pointer"
+                />
+              </div>
+
+              <div className="flex items-center gap-4">
+                <div className="h-px bg-white/10 flex-1"></div>
+                <span className="text-xs text-gray-500 font-bold">ИЛИ</span>
+                <div className="h-px bg-white/10 flex-1"></div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Внешняя ссылка на скачивание</label>
+                <input
+                  type="url"
+                  value={downloadUrl}
+                  onChange={(e) => setDownloadUrl(e.target.value)}
+                  placeholder="Например: https://example.com/download.exe"
+                  className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                />
+              </div>
+            </div>
           </div>
 
           <div>
