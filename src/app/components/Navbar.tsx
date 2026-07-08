@@ -112,6 +112,9 @@ export default function Navbar({ session }: NavbarProps) {
           <Link href="/presets" className="text-sm font-semibold text-gray-300 hover:text-white transition-colors">
             Пресеты
           </Link>
+          <Link href="/releases" className="text-sm font-semibold text-gray-300 hover:text-white transition-colors flex items-center gap-1">
+            💾 Релизы
+          </Link>
           <Link href="/guide" className="text-sm font-semibold text-[#00F0FF] hover:text-white transition-colors flex items-center gap-1">
             📖 Инструкция
           </Link>

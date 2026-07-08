@@ -99,3 +99,12 @@ model AIPromptLog {
   discordId String
   createdAt DateTime @default(now())
 }
+
+model Release {
+  id          String   @id @default(cuid())
+  version     String   @unique
+  title       String
+  description String
+  downloadUrl String
+  createdAt   DateTime @default(now())
+}

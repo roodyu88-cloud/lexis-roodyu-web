@@ -1,0 +1,81 @@
+import { prisma } from "@/lib/prisma";
+import Link from "next/link";
+
+export default async function ReleasesPage() {
+  const releases = await prisma.release.findMany({
+    orderBy: { createdAt: "desc" },
+  });
+
+  return (
+    <div className="min-h-screen bg-[#0A0A0B] text-white p-6 md:p-12 relative overflow-hidden">
+      {/* Background decorations */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none -z-10">
+        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-blue-600/10 rounded-full blur-[150px]" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-purple-600/10 rounded-full blur-[150px]" />
+      </div>
+
+      <div className="max-w-4xl mx-auto z-10 relative">
+        <header className="mb-16 text-center">
+          <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-4">
+            Releases
+          </h1>
+          <p className="text-gray-400 text-lg">
+            Download the latest versions and view the changelog.
+          </p>
+        </header>
+
+        {releases.length === 0 ? (
+          <div className="text-center p-12 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl">
+            <p className="text-gray-400 text-xl">No releases published yet.</p>
+          </div>
+        ) : (
+          <div className="space-y-12">
+            {releases.map((release, index) => (
+              <div 
+                key={release.id} 
+                className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl transition-all duration-300 hover:border-white/20 hover:bg-white/10 flex flex-col md:flex-row gap-8"
+              >
+                {/* Version Column */}
+                <div className="md:w-1/4 shrink-0 flex flex-col">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-bold rounded-full uppercase tracking-wider">
+                      {index === 0 ? "Latest" : "Previous"}
+                    </span>
+                  </div>
+                  <h2 className="text-3xl font-bold text-white tracking-tight">{release.version}</h2>
+                  <p className="text-gray-500 text-sm mt-1">
+                    {new Intl.DateTimeFormat("en-US", {
+                      dateStyle: "medium",
+                    }).format(release.createdAt)}
+                  </p>
+                </div>
+
+                {/* Content Column */}
+                <div className="md:w-3/4 flex flex-col h-full">
+                  <h3 className="text-2xl font-bold text-gray-100 mb-4">{release.title}</h3>
+                  <div className="prose prose-invert max-w-none text-gray-400 mb-8 whitespace-pre-wrap flex-grow">
+                    {release.description}
+                  </div>
+                  
+                  <div className="mt-auto">
+                    <a
+                      href={release.downloadUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(79,70,229,0.3)] hover:shadow-[0_0_30px_rgba(79,70,229,0.5)] transform hover:scale-[1.02] active:scale-[0.98]"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                      </svg>
+                      Download {release.version}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

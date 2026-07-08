@@ -10,6 +10,9 @@ export const authOptions = {
       authorization: { params: { scope: "identify email guilds.join" } }
     })
   ],
+  pages: {
+    signIn: '/login',
+  },
   callbacks: {
     async signIn({ user, account }: any) {
       if (account?.provider === "discord" && account.access_token) {

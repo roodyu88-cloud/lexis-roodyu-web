@@ -274,6 +274,12 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
         >
           📊 Статистика
         </button>
+        <Link
+          href="/admin/releases"
+          className="px-4 py-2 rounded-lg font-bold transition-all cursor-pointer bg-white/5 text-gray-400 hover:text-white flex items-center"
+        >
+          💾 Релизы
+        </Link>
       </div>
 
       {/* Main Content Area */}
