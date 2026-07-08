@@ -112,22 +112,24 @@ export default function Navbar({ session }: NavbarProps) {
           <Link href="/presets" className="text-sm font-semibold text-gray-300 hover:text-white transition-colors">
             Пресеты
           </Link>
-          <Link href="/releases" className="text-sm font-semibold text-gray-300 hover:text-white transition-colors flex items-center gap-1">
-            💾 Релизы
-          </Link>
-          <Link href="/guide" className="text-sm font-semibold text-[#00F0FF] hover:text-white transition-colors flex items-center gap-1">
-            📖 Инструкция
-          </Link>
-
           <Link href="/assistant" className="text-sm font-semibold text-purple-400 hover:text-purple-300 transition-colors flex items-center gap-1">
             🧠 Ассистент
           </Link>
           <Link href="/exam" className="text-sm font-semibold text-gray-300 hover:text-white transition-colors flex items-center gap-1">
             🎓 Тренажер <span className="text-[10px] text-amber-500 bg-amber-500/10 px-1.5 py-0.5 rounded font-bold ml-1">PRO</span>
           </Link>
-          <Link href="/premium" title="Premium" className="text-xl transition-all hover:scale-125 hover:rotate-12 opacity-90 hover:opacity-100 flex items-center justify-center">
-            💎
-          </Link>
+          
+          <div className="flex items-center gap-3 ml-2 pl-4 border-l border-white/10">
+            <Link href="/releases" title="Релизы" className="text-xl transition-all hover:scale-125 hover:rotate-12 opacity-90 hover:opacity-100 flex items-center justify-center">
+              💾
+            </Link>
+            <Link href="/guide" title="Инструкция" className="text-xl transition-all hover:scale-125 hover:rotate-12 opacity-90 hover:opacity-100 flex items-center justify-center">
+              📖
+            </Link>
+            <Link href="/premium" title="Premium" className="text-xl transition-all hover:scale-125 hover:rotate-12 opacity-90 hover:opacity-100 flex items-center justify-center">
+              💎
+            </Link>
+          </div>
           
           {(session?.user?.role === "admin" || session?.user?.role === "developer") && (
             <Link href="/admin" className="text-sm font-semibold text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1">
