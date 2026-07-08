@@ -16,6 +16,14 @@ export default function AdminReleasesPage() {
   const [fileData, setFileData] = useState("");
   const [fileName, setFileName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState<"success" | "error">("success");
+
+  const showToast = (msg: string, type: "success" | "error" = "success") => {
+    setToastMessage(msg);
+    setToastType(type);
+    setTimeout(() => setToastMessage(""), 3000);
+  };
 
   useEffect(() => {
     if (status === "unauthenticated" || (session?.user as any)?.role !== "admin" && (session?.user as any)?.role !== "developer") {
@@ -27,7 +35,7 @@ export default function AdminReleasesPage() {
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 4.5 * 1024 * 1024) {
-        alert("Файл слишком большой! Ограничение Vercel — 4.5 МБ. Загрузите файл на другой хостинг (например, Google Drive или GitHub) и укажите ссылку.");
+        showToast("Файл слишком большой! Ограничение 4.5 МБ.", "error");
         e.target.value = "";
         return;
       }
@@ -47,7 +55,7 @@ export default function AdminReleasesPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!downloadUrl && !fileData) {
-      alert("Пожалуйста, прикрепите файл ИЛИ укажите ссылку на скачивание!");
+      showToast("Пожалуйста, прикрепите файл ИЛИ укажите ссылку!", "error");
       return;
     }
     
@@ -62,7 +70,7 @@ export default function AdminReleasesPage() {
 
       if (!res.ok) throw new Error("Failed to create release");
       
-      alert("Релиз успешно опубликован!");
+      showToast("Релиз успешно опубликован!", "success");
       setVersion("");
       setTitle("");
       setDescription("");
@@ -70,10 +78,10 @@ export default function AdminReleasesPage() {
       setFileData("");
       setFileName("");
       
-      router.push("/releases");
+      setTimeout(() => router.push("/releases"), 1500);
     } catch (error) {
       console.error(error);
-      alert("Ошибка при создании релиза");
+      showToast("Ошибка при создании релиза", "error");
     } finally {
       setIsLoading(false);
     }
@@ -83,6 +91,14 @@ export default function AdminReleasesPage() {
 
   return (
     <div className="min-h-screen text-white p-8 relative overflow-hidden z-0">
+      
+      {toastMessage && (
+        <div className={`fixed bottom-4 right-4 px-6 py-3 rounded-xl shadow-2xl animate-fade-in z-50 text-white font-bold flex items-center gap-3 ${toastType === "success" ? "bg-emerald-500" : "bg-red-500"}`}>
+          {toastType === "success" ? "✅" : "❌"}
+          {toastMessage}
+        </div>
+      )}
+
       <div className="max-w-2xl mx-auto z-10 relative">
         <Link href="/releases" className="text-gray-400 hover:text-white mb-6 inline-block transition-colors">
           &larr; Назад к релизам
