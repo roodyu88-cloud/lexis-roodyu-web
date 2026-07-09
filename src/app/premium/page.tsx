@@ -121,7 +121,9 @@ export default function PremiumPage() {
                 </div>
                 <h2 className="text-2xl font-bold text-white">Premium не активен</h2>
                 <p className="text-gray-400 text-sm">
-                  На данный момент премиум-функции можно получить только с помощью специального промокода.
+                  На данный момент премиум-функции активируются специальным промокодом.
+                  <br /><br />
+                  <span className="text-white font-medium">Для приобретения подписки необходимо создать тикет в нашем официальном Discord-сервере.</span>
                 </p>
               </div>
             )}
