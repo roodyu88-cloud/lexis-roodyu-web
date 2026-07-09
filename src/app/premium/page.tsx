@@ -51,7 +51,7 @@ export default function PremiumPage() {
 
   return (
     <main className="min-h-screen p-8 max-w-5xl mx-auto flex flex-col items-center justify-center">
-      
+
       <div className="text-center mb-12">
         <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-4">
           Lexis <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600 glow-text-amber">Premium</span>
@@ -94,7 +94,7 @@ export default function PremiumPage() {
 
         {/* Subscription / Promocode Column */}
         <div className="space-y-6 flex flex-col">
-          
+
           <div className="glass-card p-8 flex-1 flex flex-col justify-center relative overflow-hidden border-amber-500/20 shadow-2xl shadow-amber-900/10">
             {isPremium ? (
               <div className="text-center space-y-4">
@@ -103,9 +103,9 @@ export default function PremiumPage() {
                 </div>
                 <h2 className="text-2xl font-bold text-white">У вас активен Premium!</h2>
                 <p className="text-gray-400 text-sm">
-                  {hasPremiumBadge 
+                  {hasPremiumBadge
                     ? "У вас вечная подписка за особые заслуги."
-                    : premiumUntil 
+                    : premiumUntil
                       ? `Подписка действительна до ${new Date(premiumUntil).toLocaleDateString("ru-RU")}`
                       : "Вы являетесь премиум-пользователем."
                   }
@@ -121,7 +121,7 @@ export default function PremiumPage() {
                 </div>
                 <h2 className="text-2xl font-bold text-white">Premium не активен</h2>
                 <p className="text-gray-400 text-sm">
-                  На данный момент премиум-функции активируются специальным промокодом.
+                  На данный момент премиум-функции активируются промокодом.
                   <br /><br />
                   <span className="text-white font-medium">Для приобретения подписки необходимо создать тикет в нашем официальном Discord-сервере.</span>
                 </p>
@@ -141,7 +141,7 @@ export default function PremiumPage() {
                   className="w-full bg-black/40 border border-white/10 text-white rounded-xl p-4 text-center font-mono font-bold text-lg outline-none focus:border-amber-500 transition-colors"
                 />
               </div>
-              
+
               {message && (
                 <div className={`p-3 rounded-lg text-sm font-semibold border ${message.type === "success" ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400" : "bg-red-500/10 border-red-500/30 text-red-400"}`}>
                   {message.text}
@@ -151,11 +151,10 @@ export default function PremiumPage() {
               <button
                 type="submit"
                 disabled={loading || !code}
-                className={`w-full py-3 px-6 rounded-xl font-bold transition-all ${
-                  loading || !code 
-                    ? "bg-white/5 text-gray-500 cursor-not-allowed" 
+                className={`w-full py-3 px-6 rounded-xl font-bold transition-all ${loading || !code
+                    ? "bg-white/5 text-gray-500 cursor-not-allowed"
                     : "bg-amber-500 text-white hover:bg-amber-600 shadow-lg shadow-amber-500/20 cursor-pointer"
-                }`}
+                  }`}
               >
                 {loading ? "Проверка..." : "Активировать"}
               </button>
