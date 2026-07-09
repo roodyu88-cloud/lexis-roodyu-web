@@ -3,6 +3,51 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]/route";
 
+async function sendDiscordWebhook(webhookUrl: string, release: any) {
+  const downloadUrlForWebhook = `${process.env.NEXTAUTH_URL || "https://лексис.xyz"}/api/releases/download/${release.id}`;
+  
+  const header = `# Lexis ${release.version}\n## ${release.title}\n**Что нового добавленно:**\n\`\`\`\n`;
+  const footer = `\n\`\`\`\n\n**[📥 СКАЧАТЬ ОБНОВЛЕНИЕ](${downloadUrlForWebhook})**` + 
+                 (release.virusTotalUrl ? `\n**[🛡️ Проверка VirusTotal](${release.virusTotalUrl})**` : "");
+  
+  const desc = release.description || "Нет описания";
+  const fullMessage = header + desc + footer;
+  
+  if (fullMessage.length <= 2000) {
+    await fetch(webhookUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ content: fullMessage })
+    });
+  } else {
+    // Split into chunks if too large
+    const chunkSize = 1800;
+    const chunks = [];
+    for (let i = 0; i < desc.length; i += chunkSize) {
+      chunks.push(desc.substring(i, i + chunkSize));
+    }
+    
+    for (let i = 0; i < chunks.length; i++) {
+      let content = "";
+      if (i === 0) {
+        content = header + chunks[i] + "\n```";
+      } else if (i === chunks.length - 1) {
+        content = "```\n" + chunks[i] + footer;
+      } else {
+        content = "```\n" + chunks[i] + "\n```";
+      }
+      
+      await fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content })
+      });
+      // Small delay to avoid rate limit
+      await new Promise(r => setTimeout(r, 500));
+    }
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
@@ -39,21 +84,7 @@ export async function POST(req: Request) {
       });
       
       if (webhookSetting && webhookSetting.value) {
-        const downloadUrlForWebhook = `${process.env.NEXTAUTH_URL || "https://лексис.xyz"}/api/releases/download/${release.id}`;
-        
-        let messageContent = `# Lexis ${version}\n## ${title}\n**Что нового добавленно:**\n\`\`\`\n${description || "Нет описания"}\n\`\`\`\n\n**[📥 СКАЧАТЬ ОБНОВЛЕНИЕ](${downloadUrlForWebhook})**`;
-        
-        if (virusTotalUrl) {
-          messageContent += `\n**[🛡️ Проверка VirusTotal](${virusTotalUrl})**`;
-        }
-        
-        await fetch(webhookSetting.value, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            content: messageContent
-          })
-        });
+        await sendDiscordWebhook(webhookSetting.value, release);
       }
     } catch (webhookError) {
       console.error("Failed to send release webhook:", webhookError);
@@ -122,21 +153,7 @@ export async function PATCH(req: Request) {
       });
       
       if (webhookSetting && webhookSetting.value) {
-        const downloadUrlForWebhook = `${process.env.NEXTAUTH_URL || "https://лексис.xyz"}/api/releases/download/${release.id}`;
-        
-        let messageContent = `# Lexis ${version}\n## ${title}\n**Что нового добавленно:**\n\`\`\`\n${description || "Нет описания"}\n\`\`\`\n\n**[📥 СКАЧАТЬ ОБНОВЛЕНИЕ](${downloadUrlForWebhook})**`;
-        
-        if (virusTotalUrl) {
-          messageContent += `\n**[🛡️ Проверка VirusTotal](${virusTotalUrl})**`;
-        }
-        
-        await fetch(webhookSetting.value, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            content: messageContent
-          })
-        });
+        await sendDiscordWebhook(webhookSetting.value, release);
       }
     } catch (webhookError) {
       console.error("Failed to send release webhook on update:", webhookError);
