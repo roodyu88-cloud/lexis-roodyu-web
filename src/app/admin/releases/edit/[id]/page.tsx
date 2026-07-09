@@ -4,14 +4,15 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 import EditReleaseForm from "./EditReleaseForm";
 
-export default async function EditReleasePage({ params }: { params: { id: string } }) {
+export default async function EditReleasePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const session = await getServerSession(authOptions);
   if (!session || ((session.user as any)?.role !== "admin" && (session.user as any)?.role !== "developer")) {
     redirect("/");
   }
 
   const release = await prisma.release.findUnique({
-    where: { id: params.id }
+    where: { id }
   });
 
   if (!release) {
