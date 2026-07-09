@@ -11,7 +11,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { version, title, description, downloadUrl, fileData, fileName } = body;
+    const { version, title, description, downloadUrl, fileData, fileName, virusTotalUrl } = body;
 
     if (!version || !title) {
       return new NextResponse("Missing required fields", { status: 400 });
@@ -29,6 +29,7 @@ export async function POST(req: Request) {
         downloadUrl: downloadUrl || null,
         fileData: fileData || null,
         fileName: fileName || null,
+        virusTotalUrl: virusTotalUrl || null,
       },
     });
 
@@ -40,7 +41,11 @@ export async function POST(req: Request) {
       if (webhookSetting && webhookSetting.value) {
         const downloadUrlForWebhook = `${process.env.NEXTAUTH_URL || "https://лексис.xyz"}/api/releases/download/${release.id}`;
         
-        const messageContent = `# Lexis ${version}\n## ${title}\n**Что нового добавленно:**\n\`\`\`\n${description || "Нет описания"}\n\`\`\`\n\n**[📥 СКАЧАТЬ ОБНОВЛЕНИЕ](${downloadUrlForWebhook})**`;
+        let messageContent = `# Lexis ${version}\n## ${title}\n**Что нового добавленно:**\n\`\`\`\n${description || "Нет описания"}\n\`\`\`\n\n**[📥 СКАЧАТЬ ОБНОВЛЕНИЕ](${downloadUrlForWebhook})**`;
+        
+        if (virusTotalUrl) {
+          messageContent += `\n**[🛡️ Проверка VirusTotal](${virusTotalUrl})**`;
+        }
         
         await fetch(webhookSetting.value, {
           method: "POST",
@@ -64,7 +69,7 @@ export async function POST(req: Request) {
 export async function DELETE(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session || (session.user as any)?.role !== "admin") {
+    if (!session || ((session.user as any)?.role !== "admin" && (session.user as any)?.role !== "developer")) {
       return new NextResponse("Unauthorized", { status: 403 });
     }
 
@@ -82,6 +87,38 @@ export async function DELETE(req: Request) {
     return new NextResponse("Deleted successfully", { status: 200 });
   } catch (error) {
     console.error("Error deleting release:", error);
+    return new NextResponse("Internal Error", { status: 500 });
+  }
+}
+
+export async function PATCH(req: Request) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session || ((session.user as any)?.role !== "admin" && (session.user as any)?.role !== "developer")) {
+      return new NextResponse("Unauthorized", { status: 403 });
+    }
+
+    const body = await req.json();
+    const { id, version, title, description, downloadUrl, virusTotalUrl } = body;
+
+    if (!id || !version || !title) {
+      return new NextResponse("Missing required fields", { status: 400 });
+    }
+
+    const release = await prisma.release.update({
+      where: { id },
+      data: {
+        version,
+        title,
+        description: description || "",
+        downloadUrl: downloadUrl || null,
+        virusTotalUrl: virusTotalUrl || null,
+      },
+    });
+
+    return NextResponse.json(release);
+  } catch (error) {
+    console.error("Error updating release:", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

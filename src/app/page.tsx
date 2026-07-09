@@ -19,7 +19,7 @@ export default async function Home() {
         {/* Hero Section */}
         <div className="space-y-4">
           <div className="inline-block px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-sm font-medium mb-4 text-[var(--blurple)]">
-            v2.0.0 - Новый дизайн!
+            v2.1.0 - Теперь с биндером!
           </div>
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight">
             Твой идеальный <br />
@@ -92,8 +92,8 @@ export default async function Home() {
                 <span className="text-xl">🛠️</span> Как установить Lexis?
               </h3>
               <p className="text-gray-400 text-sm leading-relaxed">
-                1. Нажмите кнопку <b>«Скачать Lexis»</b> на главной странице.<br/>
-                2. Распакуйте скачанный архив в любую удобную папку (<b>важно:</b> не запускайте программу прямо внутри архива!).<br/>
+                1. Нажмите кнопку <b>«Скачать Lexis»</b> на главной странице.<br />
+                2. Распакуйте скачанный архив в любую удобную папку (<b>важно:</b> не запускайте программу прямо внутри архива!).<br />
                 3. Запустите файл <b>Lexis.exe</b>. Приложение откроется и свернется в системный трей (возле часов).
               </p>
               <div className="bg-[var(--blurple-alpha-10)] p-3 rounded-lg border border-[var(--blurple-alpha-20)] mt-3">
@@ -119,7 +119,7 @@ export default async function Home() {
                 <span className="text-xl">🎮</span> Почему оверлей не открывается в игре по кнопке F9?
               </h3>
               <p className="text-gray-400 text-sm leading-relaxed">
-                Для корректной работы оверлея поверх игры, ваша GTA 5 (или любая другая игра) должна быть запущена в режиме <span className="text-white font-medium">«В окне без рамок» (Windowed Borderless)</span> или <span className="text-white font-medium">«Оконный» (Windowed)</span>. 
+                Для корректной работы оверлея поверх игры, ваша GTA 5 (или любая другая игра) должна быть запущена в режиме <span className="text-white font-medium">«В окне без рамок» (Windowed Borderless)</span> или <span className="text-white font-medium">«Оконный» (Windowed)</span>.
                 В полноэкранном (Fullscreen) режиме операционная система Windows жестко блокирует отрисовку сторонних окон поверх игры.
               </p>
             </div>

@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route";
+import ReleaseAdminActions from "./ReleaseAdminActions";
 
 export default async function ReleasesPage() {
   const session = await getServerSession(authOptions);
@@ -58,6 +59,8 @@ export default async function ReleasesPage() {
                       dateStyle: "medium",
                     }).format(release.createdAt)}
                   </p>
+                  
+                  {isAdmin && <ReleaseAdminActions releaseId={release.id} />}
                 </div>
 
                 {/* Content Column */}

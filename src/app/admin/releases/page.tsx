@@ -15,6 +15,7 @@ export default function AdminReleasesPage() {
   const [downloadUrl, setDownloadUrl] = useState("");
   const [fileData, setFileData] = useState("");
   const [fileName, setFileName] = useState("");
+  const [virusTotalUrl, setVirusTotalUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState<"success" | "error">("success");
@@ -65,7 +66,7 @@ export default function AdminReleasesPage() {
       const res = await fetch("/api/admin/releases", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ version, title, description, downloadUrl, fileData, fileName }),
+        body: JSON.stringify({ version, title, description, downloadUrl, fileData, fileName, virusTotalUrl }),
       });
 
       if (!res.ok) throw new Error("Failed to create release");
@@ -164,6 +165,17 @@ export default function AdminReleasesPage() {
                 />
               </div>
             </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Ссылка на VirusTotal (опционально)</label>
+            <input
+              type="url"
+              value={virusTotalUrl}
+              onChange={(e) => setVirusTotalUrl(e.target.value)}
+              placeholder="Например: https://www.virustotal.com/gui/file/..."
+              className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all mb-6"
+            />
           </div>
 
           <div>

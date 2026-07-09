@@ -101,12 +101,13 @@ model AIPromptLog {
 }
 
 model Release {
-  id          String   @id @default(cuid())
-  version     String   @unique
-  title       String
-  description String
-  downloadUrl String?
-  fileData    String?
-  fileName    String?
-  createdAt   DateTime @default(now())
+  id             String   @id @default(cuid())
+  version        String   @unique
+  title          String
+  description    String
+  downloadUrl    String?
+  fileData       String?
+  fileName       String?
+  virusTotalUrl  String?
+  createdAt      DateTime @default(now())
 }
