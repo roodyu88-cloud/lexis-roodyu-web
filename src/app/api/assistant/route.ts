@@ -100,7 +100,8 @@ export async function POST(req: Request) {
                 'organ': 'Органы власти', 'orm': 'ОРМ, розыск', 'prav': 'Правительство, мэрия',
                 'predp': 'Бизнес', 'prodr': 'Процессуальные действия', 'sang': 'Армия, нацгвардия',
                 'senat': 'Сенат', 'sredmass': 'СМИ', 'sudk': 'Судебный кодекс, иски',
-                'ter': 'Территории, КПЗ', 'trudk': 'Трудовой кодекс, увольнения', 'usss': 'Секретная служба'
+                'ter': 'Территории, КПЗ', 'trudk': 'Трудовой кодекс, увольнения', 'usss': 'Секретная служба',
+                'nalog': 'Налоговый кодекс, налоги'
             };
 
             // ИИ-Маршрутизатор (Groq)
@@ -168,7 +169,8 @@ ${availableFilesStr}
                         (baseName === 'sudk' && (userMsg.includes('суд') || userMsg.includes('иск') || userMsg.includes('заседан'))) ||
                         (baseName === 'ter' && (userMsg.includes('территори') || userMsg.includes('кпз') || userMsg.includes('закрыт') || userMsg.includes('охран'))) ||
                         (baseName === 'trudk' && (userMsg.includes('труд') || userMsg.includes('увольн') || userMsg.includes('работ') || userMsg.includes('выговор'))) ||
-                        (baseName === 'usss' && (userMsg.includes('usss') || userMsg.includes('секретн') || userMsg.includes('служеб')));
+                        (baseName === 'usss' && (userMsg.includes('usss') || userMsg.includes('секретн') || userMsg.includes('служеб'))) ||
+                        (baseName === 'nalog' && (userMsg.includes('налог') || userMsg.includes('пошлин')));
                     
                     if (isCore || isMentioned) selectedFileNames.push(baseName);
                 }

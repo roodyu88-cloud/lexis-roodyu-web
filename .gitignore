@@ -40,3 +40,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 lexis-website-log-export-2026-07-09T11-27-13.json
+scrape_majestic.py

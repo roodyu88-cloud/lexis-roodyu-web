@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { SERVERS } from "../api/assistant/serverLaws";
+import { SERVERS, PROJECTS } from "../api/assistant/serverLaws";
 
 type Message = {
   role: 'user' | 'model';
@@ -257,20 +257,30 @@ export default function AssistantClient({ isAuthenticated = false, isPremium = f
           onClick={() => setIsSelectOpen(!isSelectOpen)}
           className="w-full bg-white/5 hover:bg-white/10 px-4 py-2.5 rounded-xl border border-white/10 text-sm text-white flex items-center justify-between transition-colors cursor-pointer"
         >
-          <span className="font-semibold truncate text-left">{selectedServer.name}</span>
+          <span className="font-semibold truncate text-left">{selectedServer.projectName ? `${selectedServer.projectName} - ${selectedServer.name}` : selectedServer.name}</span>
           <svg className={`w-4 h-4 transition-transform flex-shrink-0 ${isSelectOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
         </button>
         
         {isSelectOpen && (
-          <div className="absolute top-full left-0 right-0 mt-2 bg-[#17181a] border border-white/10 rounded-xl overflow-hidden z-35 shadow-2xl">
-            {SERVERS.map(s => (
-              <button
-                key={s.id}
-                onClick={() => { setServerId(s.id); setIsSelectOpen(false); setIsMobileSidebarOpen(false); }}
-                className={`w-full text-left px-4 py-2.5 text-sm hover:bg-white/10 transition-colors cursor-pointer ${serverId === s.id ? 'text-[var(--blurple)] bg-white/5 font-semibold' : 'text-gray-400'}`}
-              >
-                {s.name}
-              </button>
+          <div className="absolute top-full left-0 right-0 mt-2 bg-[#17181a] border border-white/10 rounded-xl overflow-hidden z-35 shadow-2xl max-h-64 overflow-y-auto">
+            {PROJECTS.map(p => (
+              <div key={p.id} className="border-b border-white/5 last:border-0 pb-1">
+                <div className="px-3 py-1.5 mt-1 text-[10px] font-bold text-gray-500 uppercase tracking-wider">{p.name}</div>
+                {p.servers.length === 0 ? (
+                  <div className="px-4 py-2 text-xs text-gray-600 italic">Скоро...</div>
+                ) : (
+                  p.servers.map(s => (
+                    <button
+                      key={s.id}
+                      onClick={() => { setServerId(s.id); setIsSelectOpen(false); setIsMobileSidebarOpen(false); }}
+                      className={`w-full text-left px-4 py-2 text-sm hover:bg-white/10 transition-colors cursor-pointer flex items-center gap-2 ${serverId === s.id ? 'text-[var(--blurple)] bg-white/5 font-semibold' : 'text-gray-400'}`}
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-current opacity-50"></span>
+                      {s.name}
+                    </button>
+                  ))
+                )}
+              </div>
             ))}
           </div>
         )}
@@ -511,7 +521,7 @@ export default function AssistantClient({ isAuthenticated = false, isPremium = f
               <div className="hidden md:flex absolute top-0 left-0 right-0 w-full pt-2 pb-6 z-20 justify-center pointer-events-none">
                 <div className="w-full max-w-3xl flex justify-between items-start pointer-events-auto px-2">
                    <div className="text-sm text-gray-400 flex items-center gap-3">
-                     <span>Сервер:</span> <span className="text-white font-semibold text-shadow-sm">{selectedServer.name}</span>
+                     <span>Сервер:</span> <span className="text-white font-semibold text-shadow-sm">{selectedServer.projectName ? `${selectedServer.projectName} - ${selectedServer.name}` : selectedServer.name}</span>
                    </div>
                 </div>
               </div>

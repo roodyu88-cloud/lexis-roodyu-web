@@ -1,41 +1,45 @@
-export const SERVERS = [
+export const PROJECTS = [
     {
         id: "crystal",
         name: "Crystal Role Play",
-        files: [
-            'crystalrp/adk.txt',
-            'crystalrp/advokat.txt',
-            'crystalrp/chp.txt',
-            'crystalrp/dk.txt',
-            'crystalrp/ems.txt',
-            'crystalrp/etk.txt',
-            'crystalrp/fib.txt',
-            'crystalrp/gosnag.txt',
-            'crystalrp/gostay.txt',
-            'crystalrp/grak.txt',
-            'crystalrp/gun.txt',
-            'crystalrp/konst.txt',
-            'crystalrp/miting.txt',
-            'crystalrp/nej.txt',
-            'crystalrp/neprikos.txt',
-            'crystalrp/ogp.txt',
-            'crystalrp/order.txt',
-            'crystalrp/organ.txt',
-            'crystalrp/orm.txt',
-            'crystalrp/prav.txt',
-            'crystalrp/predp.txt',
-            'crystalrp/proc.txt',
-            'crystalrp/prodr.txt',
-            'crystalrp/sang.txt',
-            'crystalrp/senat.txt',
-            'crystalrp/sredmass.txt',
-            'crystalrp/sudk.txt',
-            'crystalrp/ter.txt',
-            'crystalrp/trudk.txt',
-            'crystalrp/uk.txt',
-            'crystalrp/usss.txt'
-        ],
-        basePrompt: `Ты — ИИ-ассистент "Crystal Role Play", созданный для проекта Lexis. Твоя задача — консультировать игроков сервера Crystal Role Play по их местным законам. Если информации нет в законах, так и скажи, не придумывай.
+        servers: [
+            {
+                id: "crystal_01",
+                name: "Сервер 01",
+                files: [
+                    'crystalrp/adk.txt',
+                    'crystalrp/advokat.txt',
+                    'crystalrp/chp.txt',
+                    'crystalrp/dk.txt',
+                    'crystalrp/ems.txt',
+                    'crystalrp/etk.txt',
+                    'crystalrp/fib.txt',
+                    'crystalrp/gosnag.txt',
+                    'crystalrp/gostay.txt',
+                    'crystalrp/grak.txt',
+                    'crystalrp/gun.txt',
+                    'crystalrp/konst.txt',
+                    'crystalrp/miting.txt',
+                    'crystalrp/nej.txt',
+                    'crystalrp/neprikos.txt',
+                    'crystalrp/ogp.txt',
+                    'crystalrp/order.txt',
+                    'crystalrp/organ.txt',
+                    'crystalrp/orm.txt',
+                    'crystalrp/prav.txt',
+                    'crystalrp/predp.txt',
+                    'crystalrp/proc.txt',
+                    'crystalrp/prodr.txt',
+                    'crystalrp/sang.txt',
+                    'crystalrp/senat.txt',
+                    'crystalrp/sredmass.txt',
+                    'crystalrp/sudk.txt',
+                    'crystalrp/ter.txt',
+                    'crystalrp/trudk.txt',
+                    'crystalrp/uk.txt',
+                    'crystalrp/usss.txt'
+                ],
+                basePrompt: `Ты — ИИ-ассистент "Crystal Role Play", созданный для проекта Lexis. Твоя задача — консультировать игроков 01 сервера Crystal Role Play по их местным законам. Если информации нет в законах, так и скажи, не придумывай.
 Твоя база знаний состоит из следующих файлов:
 - crystalrp/adk.txt — Административный кодекс
 - crystalrp/advokat.txt — Закон об адвокатуре
@@ -76,5 +80,65 @@ export const SERVERS = [
 
 Пример: {ЦИТАТА: 📖 ст. 2.6 Судебного кодекса | Уголовный кодекс | Правосудие в штате осуществляется только судом. Судебная власть в штате предоставляется Окружному суду.}
 Разделитель между блоками — символ прямой черты (|). НИКОГДА не используй маркдаун ссылки для цитат!`
+            }
+        ]
+    },
+    {
+        id: "majestic",
+        name: "Majestic Role Play",
+        servers: [
+            {
+                id: "majestic_ny",
+                name: "New York (01)",
+                files: [
+                    'majesticrp/ny/adk.txt',
+                    'majesticrp/ny/advokat.txt',
+                    'majesticrp/ny/chp.txt',
+                    'majesticrp/ny/dk.txt',
+                    'majesticrp/ny/ems.txt',
+                    'majesticrp/ny/etk.txt',
+                    'majesticrp/ny/fib.txt',
+                    'majesticrp/ny/gosnag.txt',
+                    'majesticrp/ny/gostay.txt',
+                    'majesticrp/ny/grak.txt',
+                    'majesticrp/ny/gun.txt',
+                    'majesticrp/ny/konst.txt',
+                    'majesticrp/ny/miting.txt',
+                    'majesticrp/ny/nalog.txt',
+                    'majesticrp/ny/nej.txt',
+                    'majesticrp/ny/neprikos.txt',
+                    'majesticrp/ny/ogp.txt',
+                    'majesticrp/ny/order.txt',
+                    'majesticrp/ny/organ.txt',
+                    'majesticrp/ny/orm.txt',
+                    'majesticrp/ny/prav.txt',
+                    'majesticrp/ny/predp.txt',
+                    'majesticrp/ny/proc.txt',
+                    'majesticrp/ny/prodr.txt',
+                    'majesticrp/ny/sang.txt',
+                    'majesticrp/ny/senat.txt',
+                    'majesticrp/ny/sredmass.txt',
+                    'majesticrp/ny/sudk.txt',
+                    'majesticrp/ny/ter.txt',
+                    'majesticrp/ny/trudk.txt',
+                    'majesticrp/ny/uk.txt',
+                    'majesticrp/ny/usss.txt'
+                ],
+                basePrompt: `Ты — ИИ-ассистент "Majestic Role Play", созданный для проекта Lexis. Твоя задача — консультировать игроков сервера New York (01) по их местным законам. Если информации нет в законах, так и скажи, не придумывай.
+
+ВАЖНОЕ ПРАВИЛО ЦИТИРОВАНИЯ:
+Если ты ссылаешься на конкретную статью закона, НИКОГДА не пиши текст самого закона в ответе!
+Вместо этого ты ОБЯЗАН использовать специальный формат тега:
+{ЦИТАТА: 📖 Название статьи | Название закона | Точный текст статьи}
+
+Пример: {ЦИТАТА: 📖 ст. 2.6 Судебного кодекса | Уголовный кодекс | Правосудие в штате осуществляется только судом. Судебная власть в штате предоставляется Окружному суду.}
+Разделитель между блоками — символ прямой черты (|). НИКОГДА не используй маркдаун ссылки для цитат!`
+            }
+        ]
     }
 ];
+
+// Helper to keep compatibility with existing API
+export const SERVERS = PROJECTS.flatMap(p => 
+    p.servers.map(s => ({ ...s, projectId: p.id, projectName: p.name }))
+);
