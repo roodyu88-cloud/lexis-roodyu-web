@@ -116,6 +116,32 @@ export async function PATCH(req: Request) {
       },
     });
 
+    try {
+      const webhookSetting = await prisma.appSetting.findUnique({
+        where: { key: "RELEASES_WEBHOOK_URL" }
+      });
+      
+      if (webhookSetting && webhookSetting.value) {
+        const downloadUrlForWebhook = `${process.env.NEXTAUTH_URL || "https://лексис.xyz"}/api/releases/download/${release.id}`;
+        
+        let messageContent = `# Lexis ${version}\n## ${title}\n**Что нового добавленно:**\n\`\`\`\n${description || "Нет описания"}\n\`\`\`\n\n**[📥 СКАЧАТЬ ОБНОВЛЕНИЕ](${downloadUrlForWebhook})**`;
+        
+        if (virusTotalUrl) {
+          messageContent += `\n**[🛡️ Проверка VirusTotal](${virusTotalUrl})**`;
+        }
+        
+        await fetch(webhookSetting.value, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            content: messageContent
+          })
+        });
+      }
+    } catch (webhookError) {
+      console.error("Failed to send release webhook on update:", webhookError);
+    }
+
     return NextResponse.json(release);
   } catch (error) {
     console.error("Error updating release:", error);
