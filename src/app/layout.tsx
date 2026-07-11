@@ -51,6 +51,9 @@ export default async function RootLayout({
               &copy; {new Date().getFullYear()} Lexis Web. Все права защищены.
             </div>
             <div className="flex gap-6">
+              <Link href="/promo" className="hover:text-white transition-colors text-[#5865F2]">
+                Акция LEXS
+              </Link>
               <Link href="/rules" className="hover:text-white transition-colors">
                 Правила пресетов
               </Link>
