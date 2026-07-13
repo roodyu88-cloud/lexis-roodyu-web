@@ -60,3 +60,4 @@ patch_admin_hierarchy.py
 patch_admin_ui_force.py
 gen.py
 gen_merge.py
+gen_all.js
