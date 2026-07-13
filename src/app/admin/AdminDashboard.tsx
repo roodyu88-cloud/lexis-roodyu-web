@@ -648,15 +648,8 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
                 </div>
               )}
 
-              {/* Save / Cancel buttons */}
-              <div className="flex gap-3 pt-4 border-t border-white/10">
-                <button
-                  onClick={() => setSelectedUser(null)}
-                  className="flex-1 btn-secondary text-xs !py-2 cursor-pointer"
-                >
-                  Отмена
-                </button>
-                
+              {/* Ban & Save/Cancel buttons */}
+              <div className="space-y-4 pt-4 border-t border-white/10">
                 <div>
                   <label className="block text-sm font-semibold text-gray-400 mb-2.5">Глобальная блокировка</label>
                   <button
@@ -686,13 +679,21 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
                   </div>
                 )}
 
-                <button
-                  onClick={handleSaveUser}
-                  disabled={savingUserId === selectedUser.id}
-                  className="flex-1 btn-primary text-xs !py-2 cursor-pointer flex items-center justify-center gap-2"
-                >
-                  {savingUserId === selectedUser.id ? "Сохранение..." : "Сохранить"}
-                </button>
+                <div className="flex gap-3 pt-2">
+                  <button
+                    onClick={() => setSelectedUser(null)}
+                    className="flex-1 btn-secondary text-xs !py-2 cursor-pointer"
+                  >
+                    Отмена
+                  </button>
+                  <button
+                    onClick={handleSaveUser}
+                    disabled={savingUserId === selectedUser.id}
+                    className="flex-1 btn-primary text-xs !py-2 cursor-pointer flex items-center justify-center gap-2"
+                  >
+                    {savingUserId === selectedUser.id ? "Сохранение..." : "Сохранить"}
+                  </button>
+                </div>
               </div>
 
             </div>
@@ -911,15 +912,25 @@ function ServerAdminTab({ servers, setServers, showToast }: {
     <div className="space-y-6">
       {/* Create form */}
       <div className="space-y-3 bg-white/5 p-4 rounded-xl border border-white/10">
-        <h3 className="text-sm font-bold text-gray-300 mb-3">➕ Добавить проект</h3>
+        <h3 className="text-sm font-bold text-gray-300 mb-3">➕ Добавить сервер</h3>
         <div className="flex gap-4 items-end flex-wrap">
           <div className="flex-1 min-w-[160px]">
-            <label className="block text-xs text-gray-400 mb-1">Название проекта</label>
+            <label className="block text-xs text-gray-400 mb-1">Группа (Название проекта)</label>
+            <input
+              type="text"
+              value={projectName}
+              onChange={e => setProjectName(e.target.value)}
+              placeholder="Например: Majestic RP"
+              className="w-full bg-black/40 border border-white/10 text-white rounded-lg p-2 outline-none focus:border-[#5865F2] text-sm"
+            />
+          </div>
+          <div className="flex-1 min-w-[160px]">
+            <label className="block text-xs text-gray-400 mb-1">Название сервера</label>
             <input
               type="text"
               value={name}
               onChange={e => setName(e.target.value)}
-              placeholder="Например: Majestic RP"
+              placeholder="Например: Atlanta"
               className="w-full bg-black/40 border border-white/10 text-white rounded-lg p-2 outline-none focus:border-[#5865F2] text-sm"
             />
           </div>
@@ -971,8 +982,17 @@ function ServerAdminTab({ servers, setServers, showToast }: {
       </div>
 
       {/* Server list */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {servers.map(s => (
+      <div className="space-y-6">
+        {Object.entries(servers.reduce((acc, s) => {
+          const proj = s.projectName || "Одиночные серверы";
+          if (!acc[proj]) acc[proj] = [];
+          acc[proj].push(s);
+          return acc;
+        }, {} as Record<string, any[]>)).map(([projName, projServers]) => (
+          <div key={projName} className="space-y-3">
+            <h4 className="text-sm font-bold text-[#5865F2] uppercase tracking-wider pl-1 border-l-2 border-[#5865F2]">{projName}</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {(projServers as any[]).map(s => (
           <div key={s.id} className="bg-white/5 border border-white/10 rounded-xl overflow-hidden">
             {/* Card header */}
             <div className="flex items-center justify-between p-4">
@@ -1044,6 +1064,16 @@ function ServerAdminTab({ servers, setServers, showToast }: {
                   />
                 </div>
                 <div>
+                  <label className="block text-xs text-gray-400 mb-1">Группа (Название проекта)</label>
+                  <input
+                    type="text"
+                    value={editProjectName}
+                    onChange={e => setEditProjectName(e.target.value)}
+                    placeholder="Например: Majestic RP"
+                    className="w-full bg-black/40 border border-white/10 text-white rounded-lg p-2 outline-none focus:border-[#5865F2] text-xs"
+                  />
+                </div>
+                <div>
                   <label className="block text-xs text-gray-400 mb-1">🔔 Webhook URL</label>
                   <input
                     type="text"
@@ -1081,6 +1111,9 @@ function ServerAdminTab({ servers, setServers, showToast }: {
                 </div>
               </div>
             )}
+          </div>
+              ))}
+            </div>
           </div>
         ))}
       </div>
