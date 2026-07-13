@@ -69,6 +69,7 @@ const AVAILABLE_BADGES = [
 
 export default function AdminDashboard({ initialUsers, initialPresets, initialServers = [], initialSettings = {}, initialPromocodes = [], initialStats }: AdminDashboardProps) {
   const [presetFilterServer, setPresetFilterServer] = useState<string>("all");
+  const [isPresetFilterOpen, setIsPresetFilterOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"users" | "presets" | "servers" | "settings" | "promocodes" | "stats">("users");
   const [users, setUsers] = useState<User[]>(initialUsers);
   const [presets, setPresets] = useState<Preset[]>(initialPresets);
@@ -371,23 +372,66 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
             <div className="glass-card overflow-hidden p-6">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
                 <h2 className="text-xl font-bold text-white">Управление пресетами</h2>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 relative">
                   <label className="text-sm text-gray-400 font-semibold">Фильтр по серверу:</label>
-                  <select
-                    value={presetFilterServer}
-                    onChange={(e) => setPresetFilterServer(e.target.value)}
-                    className="bg-black/40 border border-white/10 text-white rounded-lg p-2 text-sm outline-none focus:border-[#5865F2]"
-                  >
-                    <option value="all">Все серверы</option>
-                    {servers.map(p => (
-                      <optgroup key={p.id} label={p.name}>
-                        <option value={`project_${p.id}`}>Любой сервер ({p.name})</option>
-                        {p.servers?.map((s: any) => (
-                          <option key={s.id} value={s.id}>{s.name}</option>
-                        ))}
-                      </optgroup>
-                    ))}
-                  </select>
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setIsPresetFilterOpen(!isPresetFilterOpen)}
+                      className="bg-black/40 border border-white/10 text-white rounded-lg px-4 py-2 text-sm outline-none focus:border-[#5865F2] min-w-[200px] flex justify-between items-center gap-2 hover:bg-white/5 transition-colors cursor-pointer"
+                    >
+                      <span>
+                        {presetFilterServer === "all" 
+                          ? "Все серверы" 
+                          : presetFilterServer.startsWith("project_")
+                            ? `Любой сервер (${servers.find(p => p.id === presetFilterServer.replace("project_", ""))?.name || "Неизвестно"})`
+                            : servers.flatMap(p => p.servers || []).find(s => s.id === presetFilterServer)?.name || "Неизвестно"
+                        }
+                      </span>
+                      <svg className={`w-4 h-4 text-gray-500 transition-transform ${isPresetFilterOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    {isPresetFilterOpen && (
+                      <>
+                        <div className="fixed inset-0 z-10" onClick={() => setIsPresetFilterOpen(false)} />
+                        <div className="absolute right-0 mt-2 w-[240px] bg-[#0d0e12]/95 border border-white/10 rounded-xl overflow-hidden z-20 shadow-2xl animate-scale-up backdrop-blur-xl max-h-80 overflow-y-auto no-scrollbar">
+                          <button
+                            type="button"
+                            onClick={() => { setPresetFilterServer("all"); setIsPresetFilterOpen(false); }}
+                            className={`w-full text-left px-4 py-2.5 text-sm transition-colors hover:bg-white/5 cursor-pointer ${presetFilterServer === "all" ? 'text-[#5865F2] font-bold bg-white/5' : 'text-gray-400'}`}
+                          >
+                            Все серверы
+                          </button>
+                          {servers.map(p => (
+                            <div key={p.id}>
+                              <div className="px-4 py-1.5 text-xs font-bold text-gray-500 uppercase tracking-wider bg-black/40 flex items-center gap-2">
+                                {p.iconUrl && <img src={p.iconUrl} className="w-4 h-4 rounded" alt="icon" />}
+                                {p.name}
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => { setPresetFilterServer(`project_${p.id}`); setIsPresetFilterOpen(false); }}
+                                className={`w-full text-left px-4 py-2.5 pl-8 text-sm transition-colors hover:bg-white/5 flex items-center gap-2 cursor-pointer ${presetFilterServer === `project_${p.id}` ? 'text-[#5865F2] font-bold bg-white/5' : 'text-gray-400'}`}
+                              >
+                                <span>Любой сервер</span>
+                              </button>
+                              {p.servers?.map((s: any) => (
+                                <button
+                                  key={s.id}
+                                  type="button"
+                                  onClick={() => { setPresetFilterServer(s.id); setIsPresetFilterOpen(false); }}
+                                  className={`w-full text-left px-4 py-2.5 pl-8 text-sm transition-colors hover:bg-white/5 flex items-center gap-2 cursor-pointer ${presetFilterServer === s.id ? 'text-[#5865F2] font-bold bg-white/5' : 'text-gray-400'}`}
+                                >
+                                  <span>{s.name}</span>
+                                </button>
+                              ))}
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
               <div className="overflow-x-auto no-scrollbar">
@@ -1033,60 +1077,67 @@ function ServerAdminTab({ servers, setServers, showToast }: {
         </button>
       </div>
 
-      {/* Server list */}
-      <div className="space-y-6">
-        {Object.entries(servers.reduce((acc, s) => {
-          const proj = s.projectName || "Одиночные серверы";
-          if (!acc[proj]) acc[proj] = [];
-          acc[proj].push(s);
-          return acc;
-        }, {} as Record<string, any[]>)).map(([projName, projServers]) => (
-          <div key={projName} className="space-y-3">
-            <h4 className="text-sm font-bold text-[#5865F2] uppercase tracking-wider pl-1 border-l-2 border-[#5865F2]">{projName}</h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {(projServers as any[]).map(s => (
-          <div key={s.id} className="bg-white/5 border border-white/10 rounded-xl overflow-hidden">
-            {/* Card header */}
-            <div className="flex items-center justify-between p-4">
+      {/* Project/Server list */}
+      <div className="grid grid-cols-1 gap-6 mb-6">
+        {servers.map(p => (
+          <div key={p.id} className="bg-white/5 border border-white/10 rounded-xl overflow-hidden p-4">
+            <div className="flex items-start justify-between mb-4 pb-4 border-b border-white/10">
               <div className="flex items-center gap-3">
-                <img src={s.iconUrl} alt={s.name} className="w-9 h-9 rounded-lg" />
-                <div>
-                  <span className="font-bold text-white block">{s.name}</span>
-                  <span className="text-[10px] text-gray-500 font-mono">{s.id.slice(0, 12)}…</span>
-                </div>
+                 <img src={p.iconUrl} alt={p.name} className="w-10 h-10 rounded-lg" />
+                 <div>
+                    <span className="font-bold text-white text-lg block uppercase tracking-wider">{p.name}</span>
+                    <span className="text-[10px] text-gray-500 font-mono">Project ID: {p.id.slice(0, 12)}…</span>
+                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => {
-                    if (editingId === s.id) {
-                      setEditingId(null);
-                    } else {
-                      setEditingId(s.id);
-                      setEditWebhook(s.webhookUrl || "");
-                      setEditRoleId(s.discordRoleId || "");
-                      setEditProjectName(s.projectName || "");
+                    if (editingId === p.id) setEditingId(null);
+                    else {
+                      setEditingId(p.id);
+                      setEditWebhook(p.webhookUrl || "");
+                      setEditRoleId(p.discordRoleId || "");
                       setEditIconBase64(null);
                     }
                   }}
                   className="text-xs px-2.5 py-1.5 rounded-lg bg-white/5 border border-white/10 text-gray-300 hover:bg-[#5865F2]/20 hover:text-white hover:border-[#5865F2]/30 transition-all cursor-pointer"
-                  title="Настройки вебхука"
+                  title="Настройки проекта"
                 >
-                  ⚙️
+                  ⚙️ Настройки
                 </button>
                 <button
-                  onClick={() => setDeleteConfirmId(s.id)}
+                  onClick={() => setDeleteConfirmId(p.id)}
                   disabled={loading}
                   className="text-red-400 hover:text-red-300 text-xl leading-none p-1 cursor-pointer"
-                  title="Удалить"
+                  title="Удалить проект целиком"
                 >
                   ×
                 </button>
               </div>
             </div>
+            
+            {/* Servers inside this project */}
+            <div className="bg-black/20 rounded-lg p-4 mb-4">
+              <h5 className="text-xs font-bold text-gray-400 mb-3 flex items-center gap-2">
+                СЕРВЕРЫ ПРОЕКТА
+                <span className="bg-[#5865F2]/20 text-[#5865F2] px-1.5 rounded-full text-[10px]">{p.servers?.length || 0}</span>
+              </h5>
+              <div className="flex flex-wrap gap-2">
+                {p.servers?.map((s: any) => (
+                  <div key={s.id} className="flex items-center gap-1.5 bg-[#5865F2]/10 text-[#5865F2] px-3 py-1.5 rounded-lg text-sm font-semibold border border-[#5865F2]/20 hover:bg-[#5865F2]/20 transition-colors">
+                    <span>{s.name}</span>
+                    <button onClick={() => handleDeleteServer(s.id)} className="text-[#5865F2] hover:text-red-400 ml-1.5 opacity-70 hover:opacity-100 cursor-pointer">×</button>
+                  </div>
+                ))}
+                {(!p.servers || p.servers.length === 0) && (
+                  <span className="text-xs text-gray-500 italic">Нет добавленных серверов</span>
+                )}
+              </div>
+            </div>
 
             {/* Webhook status badges */}
-            <div className="px-4 pb-3 flex gap-2 flex-wrap">
-              {s.webhookUrl ? (
+            <div className="flex gap-2 flex-wrap">
+              {p.webhookUrl ? (
                 <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                   ✓ Вебхук настроен
                 </span>
@@ -1095,16 +1146,16 @@ function ServerAdminTab({ servers, setServers, showToast }: {
                   Вебхук не настроен
                 </span>
               )}
-              {s.discordRoleId && (
+              {p.discordRoleId && (
                 <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#5865F2]/10 text-[#5865F2] border border-[#5865F2]/20">
-                  🏷️ Роль: {s.discordRoleId}
+                  🏷️ Роль: {p.discordRoleId}
                 </span>
               )}
             </div>
 
             {/* Inline edit panel */}
-            {editingId === s.id && (
-              <div className="border-t border-white/10 p-4 space-y-3 bg-black/20">
+            {editingId === p.id && (
+              <div className="mt-4 border-t border-white/10 pt-4 space-y-3">
                 <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">⚙️ Настройки проекта</p>
                 <div>
                   <label className="block text-xs text-gray-400 mb-1">🖼️ Изменить иконку (PNG)</label>
@@ -1113,16 +1164,6 @@ function ServerAdminTab({ servers, setServers, showToast }: {
                     accept="image/png"
                     onChange={handleEditFileChange}
                     className="w-full text-xs text-gray-400 file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-white/10 file:text-white hover:file:bg-white/20"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs text-gray-400 mb-1">Группа (Название проекта)</label>
-                  <input
-                    type="text"
-                    value={editProjectName}
-                    onChange={e => setEditProjectName(e.target.value)}
-                    placeholder="Например: Majestic RP"
-                    className="w-full bg-black/40 border border-white/10 text-white rounded-lg p-2 outline-none focus:border-[#5865F2] text-xs"
                   />
                 </div>
                 <div>
@@ -1144,7 +1185,6 @@ function ServerAdminTab({ servers, setServers, showToast }: {
                     placeholder="123456789012345678"
                     className="w-full bg-black/40 border border-white/10 text-white rounded-lg p-2 outline-none focus:border-[#5865F2] text-xs font-mono"
                   />
-                  <p className="text-[10px] text-gray-600 mt-1">Правый клик на роль в Discord → «Копировать ID»</p>
                 </div>
                 <div className="flex gap-2 pt-1">
                   <button
@@ -1154,7 +1194,7 @@ function ServerAdminTab({ servers, setServers, showToast }: {
                     Отмена
                   </button>
                   <button
-                    onClick={() => handleSaveEdit(s.id)}
+                    onClick={() => handleSaveEdit(p.id)}
                     disabled={editLoading}
                     className="flex-1 text-xs py-2 px-3 rounded-lg bg-[#5865F2] hover:bg-[#4752C4] text-white font-semibold transition-colors cursor-pointer"
                   >
@@ -1163,9 +1203,6 @@ function ServerAdminTab({ servers, setServers, showToast }: {
                 </div>
               </div>
             )}
-          </div>
-              ))}
-            </div>
           </div>
         ))}
       </div>

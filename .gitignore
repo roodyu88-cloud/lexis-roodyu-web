@@ -57,3 +57,4 @@ patch_admin_ui.py
 patch_admin_filter.py
 patch_server_route.py
 patch_admin_hierarchy.py
+patch_admin_ui_force.py
