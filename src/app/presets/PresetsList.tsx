@@ -13,12 +13,15 @@ interface PresetListProps {
 
 export default function PresetsList({ presets, servers, userMap, badgeFiles, badgeLabels }: PresetListProps) {
   const [search, setSearch] = useState("");
-  const [selectedServerId, setSelectedServerId] = useState<string | null>(null);
+  const [selectedProjectId, setSelectedProjectId] = useState<string>("all");
+  const [selectedServerId, setSelectedServerId] = useState<string>("all");
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const filteredPresets = presets.filter(p => {
     // 1. Server filter
-    if (selectedServerId && p.serverProjectId !== selectedServerId) {
-      return false;
+    if (selectedProjectId !== "all") {
+      if (p.serverProjectId !== selectedProjectId) return false;
+      if (selectedServerId !== "all" && p.serverId !== selectedServerId) return false;
     }
     // 2. Search filter
     if (search) {
@@ -50,31 +53,65 @@ export default function PresetsList({ presets, servers, userMap, badgeFiles, bad
 
         {/* Server Filters */}
         {servers.length > 0 && (
-          <div className="flex flex-wrap gap-2">
-            <button
-              onClick={() => setSelectedServerId(null)}
-              className={`px-4 py-2 rounded-lg font-bold transition-all text-sm flex items-center gap-2 cursor-pointer ${
-                selectedServerId === null
-                  ? "bg-[var(--blurple)] text-[var(--user-msg-text)] shadow-lg shadow-[var(--blurple-alpha-20)] border border-[var(--blurple)]"
-                  : "bg-white/5 text-gray-400 border border-white/10 hover:text-white hover:bg-white/10"
-              }`}
-            >
-              Все серверы
-            </button>
-            {servers.map(s => (
+          <div className="flex items-center gap-2 relative">
+            <div className="relative">
               <button
-                key={s.id}
-                onClick={() => setSelectedServerId(s.id)}
-                className={`px-4 py-2 rounded-lg font-bold transition-all text-sm flex items-center gap-2 cursor-pointer ${
-                  selectedServerId === s.id
-                    ? "bg-[var(--blurple)] text-[var(--user-msg-text)] shadow-lg shadow-[var(--blurple-alpha-20)] border border-[var(--blurple)]"
-                    : "bg-white/5 text-gray-400 border border-white/10 hover:text-white hover:bg-white/10"
-                }`}
+                type="button"
+                onClick={() => setIsFilterOpen(!isFilterOpen)}
+                className="bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 text-sm outline-none focus:border-[var(--blurple)] min-w-[240px] flex justify-between items-center gap-2 hover:bg-white/10 transition-colors shadow-[inset_0_1px_1.5px_rgba(255,255,255,0.06)] cursor-pointer"
               >
-                <img src={s.iconUrl} alt={s.name} className="w-5 h-5 rounded" />
-                {s.projectName ? `${s.projectName} — ${s.name}` : s.name}
+                <span>
+                  {selectedProjectId === "all" 
+                    ? "Все серверы" 
+                    : selectedServerId === "all"
+                      ? `Любой сервер (${servers.find(p => p.id === selectedProjectId)?.name || "Неизвестно"})`
+                      : servers.flatMap(p => p.servers || []).find(s => s.id === selectedServerId)?.name || "Неизвестно"
+                  }
+                </span>
+                <svg className={`w-4 h-4 text-gray-500 transition-transform ${isFilterOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                </svg>
               </button>
-            ))}
+              {isFilterOpen && (
+                <>
+                  <div className="fixed inset-0 z-10" onClick={() => setIsFilterOpen(false)} />
+                  <div className="absolute left-0 mt-2 w-[280px] bg-[#0d0e12]/95 border border-white/10 rounded-xl overflow-hidden z-20 shadow-2xl animate-scale-up backdrop-blur-xl max-h-80 overflow-y-auto no-scrollbar">
+                    <button
+                      type="button"
+                      onClick={() => { setSelectedProjectId("all"); setSelectedServerId("all"); setIsFilterOpen(false); }}
+                      className={`w-full text-left px-4 py-2.5 text-sm transition-colors hover:bg-white/5 cursor-pointer ${selectedProjectId === "all" ? 'text-[#5865F2] font-bold bg-white/5' : 'text-gray-400'}`}
+                    >
+                      Все серверы
+                    </button>
+                    {servers.map(p => (
+                      <div key={p.id}>
+                        <div className="px-4 py-1.5 text-xs font-bold text-gray-500 uppercase tracking-wider bg-black/40 flex items-center gap-2">
+                          {p.iconUrl && <img src={p.iconUrl} className="w-4 h-4 rounded" alt="icon" />}
+                          {p.name}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => { setSelectedProjectId(p.id); setSelectedServerId("all"); setIsFilterOpen(false); }}
+                          className={`w-full text-left px-4 py-2.5 pl-8 text-sm transition-colors hover:bg-white/5 flex items-center gap-2 cursor-pointer ${selectedProjectId === p.id && selectedServerId === "all" ? 'text-[#5865F2] font-bold bg-white/5' : 'text-gray-400'}`}
+                        >
+                          <span>Любой сервер</span>
+                        </button>
+                        {p.servers?.map((s: any) => (
+                          <button
+                            key={s.id}
+                            type="button"
+                            onClick={() => { setSelectedProjectId(p.id); setSelectedServerId(s.id); setIsFilterOpen(false); }}
+                            className={`w-full text-left px-4 py-2.5 pl-8 text-sm transition-colors hover:bg-white/5 flex items-center gap-2 cursor-pointer ${selectedServerId === s.id ? 'text-[#5865F2] font-bold bg-white/5' : 'text-gray-400'}`}
+                          >
+                            <span>{s.name}</span>
+                          </button>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         )}
       </div>

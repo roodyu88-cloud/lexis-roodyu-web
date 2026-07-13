@@ -10,7 +10,8 @@ export default async function PresetsPage() {
   });
 
   const servers = await prisma.serverProject.findMany({
-    orderBy: { name: "asc" }
+    orderBy: { name: "asc" },
+    include: { servers: true }
   });
 
   // Fetch profiles of preset authors in one optimized query

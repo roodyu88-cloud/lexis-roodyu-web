@@ -47,20 +47,26 @@ export default async function EditPresetPage({ params }: { params: Promise<{ id:
 
   // Fetch available projects/servers
   const servers = await prisma.serverProject.findMany({
-    orderBy: { name: "asc" }
+    orderBy: { name: "asc" },
+    include: { servers: true }
   });
 
   const formattedPreset = {
     id: preset.id,
     name: preset.name,
     description: preset.description,
-    serverProjectId: preset.serverProjectId
+    serverProjectId: preset.serverProjectId,
+    serverId: preset.serverId
   };
 
   const formattedServers = servers.map(s => ({
     id: s.id,
     name: s.name,
-    iconUrl: s.iconUrl
+    iconUrl: s.iconUrl,
+    servers: s.servers.map((nested: any) => ({
+      id: nested.id,
+      name: nested.name
+    }))
   }));
 
   return (
