@@ -898,13 +898,22 @@ function ServerAdminTab({ servers, setServers, showToast }: {
   };
 
   const handleCreate = async () => {
-    if (!name || !iconBase64) return showToast("Имя и иконка обязательны", "error");
+    if (!projectName) return showToast("Укажите название проекта (группы)", "error");
+    if (!name && !iconBase64) return showToast("Иконка обязательна при создании нового проекта", "error");
+    
     setLoading(true);
     try {
       const res = await fetch("/api/admin/servers", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "create", name, projectName: projectName || null, iconBase64, webhookUrl: webhookUrl || null, discordRoleId: discordRoleId || null })
+        body: JSON.stringify({ 
+          action: "create", 
+          name: name || projectName, // If no server name, just pass project name to create only project
+          projectName: projectName, 
+          iconBase64, 
+          webhookUrl: webhookUrl || null, 
+          discordRoleId: discordRoleId || null 
+        })
       });
       if (res.ok) {
         const data = await res.json();
@@ -1001,33 +1010,37 @@ function ServerAdminTab({ servers, setServers, showToast }: {
   return (
     <div className="space-y-6">
       {/* Create form */}
-      <div className="space-y-3 bg-white/5 p-4 rounded-xl border border-white/10">
-        <h3 className="text-sm font-bold text-gray-300 mb-3">➕ Добавить сервер</h3>
+      <div className="space-y-4 bg-white/5 p-4 rounded-xl border border-white/10">
+        <h3 className="text-sm font-bold text-gray-300">➕ Добавить проект или сервер</h3>
+        <p className="text-xs text-gray-500 mb-2">
+          Чтобы создать новый проект (например, Majestic RP), введите его название в поле «Проект» и загрузите иконку. <br/>
+          Чтобы добавить сервер в существующий проект (например, Boston), выберите проект из списка и укажите «Название сервера».
+        </p>
         <div className="flex gap-4 items-end flex-wrap">
           <div className="flex-1 min-w-[160px]">
-            <label className="block text-xs text-gray-400 mb-1">Группа (Название проекта)</label>
+            <label className="block text-xs font-bold text-[#5865F2] mb-1">1. Проект (выберите или введите)</label>
             <input
               type="text"
               list="project-names-datalist"
               value={projectName}
               onChange={e => setProjectName(e.target.value)}
               placeholder="Например: Majestic RP"
-              className="w-full bg-black/40 border border-white/10 text-white rounded-lg p-2 outline-none focus:border-[#5865F2] text-sm"
+              className="w-full bg-black/40 border border-[#5865F2]/30 text-white rounded-lg p-2 outline-none focus:border-[#5865F2] text-sm"
             />
             <datalist id="project-names-datalist">
-              {Array.from(new Set(servers.map(s => s.projectName).filter(Boolean))).map(p => (
-                <option key={p as string} value={p as string} />
+              {servers.map(p => (
+                <option key={p.id} value={p.name} />
               ))}
             </datalist>
           </div>
           <div className="flex-1 min-w-[160px]">
-            <label className="block text-xs text-gray-400 mb-1">Название сервера</label>
+            <label className="block text-xs font-bold text-emerald-400 mb-1">2. Название сервера (опционально)</label>
             <input
               type="text"
               value={name}
               onChange={e => setName(e.target.value)}
-              placeholder="Например: Atlanta"
-              className="w-full bg-black/40 border border-white/10 text-white rounded-lg p-2 outline-none focus:border-[#5865F2] text-sm"
+              placeholder="Например: Boston (оставьте пустым для создания самого проекта)"
+              className="w-full bg-black/40 border border-emerald-500/30 text-white rounded-lg p-2 outline-none focus:border-emerald-500 text-sm"
             />
           </div>
           <div className="flex-1 min-w-[160px]">
@@ -1036,7 +1049,7 @@ function ServerAdminTab({ servers, setServers, showToast }: {
               type="file"
               accept="image/png"
               onChange={handleFileChange}
-              className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#5865F2] file:text-white hover:file:bg-[#4752C4]"
+              className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-white/10 file:text-white hover:file:bg-white/20"
             />
           </div>
         </div>

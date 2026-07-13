@@ -20,11 +20,16 @@ export async function GET() {
       select: { isBanned: true, banReason: true }
     });
 
+    const discordUrlSetting = await prisma.appSetting.findUnique({
+      where: { key: "discordUrl" }
+    });
+    const discordUrl = discordUrlSetting?.value || "https://dsc.gg/lexis";
+
     if (user && user.isBanned) {
-      return NextResponse.json({ isBanned: true, banReason: user.banReason });
+      return NextResponse.json({ isBanned: true, banReason: user.banReason, discordUrl });
     }
 
-    return NextResponse.json({ isBanned: false, banReason: null });
+    return NextResponse.json({ isBanned: false, banReason: null, discordUrl });
   } catch (e) {
     console.error("Error checking ban status:", e);
     // On error, default to not banned so we don't accidentally block everyone

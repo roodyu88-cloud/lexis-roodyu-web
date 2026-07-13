@@ -7,6 +7,7 @@ export default function GlobalBanCheck() {
   const { data: session } = useSession();
   const [isBanned, setIsBanned] = useState(false);
   const [banReason, setBanReason] = useState<string | null>(null);
+  const [discordUrl, setDiscordUrl] = useState<string>("https://dsc.gg/lexis");
 
   useEffect(() => {
     // Only poll if user is logged in
@@ -17,6 +18,9 @@ export default function GlobalBanCheck() {
         const res = await fetch("/api/ban-status");
         if (res.ok) {
           const data = await res.json();
+          if (data.discordUrl) {
+            setDiscordUrl(data.discordUrl);
+          }
           if (data.isBanned) {
             setIsBanned(true);
             setBanReason(data.banReason || "Причина не указана");
@@ -63,7 +67,7 @@ export default function GlobalBanCheck() {
           </div>
 
           <p className="text-sm text-gray-500">
-            Если вы считаете, что блокировка выдана по ошибке, свяжитесь с администрацией в нашем Discord канале.
+            Если вы считаете, что блокировка выдана по ошибке, свяжитесь с администрацией в нашем <a href={discordUrl} target="_blank" rel="noopener noreferrer" className="text-[#5865F2] hover:underline font-semibold">Discord канале</a>.
           </p>
         </div>
       </div>
