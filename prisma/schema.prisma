@@ -9,28 +9,39 @@ datasource db {
 }
 
 model Preset {
-  id          String   @id @default(cuid())
-  name        String
-  description String?
-  author      String
-  discordId   String?
-  data        String
+  id              String         @id @default(cuid())
+  name            String
+  description     String?
+  author          String
+  discordId       String?
+  data            String
   downloads       Int            @default(0)
   isVerified      Boolean        @default(false)
   serverProjectId String?
   serverProject   ServerProject? @relation(fields: [serverProjectId], references: [id])
+  serverId        String?
+  server          Server?        @relation(fields: [serverId], references: [id])
   createdAt       DateTime       @default(now())
 }
 
 model ServerProject {
   id             String   @id @default(cuid())
-  projectName    String?
-  name           String
+  name           String   // e.g., "Majestic RP"
   iconUrl        String
   discordRoleId  String?  // Discord role ID to ping when a preset is posted
   webhookUrl     String?  // Discord channel webhook URL for autopost
   presets        Preset[]
+  servers        Server[]
   createdAt      DateTime @default(now())
+}
+
+model Server {
+  id              String        @id @default(cuid())
+  name            String        // e.g., "Boston", "Atlanta"
+  serverProjectId String
+  project         ServerProject @relation(fields: [serverProjectId], references: [id], onDelete: Cascade)
+  presets         Preset[]
+  createdAt       DateTime      @default(now())
 }
 
 model User {

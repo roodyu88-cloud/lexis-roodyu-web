@@ -19,7 +19,8 @@ async function checkAdmin() {
 export async function GET() {
   try {
     const servers = await prisma.serverProject.findMany({
-      orderBy: { createdAt: "desc" }
+      orderBy: { createdAt: "desc" },
+      include: { servers: true }
     });
     return NextResponse.json({ servers });
   } catch (e) {
@@ -48,37 +49,77 @@ export async function POST(req: Request) {
       }
 
       if (action === "create") {
-        if (!iconUrl) return NextResponse.json({ error: "Icon is required for creation" }, { status: 400 });
-        const server = await prisma.serverProject.create({
-          data: {
-            name,
-            projectName: projectName || null,
-            iconUrl,
-            discordRoleId: discordRoleId || null,
-            webhookUrl: webhookUrl || null,
-          }
+        let targetProject = null;
+        if (projectName) {
+          targetProject = await prisma.serverProject.findFirst({
+            where: { name: projectName }
+          });
+        }
+        
+        // If project doesn't exist, create it
+        if (!targetProject) {
+          if (!iconUrl) return NextResponse.json({ error: "Icon is required to create a new project group" }, { status: 400 });
+          targetProject = await prisma.serverProject.create({
+            data: {
+              name: projectName || name,
+              iconUrl,
+              discordRoleId: discordRoleId || null,
+              webhookUrl: webhookUrl || null,
+            }
+          });
+        }
+
+        // If they provided a separate server name (like Boston), create the Server
+        if (name && name !== targetProject.name) {
+          await prisma.server.create({
+            data: {
+              name: name,
+              serverProjectId: targetProject.id
+            }
+          });
+        }
+
+        const allProjects = await prisma.serverProject.findMany({
+          orderBy: { createdAt: "desc" },
+          include: { servers: true }
         });
-        return NextResponse.json({ server });
+        
+        return NextResponse.json({ projects: allProjects });
+      } else if (action === "delete_server") {
+         // Delete a specific server within a project
+         await prisma.server.delete({ where: { id } });
+         const allProjects = await prisma.serverProject.findMany({
+           orderBy: { createdAt: "desc" },
+           include: { servers: true }
+         });
+         return NextResponse.json({ projects: allProjects });
       } else {
-        // update
+        // update project
         const dataToUpdate: any = {
-          name,
-          projectName: projectName !== undefined ? (projectName || null) : undefined,
+          name: projectName || name,
           discordRoleId: discordRoleId !== undefined ? (discordRoleId || null) : undefined,
           webhookUrl: webhookUrl !== undefined ? (webhookUrl || null) : undefined,
         };
         if (iconUrl) dataToUpdate.iconUrl = iconUrl;
         
-        const server = await prisma.serverProject.update({
+        await prisma.serverProject.update({
           where: { id },
           data: dataToUpdate
         });
-        return NextResponse.json({ server });
+        const allProjects = await prisma.serverProject.findMany({
+          orderBy: { createdAt: "desc" },
+          include: { servers: true }
+        });
+        return NextResponse.json({ projects: allProjects });
       }
     } else if (action === "delete") {
       if (!id) return NextResponse.json({ error: "ID is required" }, { status: 400 });
       await prisma.serverProject.delete({ where: { id } });
-      return NextResponse.json({ success: true });
+      const allProjects = await prisma.serverProject.findMany({
+          orderBy: { createdAt: "desc" },
+          include: { servers: true }
+      });
+      return NextResponse.json({ projects: allProjects });
     }
 
     return NextResponse.json({ error: "Invalid action" }, { status: 400 });

@@ -32,6 +32,7 @@ export default async function AdminPage() {
 
   const servers = await prisma.serverProject.findMany({
     orderBy: { createdAt: "desc" },
+    include: { servers: true }
   });
 
   const settings = await prisma.appSetting.findMany();

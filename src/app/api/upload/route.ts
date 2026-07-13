@@ -58,7 +58,7 @@ async function notifyDiscord(preset: {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { name, description, data, serverId } = body;
+    const { name, description, data, serverProjectId, serverId } = body;
 
     if (!name || !data) {
       return new NextResponse("Missing required fields", { status: 400 });
@@ -83,20 +83,26 @@ export async function POST(req: Request) {
         data,
         author,
         discordId,
-        serverProjectId: serverId || null
+        serverProjectId: serverProjectId || null,
+        serverId: serverId || null
       }
     });
 
     // ── Discord webhook notification ──────────────────────────────────────────
-    if (serverId) {
+    if (serverProjectId) {
       const serverProject = await prisma.serverProject.findUnique({
-        where: { id: serverId }
+        where: { id: serverProjectId }
       });
+      let serverName = serverProject?.name || "Неизвестный сервер";
+      if (serverId) {
+        const server = await prisma.server.findUnique({ where: { id: serverId } });
+        if (server) serverName = `${serverProject?.name} / ${server.name}`;
+      }
       if (serverProject?.webhookUrl) {
         await notifyDiscord(
           { ...preset, description: preset.description ?? null },
           {
-            name: serverProject.name,
+            name: serverName,
             iconUrl: serverProject.iconUrl,
             webhookUrl: serverProject.webhookUrl,
             discordRoleId: serverProject.discordRoleId ?? null,

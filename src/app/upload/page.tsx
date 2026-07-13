@@ -13,10 +13,12 @@ export default function UploadPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [servers, setServers] = useState<any[]>([]);
+  const [selectedProjectId, setSelectedProjectId] = useState("");
   const [selectedServerId, setSelectedServerId] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   
-  const selectedServer = servers.find(s => s.id === selectedServerId);
+  const selectedProject = servers.find(p => p.id === selectedProjectId);
+  const selectedServer = selectedProject?.servers?.find((s: any) => s.id === selectedServerId);
 
   useEffect(() => {
     fetch("/api/servers")
@@ -49,7 +51,7 @@ export default function UploadPage() {
       const res = await fetch("/api/upload", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, description, data: text, serverId: selectedServerId || null })
+        body: JSON.stringify({ name, description, data: text, serverProjectId: selectedProjectId || null, serverId: selectedServerId || null })
       });
 
       if (!res.ok) {
@@ -146,12 +148,15 @@ export default function UploadPage() {
               className="w-full bg-black/40 border border-white/10 rounded px-4 py-2.5 text-white flex items-center justify-between text-left focus:outline-none focus:border-[#5865F2] cursor-pointer transition-colors"
             >
               <div className="flex items-center gap-2">
-                {selectedServer ? (
+                {selectedProject ? (
                   <>
-                    {selectedServer.iconUrl && (
-                      <img src={selectedServer.iconUrl} alt={selectedServer.name} className="w-5 h-5 rounded object-cover" />
+                    {selectedProject.iconUrl && (
+                      <img src={selectedProject.iconUrl} alt={selectedProject.name} className="w-5 h-5 rounded object-cover" />
                     )}
-                    <span className="font-medium">{selectedServer.name}</span>
+                    <span className="font-medium">
+                      {selectedProject.name}
+                      {selectedServer ? <span className="text-gray-400 font-normal"> / {selectedServer.name}</span> : <span className="text-gray-400 font-normal"> (Без привязки к серверу)</span>}
+                    </span>
                   </>
                 ) : (
                   <span className="text-gray-500">-- Выберите сервер (если нужно) --</span>
@@ -168,29 +173,31 @@ export default function UploadPage() {
                 <div className="absolute left-0 right-0 mt-2 bg-[#0d0e12]/95 border border-white/10 rounded-xl overflow-hidden z-20 shadow-2xl animate-scale-up backdrop-blur-xl max-h-60 overflow-y-auto no-scrollbar">
                   <button
                     type="button"
-                    onClick={() => { setSelectedServerId(""); setIsDropdownOpen(false); }}
-                    className={`w-full text-left px-4 py-2.5 text-sm transition-colors hover:bg-white/5 cursor-pointer ${!selectedServerId ? 'text-[#5865F2] font-bold bg-white/5' : 'text-gray-400'}`}
+                    onClick={() => { setSelectedProjectId(""); setSelectedServerId(""); setIsDropdownOpen(false); }}
+                    className={`w-full text-left px-4 py-2.5 text-sm transition-colors hover:bg-white/5 cursor-pointer ${!selectedProjectId ? 'text-[#5865F2] font-bold bg-white/5' : 'text-gray-400'}`}
                   >
                     -- Не выбирать (Без сервера) --
                   </button>
-                  {Object.entries(servers.reduce((acc, s) => {
-                      const proj = s.projectName || "Другое";
-                      if (!acc[proj]) acc[proj] = [];
-                      acc[proj].push(s);
-                      return acc;
-                  }, {} as Record<string, any[]>)).map(([projName, projServers]) => (
-                    <div key={projName}>
-                      <div className="px-4 py-1.5 text-xs font-bold text-gray-500 uppercase tracking-wider bg-black/40">{projName}</div>
-                      {(projServers as any[]).map((s: any) => (
+                  {servers.map((p: any) => (
+                    <div key={p.id}>
+                      <div className="px-4 py-1.5 text-xs font-bold text-gray-500 uppercase tracking-wider bg-black/40 flex items-center gap-2">
+                        {p.iconUrl && <img src={p.iconUrl} className="w-4 h-4 rounded" alt="icon" />}
+                        {p.name}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => { setSelectedProjectId(p.id); setSelectedServerId(""); setIsDropdownOpen(false); }}
+                        className={`w-full text-left px-4 py-2.5 pl-8 text-sm transition-colors hover:bg-white/5 flex items-center gap-2 cursor-pointer ${selectedProjectId === p.id && !selectedServerId ? 'text-[#5865F2] font-bold bg-white/5' : 'text-gray-400'}`}
+                      >
+                        <span>Любой сервер</span>
+                      </button>
+                      {p.servers?.map((s: any) => (
                         <button
                           key={s.id}
                           type="button"
-                          onClick={() => { setSelectedServerId(s.id); setIsDropdownOpen(false); }}
-                          className={`w-full text-left px-4 py-2.5 text-sm transition-colors hover:bg-white/5 flex items-center gap-2 cursor-pointer ${selectedServerId === s.id ? 'text-[#5865F2] font-bold bg-white/5' : 'text-gray-400'}`}
+                          onClick={() => { setSelectedProjectId(p.id); setSelectedServerId(s.id); setIsDropdownOpen(false); }}
+                          className={`w-full text-left px-4 py-2.5 pl-8 text-sm transition-colors hover:bg-white/5 flex items-center gap-2 cursor-pointer ${selectedServerId === s.id ? 'text-[#5865F2] font-bold bg-white/5' : 'text-gray-400'}`}
                         >
-                          {s.iconUrl && (
-                            <img src={s.iconUrl} alt={s.name} className="w-5 h-5 rounded object-cover" />
-                          )}
                           <span>{s.name}</span>
                         </button>
                       ))}

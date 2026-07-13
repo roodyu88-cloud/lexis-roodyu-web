@@ -55,3 +55,5 @@ fix_route.py
 patch_routes.py
 patch_admin_ui.py
 patch_admin_filter.py
+patch_server_route.py
+patch_admin_hierarchy.py

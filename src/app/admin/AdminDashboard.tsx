@@ -27,14 +27,17 @@ interface Preset {
   downloads: number;
   isVerified: boolean;
   serverProjectId?: string | null;
+  serverId?: string | null;
   createdAt: Date | string;
 }
 
 interface ServerProject {
   id: string;
-  projectName?: string | null;
   name: string;
   iconUrl: string;
+  webhookUrl?: string | null;
+  discordRoleId?: string | null;
+  servers?: { id: string; name: string; serverProjectId: string; }[];
 }
 
 interface Promocode {
@@ -376,8 +379,13 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
                     className="bg-black/40 border border-white/10 text-white rounded-lg p-2 text-sm outline-none focus:border-[#5865F2]"
                   >
                     <option value="all">Все серверы</option>
-                    {servers.map(s => (
-                      <option key={s.id} value={s.id}>{s.projectName ? `${s.projectName} - ${s.name}` : s.name}</option>
+                    {servers.map(p => (
+                      <optgroup key={p.id} label={p.name}>
+                        <option value={`project_${p.id}`}>Любой сервер ({p.name})</option>
+                        {p.servers?.map((s: any) => (
+                          <option key={s.id} value={s.id}>{s.name}</option>
+                        ))}
+                      </optgroup>
                     ))}
                   </select>
                 </div>
@@ -394,7 +402,7 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5">
-                    {presets.filter(p => presetFilterServer === "all" || p.serverProjectId === presetFilterServer).map(p => (
+                    {presets.filter(p => presetFilterServer === "all" || (presetFilterServer.startsWith("project_") ? p.serverProjectId === presetFilterServer.replace("project_", "") : p.serverId === presetFilterServer)).map(p => (
                       <tr key={p.id} className="hover:bg-white/20 transition-colors">
                         <td className="py-3 px-3">
                           <Link href={`/presets/${p.id}`} className="font-semibold text-white hover:text-[#5865F2] transition-colors line-clamp-1">
@@ -856,7 +864,7 @@ function ServerAdminTab({ servers, setServers, showToast }: {
       });
       if (res.ok) {
         const data = await res.json();
-        setServers([data.server, ...servers]);
+        setServers(data.projects);
         setName("");
           setProjectName("");
         setIconBase64("");
@@ -890,7 +898,7 @@ function ServerAdminTab({ servers, setServers, showToast }: {
       });
       if (res.ok) {
         const data = await res.json();
-        setServers(servers.map(s => s.id === id ? { ...s, ...data.server } : s));
+        setServers(data.projects);
         setEditingId(null);
         showToast("Настройки сохранены", "success");
       } else {
@@ -900,6 +908,25 @@ function ServerAdminTab({ servers, setServers, showToast }: {
       showToast("Системная ошибка", "error");
     }
     setEditLoading(false);
+  };
+
+    const handleDeleteServer = async (serverId: string) => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/admin/servers", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "delete_server", id: serverId })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setServers(data.projects);
+        showToast("Сервер удален", "success");
+      }
+    } catch (e) {
+      showToast("Системная ошибка", "error");
+    }
+    setLoading(false);
   };
 
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
@@ -914,8 +941,9 @@ function ServerAdminTab({ servers, setServers, showToast }: {
         body: JSON.stringify({ action: "delete", id: deleteConfirmId })
       });
       if (res.ok) {
-        setServers(servers.filter(s => s.id !== deleteConfirmId));
-        showToast("Сервер удален", "success");
+        const data = await res.json();
+        setServers(data.projects);
+        showToast("Проект удален", "success");
       } else {
         showToast("Ошибка при удалении", "error");
       }
@@ -1253,6 +1281,7 @@ function PromocodesAdminTab({ promocodes, setPromocodes, showToast }: {
   const [days, setDays] = useState(30);
   const [maxUses, setMaxUses] = useState(1);
   const [loading, setLoading] = useState(false);
+
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   const handleCreate = async () => {
