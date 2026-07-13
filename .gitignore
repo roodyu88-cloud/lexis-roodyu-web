@@ -41,3 +41,13 @@ yarn-error.log*
 next-env.d.ts
 lexis-website-log-export-2026-07-09T11-27-13.json
 scrape_majestic.py
+screenshot.png
+scrape_majestic_uc.py
+patch_admin.py
+page.html
+debug_scraper.py
+check_servers.ts
+patch_presets.py
+patch_upload.py
+patch_admin_ban.py
+patch_users_api.py

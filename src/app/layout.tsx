@@ -4,6 +4,7 @@ import "./globals.css";
 import Link from "next/link";
 import Navbar from "@/app/components/Navbar";
 import Providers from "@/app/components/Providers";
+import GlobalBanCheck from "@/app/components/GlobalBanCheck";
 
 const inter = Inter({ subsets: ["latin", "cyrillic"] });
 import { getServerSession } from "next-auth";
@@ -36,6 +37,7 @@ export default async function RootLayout({
       </head>
       <body className={`${inter.className} min-h-screen flex flex-col justify-between`}>
         <Providers>
+          <GlobalBanCheck />
           <div className="flex-1 flex flex-col w-full">
             <Navbar session={session} />
             <div className="pt-20 flex-1">

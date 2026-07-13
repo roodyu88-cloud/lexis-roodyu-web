@@ -41,7 +41,7 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    const { discordId, role, badges, canUpload } = body;
+    const { discordId, role, badges, canUpload, isBanned, banReason } = body;
 
     if (!discordId) {
       return NextResponse.json({ error: "Missing discordId" }, { status: 400 });
@@ -60,6 +60,8 @@ export async function POST(req: Request) {
         role: updatedRole,
         badges: badges ? JSON.stringify(badges) : undefined,
         canUpload: canUpload !== undefined ? canUpload : undefined,
+        isBanned: isBanned !== undefined ? isBanned : undefined,
+        banReason: banReason !== undefined ? banReason : undefined,
         ...(body.revokePremium ? {
           isPremium: false,
           premiumUntil: null,

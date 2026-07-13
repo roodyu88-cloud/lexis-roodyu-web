@@ -11,6 +11,8 @@ interface User {
   role: string;
   badges: string[];
   canUpload: boolean;
+  isBanned?: boolean;
+  banReason?: string | null;
   isPremium?: boolean;
   premiumUntil?: Date | string | null;
   createdAt: Date | string;
@@ -82,6 +84,8 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
   const [editRole, setEditRole] = useState("user");
   const [editBadges, setEditBadges] = useState<string[]>([]);
   const [editCanUpload, setEditCanUpload] = useState(true);
+  const [editIsBanned, setEditIsBanned] = useState(false);
+  const [editBanReason, setEditBanReason] = useState("");
   const [isRoleDropdownOpen, setIsRoleDropdownOpen] = useState(false);
   const roleDropdownRef = useRef<HTMLDivElement>(null);
 
@@ -101,6 +105,8 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
     setEditRole(user.role);
     setEditBadges(user.badges);
     setEditCanUpload(user.canUpload);
+    setEditIsBanned(user.isBanned || false);
+    setEditBanReason(user.banReason || "");
     setIsRoleDropdownOpen(false);
   };
 
@@ -125,6 +131,10 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
           role: editRole,
           badges: editBadges,
           canUpload: editCanUpload,
+            isBanned: editIsBanned,
+            banReason: editBanReason,
+        isBanned: editIsBanned,
+        banReason: editBanReason,
         }),
       });
 
@@ -165,6 +175,10 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
           role: editRole,
           badges: editBadges,
           canUpload: editCanUpload,
+            isBanned: editIsBanned,
+            banReason: editBanReason,
+        isBanned: editIsBanned,
+        banReason: editBanReason,
           revokePremium: true,
         }),
       });
@@ -646,6 +660,36 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
                 >
                   Отмена
                 </button>
+                
+                <div>
+                  <label className="block text-sm font-semibold text-gray-400 mb-2.5">Глобальная блокировка</label>
+                  <button
+                    onClick={() => setEditIsBanned(!editIsBanned)}
+                    className={`w-full flex items-center justify-between p-3 rounded-lg border text-left text-sm font-semibold transition-all cursor-pointer ${
+                      !editIsBanned
+                        ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20"
+                        : "bg-red-500/10 border-red-500/30 text-red-400 hover:bg-red-500/20"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="text-xl">{!editIsBanned ? "✅" : "⛔"}</span>
+                      <span>{!editIsBanned ? "Аккаунт активен" : "Аккаунт заблокирован"}</span>
+                    </div>
+                  </button>
+                </div>
+                
+                {editIsBanned && (
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-400 mb-2.5">Причина блокировки</label>
+                    <textarea
+                      value={editBanReason}
+                      onChange={e => setEditBanReason(e.target.value)}
+                      placeholder="Например: Нарушение правил сайта, спам пресетами..."
+                      className="w-full bg-black/40 border border-white/10 text-white rounded-lg p-3 outline-none focus:border-red-500 text-sm h-20 resize-none"
+                    />
+                  </div>
+                )}
+
                 <button
                   onClick={handleSaveUser}
                   disabled={savingUserId === selectedUser.id}
@@ -752,6 +796,7 @@ function ServerAdminTab({ servers, setServers, showToast }: {
   showToast: (msg: string, type: "success" | "error") => void
 }) {
   const [name, setName] = useState("");
+    const [projectName, setProjectName] = useState("");
   const [iconBase64, setIconBase64] = useState("");
   const [webhookUrl, setWebhookUrl] = useState("");
   const [discordRoleId, setDiscordRoleId] = useState("");
@@ -761,6 +806,7 @@ function ServerAdminTab({ servers, setServers, showToast }: {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editWebhook, setEditWebhook] = useState("");
   const [editRoleId, setEditRoleId] = useState("");
+    const [editProjectName, setEditProjectName] = useState("");
   const [editIconBase64, setEditIconBase64] = useState<string | null>(null);
   const [editLoading, setEditLoading] = useState(false);
 
@@ -791,12 +837,13 @@ function ServerAdminTab({ servers, setServers, showToast }: {
       const res = await fetch("/api/admin/servers", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "create", name, iconBase64, webhookUrl: webhookUrl || null, discordRoleId: discordRoleId || null })
+        body: JSON.stringify({ action: "create", name, projectName: projectName || null, iconBase64, webhookUrl: webhookUrl || null, discordRoleId: discordRoleId || null })
       });
       if (res.ok) {
         const data = await res.json();
         setServers([data.server, ...servers]);
         setName("");
+          setProjectName("");
         setIconBase64("");
         setWebhookUrl("");
         setDiscordRoleId("");
@@ -821,6 +868,7 @@ function ServerAdminTab({ servers, setServers, showToast }: {
           id,
           name: servers.find(s => s.id === id)?.name,
           webhookUrl: editWebhook || null,
+          projectName: editProjectName || null,
           discordRoleId: editRoleId || null,
           iconBase64: editIconBase64 || undefined,
         })
@@ -948,6 +996,7 @@ function ServerAdminTab({ servers, setServers, showToast }: {
                       setEditingId(s.id);
                       setEditWebhook(s.webhookUrl || "");
                       setEditRoleId(s.discordRoleId || "");
+                      setEditProjectName(s.projectName || "");
                       setEditIconBase64(null);
                     }
                   }}

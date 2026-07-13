@@ -24,6 +24,7 @@ model Preset {
 
 model ServerProject {
   id             String   @id @default(cuid())
+  projectName    String?
   name           String
   iconUrl        String
   discordRoleId  String?  // Discord role ID to ping when a preset is posted
@@ -42,6 +43,8 @@ model User {
   canUpload   Boolean   @default(true)
   isPremium   Boolean   @default(false)
   premiumUntil DateTime?
+  isBanned    Boolean   @default(false)
+  banReason   String?
   createdAt   DateTime  @default(now())
 }
 

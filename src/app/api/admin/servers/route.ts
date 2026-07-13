@@ -33,7 +33,7 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    const { action, id, name, iconBase64 } = body;
+    const { action, id, name, projectName, iconBase64 } = body;
 
     if (action === "create" || action === "update") {
       if (!name) return NextResponse.json({ error: "Name is required" }, { status: 400 });
@@ -52,6 +52,7 @@ export async function POST(req: Request) {
         const server = await prisma.serverProject.create({
           data: {
             name,
+            projectName: projectName || null,
             iconUrl,
             discordRoleId: discordRoleId || null,
             webhookUrl: webhookUrl || null,
@@ -62,6 +63,7 @@ export async function POST(req: Request) {
         // update
         const dataToUpdate: any = {
           name,
+          projectName: projectName !== undefined ? (projectName || null) : undefined,
           discordRoleId: discordRoleId !== undefined ? (discordRoleId || null) : undefined,
           webhookUrl: webhookUrl !== undefined ? (webhookUrl || null) : undefined,
         };

@@ -72,7 +72,7 @@ export default function PresetsList({ presets, servers, userMap, badgeFiles, bad
                 }`}
               >
                 <img src={s.iconUrl} alt={s.name} className="w-5 h-5 rounded" />
-                {s.name}
+                {s.projectName ? `${s.projectName} — ${s.name}` : s.name}
               </button>
             ))}
           </div>
