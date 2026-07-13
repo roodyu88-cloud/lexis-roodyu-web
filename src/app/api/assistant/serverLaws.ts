@@ -1464,3 +1464,8 @@ export const PROJECTS = [
         ]
     }
 ];
+
+// Helper to keep compatibility with existing API
+export const SERVERS = PROJECTS.flatMap(p => 
+    p.servers.map(s => ({ ...s, projectId: p.id, projectName: p.name }))
+);
