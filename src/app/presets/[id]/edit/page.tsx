@@ -63,7 +63,7 @@ export default async function EditPresetPage({ params }: { params: Promise<{ id:
     id: s.id,
     name: s.name,
     iconUrl: s.iconUrl,
-    servers: s.servers.map((nested: any) => ({
+    servers: (s.servers || []).map((nested: any) => ({
       id: nested.id,
       name: nested.name
     }))

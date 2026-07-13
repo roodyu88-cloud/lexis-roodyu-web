@@ -105,7 +105,7 @@ export async function PATCH(
       return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
     }
 
-    const { name, description, serverId } = body;
+    const { name, description, serverProjectId, serverId } = body;
 
     if (!name || name.trim() === "") {
       return NextResponse.json({ error: "Название пресета обязательно" }, { status: 400 });
@@ -116,7 +116,8 @@ export async function PATCH(
       data: {
         name: name.trim(),
         description: description ? description.trim() : null,
-        serverProjectId: serverId || null,
+        serverProjectId: serverProjectId || null,
+        serverId: serverId || null,
       },
     });
 
