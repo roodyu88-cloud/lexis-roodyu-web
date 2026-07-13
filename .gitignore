@@ -54,3 +54,4 @@ patch_users_api.py
 fix_route.py
 patch_routes.py
 patch_admin_ui.py
+patch_admin_filter.py

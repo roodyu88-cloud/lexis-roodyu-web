@@ -26,11 +26,13 @@ interface Preset {
   discordId: string | null;
   downloads: number;
   isVerified: boolean;
+  serverProjectId?: string | null;
   createdAt: Date | string;
 }
 
 interface ServerProject {
   id: string;
+  projectName?: string | null;
   name: string;
   iconUrl: string;
 }
@@ -63,6 +65,7 @@ const AVAILABLE_BADGES = [
 ];
 
 export default function AdminDashboard({ initialUsers, initialPresets, initialServers = [], initialSettings = {}, initialPromocodes = [], initialStats }: AdminDashboardProps) {
+  const [presetFilterServer, setPresetFilterServer] = useState<string>("all");
   const [activeTab, setActiveTab] = useState<"users" | "presets" | "servers" | "settings" | "promocodes" | "stats">("users");
   const [users, setUsers] = useState<User[]>(initialUsers);
   const [presets, setPresets] = useState<Preset[]>(initialPresets);
@@ -363,7 +366,22 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
             </div>
           ) : activeTab === "presets" ? (
             <div className="glass-card overflow-hidden p-6">
-              <h2 className="text-xl font-bold text-white mb-4">Управление пресетами</h2>
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+                <h2 className="text-xl font-bold text-white">Управление пресетами</h2>
+                <div className="flex items-center gap-2">
+                  <label className="text-sm text-gray-400 font-semibold">Фильтр по серверу:</label>
+                  <select
+                    value={presetFilterServer}
+                    onChange={(e) => setPresetFilterServer(e.target.value)}
+                    className="bg-black/40 border border-white/10 text-white rounded-lg p-2 text-sm outline-none focus:border-[#5865F2]"
+                  >
+                    <option value="all">Все серверы</option>
+                    {servers.map(s => (
+                      <option key={s.id} value={s.id}>{s.projectName ? `${s.projectName} - ${s.name}` : s.name}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
               <div className="overflow-x-auto no-scrollbar">
                 <table className="w-full text-left border-collapse">
                   <thead>
@@ -376,7 +394,7 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5">
-                    {presets.map(p => (
+                    {presets.filter(p => presetFilterServer === "all" || p.serverProjectId === presetFilterServer).map(p => (
                       <tr key={p.id} className="hover:bg-white/20 transition-colors">
                         <td className="py-3 px-3">
                           <Link href={`/presets/${p.id}`} className="font-semibold text-white hover:text-[#5865F2] transition-colors line-clamp-1">
@@ -918,11 +936,17 @@ function ServerAdminTab({ servers, setServers, showToast }: {
             <label className="block text-xs text-gray-400 mb-1">Группа (Название проекта)</label>
             <input
               type="text"
+              list="project-names-datalist"
               value={projectName}
               onChange={e => setProjectName(e.target.value)}
               placeholder="Например: Majestic RP"
               className="w-full bg-black/40 border border-white/10 text-white rounded-lg p-2 outline-none focus:border-[#5865F2] text-sm"
             />
+            <datalist id="project-names-datalist">
+              {Array.from(new Set(servers.map(s => s.projectName).filter(Boolean))).map(p => (
+                <option key={p as string} value={p as string} />
+              ))}
+            </datalist>
           </div>
           <div className="flex-1 min-w-[160px]">
             <label className="block text-xs text-gray-400 mb-1">Название сервера</label>
