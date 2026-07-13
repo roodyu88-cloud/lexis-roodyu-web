@@ -60,6 +60,9 @@ export default async function RootLayout({
               <Link href="/tos" className="hover:text-white transition-colors">
                 Пользовательское соглашение
               </Link>
+              <Link href="/privacy" className="hover:text-white transition-colors">
+                Политика конфиденциальности
+              </Link>
             </div>
           </div>
         </footer>
