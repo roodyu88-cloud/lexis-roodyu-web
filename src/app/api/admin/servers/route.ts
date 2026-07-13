@@ -85,15 +85,7 @@ export async function POST(req: Request) {
         });
         
         return NextResponse.json({ projects: allProjects });
-      } else if (action === "delete_server") {
-         // Delete a specific server within a project
-         await prisma.server.delete({ where: { id } });
-         const allProjects = await prisma.serverProject.findMany({
-           orderBy: { createdAt: "desc" },
-           include: { servers: true }
-         });
-         return NextResponse.json({ projects: allProjects });
-      } else {
+      } else if (action === "update") {
         // update project
         const dataToUpdate: any = {
           name: projectName || name,
@@ -112,6 +104,15 @@ export async function POST(req: Request) {
         });
         return NextResponse.json({ projects: allProjects });
       }
+    } else if (action === "delete_server") {
+      if (!id) return NextResponse.json({ error: "ID is required" }, { status: 400 });
+      // Delete a specific server within a project
+      await prisma.server.delete({ where: { id } });
+      const allProjects = await prisma.serverProject.findMany({
+        orderBy: { createdAt: "desc" },
+        include: { servers: true }
+      });
+      return NextResponse.json({ projects: allProjects });
     } else if (action === "delete") {
       if (!id) return NextResponse.json({ error: "ID is required" }, { status: 400 });
       await prisma.serverProject.delete({ where: { id } });
