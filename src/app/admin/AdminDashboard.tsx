@@ -131,10 +131,8 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
           role: editRole,
           badges: editBadges,
           canUpload: editCanUpload,
-            isBanned: editIsBanned,
-            banReason: editBanReason,
-        isBanned: editIsBanned,
-        banReason: editBanReason,
+          isBanned: editIsBanned,
+          banReason: editBanReason,
         }),
       });
 
@@ -175,10 +173,8 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
           role: editRole,
           badges: editBadges,
           canUpload: editCanUpload,
-            isBanned: editIsBanned,
-            banReason: editBanReason,
-        isBanned: editIsBanned,
-        banReason: editBanReason,
+          isBanned: editIsBanned,
+          banReason: editBanReason,
           revokePremium: true,
         }),
       });

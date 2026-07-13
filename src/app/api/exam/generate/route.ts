@@ -10,8 +10,20 @@ import { SERVERS } from '../../assistant/serverLaws';
 // Функция для загрузки текста из файла
 const getFileContent = (filename: string) => {
     try {
-        const filePath = path.join(process.cwd(), filename);
-        if (fs.existsSync(filePath)) {
+        const parts = filename.split('/');
+        const rootFolder = parts[0];
+        const restPath = parts.slice(1).join('/');
+
+        let filePath = "";
+        if (rootFolder === 'majesticrp') {
+            filePath = path.join(process.cwd(), 'majesticrp', restPath);
+        } else if (rootFolder === 'crystalrp') {
+            filePath = path.join(process.cwd(), 'crystalrp', restPath);
+        } else if (rootFolder === 'public') {
+            filePath = path.join(process.cwd(), 'public', restPath);
+        }
+
+        if (filePath && fs.existsSync(filePath)) {
             return fs.readFileSync(filePath, 'utf-8');
         }
     } catch (e) {

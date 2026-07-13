@@ -14,17 +14,16 @@ const getFileContent = (filename: string) => {
         const rootFolder = parts[0];
         const restPath = parts.slice(1).join('/');
 
-        let filePath;
-        // Явное указание корня для path.join помогает Next.js понять, что не нужно сканировать весь проект
+        let filePath = "";
         if (rootFolder === 'majesticrp') {
-            filePath = path.join(/*turbopackIgnore: true*/ process.cwd(), 'majesticrp', restPath);
+            filePath = path.join(process.cwd(), 'majesticrp', restPath);
         } else if (rootFolder === 'crystalrp') {
-            filePath = path.join(/*turbopackIgnore: true*/ process.cwd(), 'crystalrp', restPath);
-        } else {
-            filePath = path.join(/*turbopackIgnore: true*/ process.cwd(), filename);
+            filePath = path.join(process.cwd(), 'crystalrp', restPath);
+        } else if (rootFolder === 'public') {
+            filePath = path.join(process.cwd(), 'public', restPath);
         }
 
-        if (fs.existsSync(filePath)) {
+        if (filePath && fs.existsSync(filePath)) {
             return fs.readFileSync(filePath, 'utf-8');
         }
     } catch (e) {

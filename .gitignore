@@ -51,3 +51,5 @@ patch_presets.py
 patch_upload.py
 patch_admin_ban.py
 patch_users_api.py
+fix_route.py
+patch_routes.py
