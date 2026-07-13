@@ -7,10 +7,23 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/lib/prisma";
 
-// Функция для безопасной загрузки текстов из файлов
+// Функция для безопасной загрузки текстов из файлов (с обходом бага Next.js NFT tracing)
 const getFileContent = (filename: string) => {
     try {
-        const filePath = path.join(process.cwd(), filename);
+        const parts = filename.split('/');
+        const rootFolder = parts[0];
+        const restPath = parts.slice(1).join('/');
+
+        let filePath;
+        // Явное указание корня для path.join помогает Next.js понять, что не нужно сканировать весь проект
+        if (rootFolder === 'majesticrp') {
+            filePath = path.join(process.cwd(), 'majesticrp', restPath);
+        } else if (rootFolder === 'crystalrp') {
+            filePath = path.join(process.cwd(), 'crystalrp', restPath);
+        } else {
+            filePath = path.join(process.cwd(), filename);
+        }
+
         if (fs.existsSync(filePath)) {
             return fs.readFileSync(filePath, 'utf-8');
         }
