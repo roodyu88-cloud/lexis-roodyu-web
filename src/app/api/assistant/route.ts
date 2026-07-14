@@ -324,7 +324,7 @@ ${availableFilesStr}
             let loadedFiles = 0;
             for (const file of serverInfo.files) {
                 const baseName = file.split('/').pop()?.replace('.txt', '') || '';
-                if (selectedFileNames.includes(baseName)) {
+                if (selectedFileNames.includes(baseName.toLowerCase().trim())) {
                     systemPrompt += `\n\n--- ДОКУМЕНТ: ${file.toUpperCase()} ---\n` + getFileContent(file);
                     loadedFiles++;
                 }
@@ -400,7 +400,7 @@ ${availableFilesStr}
             if (dsKey) {
                 try {
                     const dsMessages = [
-                        { role: "system", content: systemPrompt.substring(0, 100000) },
+                        { role: "system", content: systemPrompt.substring(0, 300000) },
                         ...messages.map((msg: any) => ({ role: msg.role === 'user' ? 'user' : 'assistant', content: msg.content }))
                     ];
                     
@@ -424,7 +424,7 @@ ${availableFilesStr}
             if (process.env.OPENROUTER_API_KEY) {
                 try {
                     const orMessages = [
-                        { role: "system", content: systemPrompt.substring(0, 100000) },
+                        { role: "system", content: systemPrompt.substring(0, 300000) },
                         ...messages.map((msg: any) => ({ role: msg.role === 'user' ? 'user' : 'assistant', content: msg.content }))
                     ];
 
