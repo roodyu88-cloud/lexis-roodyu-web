@@ -527,8 +527,8 @@ export default function AssistantClient({ isAuthenticated = false, isPremium = f
               </div>
 
               <div
-                className="flex-1 w-full max-w-3xl flex flex-col gap-6 mb-4 mt-2 overflow-y-auto overflow-x-hidden pr-2 pb-36 pt-4 md:pt-14 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
-                style={{ maskImage: 'linear-gradient(to bottom, transparent 0px, black 40px, black calc(100% - 120px), transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, transparent 0px, black 40px, black calc(100% - 120px), transparent 100%)' }}
+                className="flex-1 w-full max-w-3xl flex flex-col gap-6 mb-4 mt-2 overflow-y-auto overflow-x-hidden pr-2 pb-[180px] pt-4 md:pt-14 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+                style={{ maskImage: 'linear-gradient(to bottom, transparent 0px, black 40px, black calc(100% - 180px), transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, transparent 0px, black 40px, black calc(100% - 180px), transparent 100%)' }}
               >
                 {messages.map((m, i) => (
                   <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}>
