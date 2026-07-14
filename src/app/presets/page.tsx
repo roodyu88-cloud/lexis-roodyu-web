@@ -6,6 +6,9 @@ export const revalidate = 0; // Disable cache for this page
 
 export default async function PresetsPage() {
   const presets = await prisma.preset.findMany({
+    where: {
+      author: { not: "Lexis AI" }
+    },
     orderBy: { createdAt: "desc" }
   });
 

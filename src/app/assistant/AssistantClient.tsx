@@ -644,7 +644,7 @@ export default function AssistantClient({ isAuthenticated = false, isPremium = f
                                           <a href={href} target="_blank" className="mb-2 flex items-center gap-4 p-4 bg-gradient-to-r from-emerald-500/20 to-transparent border border-emerald-500/30 rounded-xl hover:bg-emerald-500/30 transition-all cursor-pointer max-w-sm w-full shadow-lg" {...props}>
                                             <div className="text-3xl drop-shadow-md">📖</div>
                                             <div className="flex flex-col">
-                                              <span className="font-semibold text-white text-base leading-tight">Открыть пресет</span>
+                                              <span className="font-semibold text-white text-base leading-tight">Открыть в приложении</span>
                                               <span className="text-xs text-gray-400 mt-0.5">Открыть пресет на сайте Lexis</span>
                                             </div>
                                           </a>

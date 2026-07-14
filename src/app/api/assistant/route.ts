@@ -104,9 +104,17 @@ async function processAiResponse(text: string, serverInfo: any, isPremium: boole
         }
     });
 
-    const link = `\n\n✅ **Пресет успешно создан!**\n\n[Скачать пресет](/api/download/${dbPreset.id})\n\n[Открыть пресет в Lexis](/presets/${dbPreset.id})`;
+    const link = `\n\n✅ **Пресет успешно создан!**\n\n[Скачать пресет](/api/download/${dbPreset.id})\n\n[Открыть в приложении](/presets/${dbPreset.id})`;
     const finalResponse = text.replace(/\[CREATE_PRESET:\s*(.+?)\]/i, link);
     
+    // Lazy cleanup: Delete AI generated presets older than 30 days
+    prisma.preset.deleteMany({
+        where: {
+            author: "Lexis AI",
+            createdAt: { lt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) }
+        }
+    }).catch(console.error);
+
     // Log the creation to track limits
     if (!isPremium) {
         await prisma.aIPromptLog.create({
