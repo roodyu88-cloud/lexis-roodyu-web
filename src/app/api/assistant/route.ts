@@ -47,11 +47,11 @@ async function processAiResponse(text: string, serverInfo: any, isPremium: boole
             if (!baseName) return false;
             
             const isShorthand = 
-                (law === 'uk' || law === 'ук') && baseName.includes('уголовн') ||
-                (law === 'proc' || law === 'пк') && baseName.includes('процессуал') ||
-                (law === 'dk' || law === 'дк') && baseName.includes('дорожн') ||
-                (law === 'ak' || law === 'ак') && baseName.includes('административн') ||
-                (law === 'konst') && baseName.includes('конституц');
+                (law === 'uk' || law === 'ук' || law.includes('уголов')) && baseName.includes('уголовн') ||
+                (law === 'proc' || law === 'пк' || law.includes('процессуал')) && baseName.includes('процессуал') ||
+                (law === 'dk' || law === 'дк' || law.includes('дорожн')) && baseName.includes('дорожн') ||
+                (law === 'ak' || law === 'ак' || law.includes('административ')) && baseName.includes('административн') ||
+                (law === 'konst' || law.includes('конституц')) && baseName.includes('конституц');
             return baseName.includes(law) || law.includes(baseName) || isShorthand;
         });
         if (!fileItem) continue;
@@ -76,17 +76,15 @@ async function processAiResponse(text: string, serverInfo: any, isPremium: boole
             const isArticleStart = /^(Статья|Глава|Раздел|Пункт)\s/i.test(line) || /^\d+\.\d+/.test(line);
             
             if (isArticleStart) {
-               if (currentArticle) currentCategory.articles.push(currentArticle);
+               if (currentArticle && currentArticle.text.trim()) currentCategory.articles.push(currentArticle);
                currentArticle = { title: line, text: '' };
             } else {
                if (currentArticle) {
                    currentArticle.text += line + '\n';
-               } else {
-                   currentArticle = { title: "Введение", text: line + '\n' };
                }
             }
         }
-        if (currentArticle) currentCategory.articles.push(currentArticle);
+        if (currentArticle && currentArticle.text.trim()) currentCategory.articles.push(currentArticle);
         presetData.push(currentCategory);
     }
 
@@ -106,7 +104,7 @@ async function processAiResponse(text: string, serverInfo: any, isPremium: boole
         }
     });
 
-    const link = `\n\n✅ **Пресет успешно создан!**\n\n[Скачать пресет](/api/download/${dbPreset.id})`;
+    const link = `\n\n✅ **Пресет успешно создан!**\n\n[Скачать пресет](/api/download/${dbPreset.id})\n\n[Открыть пресет в Lexis](/presets/${dbPreset.id})`;
     const finalResponse = text.replace(/\[CREATE_PRESET:\s*(.+?)\]/i, link);
     
     // Log the creation to track limits
