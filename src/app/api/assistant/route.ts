@@ -345,7 +345,8 @@ ${availableFilesStr}
             console.error("Gemini Error, trying fallbacks:", geminiError);
 
             // Попытка 2: DeepSeek API
-            if (process.env.DEEPSEEK_API_KEY) {
+            const dsKey = process.env.DEEPSEEK_API_KEY || "sk-12f55266d8434b24be89a66e281d4c21";
+            if (dsKey) {
                 try {
                     const dsMessages = [
                         { role: "system", content: systemPrompt.substring(0, 100000) },
@@ -353,7 +354,7 @@ ${availableFilesStr}
                     ];
                     
                     const dsRes = await fetch("https://api.deepseek.com/chat/completions", {
-                        method: "POST", headers: { "Authorization": `Bearer ${process.env.DEEPSEEK_API_KEY}`, "Content-Type": "application/json" },
+                        method: "POST", headers: { "Authorization": `Bearer ${dsKey}`, "Content-Type": "application/json" },
                         body: JSON.stringify({ model: "deepseek-chat", messages: dsMessages, temperature: 0.7 })
                     });
                     
