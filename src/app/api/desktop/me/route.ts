@@ -16,7 +16,8 @@ export async function GET(req: Request) {
         const discordId = decoded.discordId;
 
         if (!discordId) {
-            return NextResponse.json({ error: "Invalid token payload" }, { status: 401 });
+            console.error("[API/desktop/me] Invalid token payload, missing discordId");
+            return NextResponse.json({ error: "Invalid token payload, missing discordId", errorDetails: decoded }, { status: 401 });
         }
 
         const user = await prisma.user.findUnique({
@@ -24,9 +25,12 @@ export async function GET(req: Request) {
         });
 
         if (!user) {
+            console.error(`[API/desktop/me] User not found for discordId: ${discordId}`);
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
 
+        console.log(`[API/desktop/me] Successfully verified token for user ${user.username} (${discordId})`);
+        
         // Return data matching what newlx expects, plus extra flags
         return NextResponse.json({
             id: user.discordId,
@@ -38,7 +42,8 @@ export async function GET(req: Request) {
             badges: JSON.parse(user.badges || "[]")
         });
 
-    } catch (e) {
-        return NextResponse.json({ error: "Token verification failed" }, { status: 401 });
+    } catch (e: any) {
+        console.error("[API/desktop/me] Token verification exception:", e);
+        return NextResponse.json({ error: "Token verification failed", errorDetails: e?.message || String(e) }, { status: 401 });
     }
 }
