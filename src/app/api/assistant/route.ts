@@ -53,7 +53,9 @@ async function processAiResponse(text: string, serverInfo: any, isPremium: boole
             line = line.trim();
             if (!line) continue;
             
-            if ((line.startsWith('Статья') || line.startsWith('Глава') || line.startsWith('Раздел')) && !line.includes('ч.')) {
+            const isArticleStart = /^(Статья|Глава|Раздел|Пункт)\s/i.test(line) || /^\d+\.\d+/.test(line);
+            
+            if (isArticleStart) {
                if (currentArticle) currentCategory.articles.push(currentArticle);
                currentArticle = { title: line, text: '' };
             } else {
