@@ -17,10 +17,22 @@ async function processAiResponse(text: string, serverInfo: any, isPremium: boole
 
     const laws = match[1].split(',').map(s => s.trim().toLowerCase());
     
-    if (!isPremium && laws.length > 3) {
-        const errorMsg = "К сожалению, без Premium-подписки вы можете добавить максимум 3 закона в пресет.";
-        const cleanText = text.replace(/\[CREATE_PRESET:\s*(.+?)\]/i, errorMsg);
-        return NextResponse.json({ response: cleanText });
+    if (!isPremium) {
+        if (laws.length > 3) {
+            return NextResponse.json({ response: "К сожалению, без Premium-подписки вы можете добавить максимум 3 закона в пресет." });
+        }
+        
+        const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+        const presetCount = await prisma.aIPromptLog.count({
+            where: {
+                discordId: `PRESET_${discordId}`,
+                createdAt: { gte: oneDayAgo }
+            }
+        });
+
+        if (presetCount >= 2) {
+            return NextResponse.json({ response: "К сожалению, без Premium-подписки вы можете создавать не более 2 пресетов в сутки. Лимит исчерпан." });
+        }
     }
 
     // Process files
@@ -71,34 +83,20 @@ async function processAiResponse(text: string, serverInfo: any, isPremium: boole
     }
 
     if (presetData.length === 0) {
-        return NextResponse.json({ response: text.replace(/\[CREATE_PRESET:\s*(.+?)\]/i, "Не удалось найти указанные законы для создания пресета.") });
+        return NextResponse.json({ response: "Не удалось найти указанные законы для создания пресета." });
     }
 
-    // Prevent foreign key constraint violation if ID doesn't exist in DB
-    let validProjectId = null;
-    let validServerId = null;
-    if (serverInfo.projectId) {
-        const checkProj = await prisma.serverProject.findUnique({ where: { id: serverInfo.projectId } });
-        if (checkProj) validProjectId = serverInfo.projectId;
-    }
-    if (serverInfo.id) {
-        const checkServer = await prisma.server.findUnique({ where: { id: serverInfo.id } });
-        if (checkServer) validServerId = serverInfo.id;
-    }
-
-    const preset = await prisma.preset.create({
-        data: {
-            name: `Пресет от ИИ: ${serverInfo.name}`,
-            author: authorName,
-            discordId: discordId,
-            data: JSON.stringify(presetData),
-            serverProjectId: validProjectId,
-            serverId: validServerId
-        }
-    });
-
-    const link = `\n\n✅ **Пресет успешно создан!** [📦 Скачать JSON файл](/api/download/${preset.id})`;
+    const jsonStr = JSON.stringify(presetData, null, 2);
+    const link = `\n\n✅ **Пресет успешно создан!** Скопируйте содержимое ниже и сохраните его в файл \`.json\` (или воспользуйтесь функцией импорта напрямую из текста):\n\n\`\`\`json\n${jsonStr}\n\`\`\``;
     const finalResponse = text.replace(/\[CREATE_PRESET:\s*(.+?)\]/i, link);
+    
+    // Log the creation to track limits
+    if (!isPremium) {
+        await prisma.aIPromptLog.create({
+            data: { discordId: `PRESET_${discordId}` }
+        });
+    }
+    
     return NextResponse.json({ response: finalResponse });
 }
 
