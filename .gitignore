@@ -63,3 +63,4 @@ gen_merge.py
 gen_all.js
 patch_assistant_preset2.js
 test_match.js
+check_db.js

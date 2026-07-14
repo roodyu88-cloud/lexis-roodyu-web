@@ -70,14 +70,26 @@ async function processAiResponse(text: string, serverInfo: any, isPremium: boole
         return NextResponse.json({ response: text.replace(/\[CREATE_PRESET:\s*(.+?)\]/i, "Не удалось найти указанные законы для создания пресета.") });
     }
 
+    // Prevent foreign key constraint violation if ID doesn't exist in DB
+    let validProjectId = null;
+    let validServerId = null;
+    if (serverInfo.projectId) {
+        const checkProj = await prisma.serverProject.findUnique({ where: { id: serverInfo.projectId } });
+        if (checkProj) validProjectId = serverInfo.projectId;
+    }
+    if (serverInfo.id) {
+        const checkServer = await prisma.server.findUnique({ where: { id: serverInfo.id } });
+        if (checkServer) validServerId = serverInfo.id;
+    }
+
     const preset = await prisma.preset.create({
         data: {
             name: `Пресет от ИИ: ${serverInfo.name}`,
             author: authorName,
             discordId: discordId,
             data: JSON.stringify(presetData),
-            serverProjectId: serverInfo.projectId || null,
-            serverId: serverInfo.id || null
+            serverProjectId: validProjectId,
+            serverId: validServerId
         }
     });
 
