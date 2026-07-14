@@ -725,8 +725,9 @@ export default function AssistantClient({ isAuthenticated = false, isPremium = f
 
           {/* Input Area (Docked to bottom) */}
           <div className="absolute bottom-0 left-0 right-0 w-full pt-16 pb-4 md:pb-6 px-2 md:px-4 z-20 flex justify-center pointer-events-none">
-            <div className="w-full max-w-3xl bg-[var(--card-bg)] backdrop-blur-xl border border-white/10 rounded-3xl p-3 shadow-2xl transition-all focus-within:border-[var(--blurple)]/50 focus-within:bg-[var(--card-bg)] pointer-events-auto ring-1 ring-black/50">
-              <textarea
+            <div className="w-full max-w-3xl flex flex-col pointer-events-auto">
+              <div className="w-full bg-[var(--card-bg)] backdrop-blur-xl border border-white/10 rounded-3xl p-3 shadow-2xl transition-all focus-within:border-[var(--blurple)]/50 focus-within:bg-[var(--card-bg)] ring-1 ring-black/50">
+                <textarea
                 ref={textareaRef}
                 value={input}
                 onChange={(e) => {
@@ -776,6 +777,10 @@ export default function AssistantClient({ isAuthenticated = false, isPremium = f
                   )}
                 </button>
               </div>
+              </div>
+              <p className="text-center text-[10.5px] text-gray-500 mt-2.5 px-4 font-medium drop-shadow-sm">
+                ИИ может допускать ошибки. Если на вашем сервере изменилось законодательство, или вы хотите добавить новый сервер — <a href="https://discord.gg/hM4BfE6Tnt" target="_blank" rel="noopener noreferrer" className="text-[var(--blurple)] hover:underline hover:text-[var(--blurple-hover)] transition-colors">создавайте тикет в официальном Discord</a>.<br/>Последнее обновление законодательства: 14.07.2026.
+              </p>
             </div>
           </div>
         </div>
