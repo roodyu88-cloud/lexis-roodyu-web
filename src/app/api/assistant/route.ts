@@ -76,7 +76,7 @@ async function processAiResponse(text: string, serverInfo: any, isPremium: boole
             const isArticleStart = /^(Статья|Глава|Раздел|Пункт)\s/i.test(line) || /^\d+\.\d+/.test(line);
             
             if (isArticleStart) {
-               if (currentArticle && currentArticle.text.trim()) currentCategory.articles.push(currentArticle);
+               if (currentArticle) currentCategory.articles.push(currentArticle);
                currentArticle = { title: line, text: '' };
             } else {
                if (currentArticle) {
@@ -84,7 +84,7 @@ async function processAiResponse(text: string, serverInfo: any, isPremium: boole
                }
             }
         }
-        if (currentArticle && currentArticle.text.trim()) currentCategory.articles.push(currentArticle);
+        if (currentArticle) currentCategory.articles.push(currentArticle);
         presetData.push(currentCategory);
     }
 
