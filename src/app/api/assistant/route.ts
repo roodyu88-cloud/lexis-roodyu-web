@@ -345,10 +345,19 @@ ${availableFilesStr}
                 const realName = parts.length > 1 ? parts[1] : '';
                 const baseName = realName ? realName.toLowerCase() : file.split('/').pop()?.replace('.txt', '').toLowerCase().trim() || '';
                 
-                const isSelected = selectedFileNames.some(selected => 
-                    (selected && file.toLowerCase().includes(selected)) || 
-                    (selected && baseName.includes(selected))
-                );
+                const isSelected = selectedFileNames.some(selected => {
+                    if (!selected) return false;
+                    if (file.toLowerCase().includes(selected)) return true;
+                    if (baseName.includes(selected)) return true;
+                    // Maps shorthands returned by Groq to keywords
+                    if (selected === 'uk' && baseName.includes('уголов')) return true;
+                    if (selected === 'proc' && baseName.includes('процессуал')) return true;
+                    if (selected === 'konst' && baseName.includes('конституц')) return true;
+                    if (selected === 'adk' && baseName.includes('административ')) return true;
+                    if (selected === 'dk' && baseName.includes('дорож')) return true;
+                    if (selected === 'ak' && baseName.includes('административ')) return true;
+                    return false;
+                });
 
                 if (isSelected || selectedFileNames.includes(baseName)) {
                     systemPrompt += `\n\n--- ДОКУМЕНТ: ${realName ? realName.toUpperCase() : file.toUpperCase()} ---\n` + getFileContent(file);
