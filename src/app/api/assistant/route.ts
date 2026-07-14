@@ -81,7 +81,7 @@ async function processAiResponse(text: string, serverInfo: any, isPremium: boole
         }
     });
 
-    const link = `\n\n✅ **Пресет успешно создан!** [👉 Нажмите здесь, чтобы просмотреть и скачать](/presets/${preset.id})`;
+    const link = `\n\n✅ **Пресет успешно создан!** [📦 Скачать JSON файл](/api/download/${preset.id})`;
     const finalResponse = text.replace(/\[CREATE_PRESET:\s*(.+?)\]/i, link);
     return NextResponse.json({ response: finalResponse });
 }
