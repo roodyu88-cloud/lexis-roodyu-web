@@ -8,6 +8,75 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/lib/prisma";
 
 // Функция для безопасной загрузки текстов из файлов (с обходом бага Next.js NFT tracing)
+
+async function processAiResponse(text: string, serverInfo: any, isPremium: boolean, discordId: string, authorName: string) {
+    const match = text.match(/\[CREATE_PRESET:\s*(.+?)\]/i);
+    if (!match) {
+        return NextResponse.json({ response: text });
+    }
+
+    const laws = match[1].split(',').map(s => s.trim().toLowerCase());
+    
+    if (!isPremium && laws.length > 3) {
+        const errorMsg = "К сожалению, без Premium-подписки вы можете добавить максимум 3 закона в пресет.";
+        const cleanText = text.replace(/\[CREATE_PRESET:\s*(.+?)\]/i, errorMsg);
+        return NextResponse.json({ response: cleanText });
+    }
+
+    // Process files
+    let presetData: any[] = [];
+    for (const law of laws) {
+        const file = serverInfo.files.find((f: string) => f.toLowerCase().includes(law + '.txt') || f.split('/').pop()?.replace('.txt', '').toLowerCase() === law);
+        if (!file) continue;
+
+        const content = getFileContent(file);
+        if (!content) continue;
+
+        const lawTitle = file.split('/').pop()?.replace('.txt', '') || 'Закон';
+        
+        const lines = content.split('\n');
+        let currentCategory = { name: lawTitle, articles: [] as any[] };
+        let currentArticle: { title: string; text: string } | null = null;
+        
+        for (let line of lines) {
+            line = line.trim();
+            if (!line) continue;
+            
+            if ((line.startsWith('Статья') || line.startsWith('Глава') || line.startsWith('Раздел')) && !line.includes('ч.')) {
+               if (currentArticle) currentCategory.articles.push(currentArticle);
+               currentArticle = { title: line, text: '' };
+            } else {
+               if (currentArticle) {
+                   currentArticle.text += line + '\n';
+               } else {
+                   currentArticle = { title: "Введение", text: line + '\n' };
+               }
+            }
+        }
+        if (currentArticle) currentCategory.articles.push(currentArticle);
+        presetData.push(currentCategory);
+    }
+
+    if (presetData.length === 0) {
+        return NextResponse.json({ response: text.replace(/\[CREATE_PRESET:\s*(.+?)\]/i, "Не удалось найти указанные законы для создания пресета.") });
+    }
+
+    const preset = await prisma.preset.create({
+        data: {
+            name: `Пресет от ИИ: ${serverInfo.name}`,
+            author: authorName,
+            discordId: discordId,
+            data: JSON.stringify(presetData),
+            serverProjectId: serverInfo.projectId || null,
+            serverId: serverInfo.id || null
+        }
+    });
+
+    const link = `\n\n✅ **Пресет успешно создан!** [👉 Нажмите здесь, чтобы просмотреть и скачать](/presets/${preset.id})`;
+    const finalResponse = text.replace(/\[CREATE_PRESET:\s*(.+?)\]/i, link);
+    return NextResponse.json({ response: finalResponse });
+}
+
 const getFileContent = (filename: string) => {
     try {
         const parts = filename.split('/');
@@ -96,6 +165,9 @@ export async function POST(req: Request) {
 
         // Собираем системный промпт + законы
         let systemPrompt = serverInfo.basePrompt;
+        // Добавляем инструкцию для пресетов
+        systemPrompt += "\n\n[СОЗДАНИЕ ПРЕСЕТА]: Если пользователь просит создать пресет (например: 'создай пресет с уголовным и процессуальным кодексами'), ты должен обязательно вернуть специальный тег: [CREATE_PRESET: uk, proc, dk]. Названия законов бери из имен файлов. Перед тегом можешь написать пару слов подтверждения.";
+
         const latestMessage = messages[messages.length - 1].content;
 
         if (serverInfo.files && serverInfo.files.length > 0) {
@@ -258,7 +330,7 @@ ${availableFilesStr}
 
             const chat = model.startChat({ history: history });
             const result = await chat.sendMessage(modifiedLatestMessage);
-            return NextResponse.json({ response: result.response.text() });
+            return await processAiResponse(result.response.text(), serverInfo, isPremium, discordId, session.user.name || "AI Assistant");
             
         } catch (geminiError: any) {
             console.error("Gemini Error, trying fallbacks:", geminiError);
@@ -278,7 +350,7 @@ ${availableFilesStr}
                     
                     if (dsRes.ok) {
                         const dsData = await dsRes.json();
-                        return NextResponse.json({ response: dsData.choices[0]?.message?.content });
+                        return await processAiResponse(dsData.choices[0]?.message?.content, serverInfo, isPremium, discordId, session.user.name || "AI Assistant");
                     } else {
                         console.error("DeepSeek 400 Error Details:", await dsRes.text());
                     }
@@ -302,7 +374,7 @@ ${availableFilesStr}
 
                     if (orRes.ok) {
                         const orData = await orRes.json();
-                        return NextResponse.json({ response: orData.choices[0]?.message?.content });
+                        return await processAiResponse(orData.choices[0]?.message?.content, serverInfo, isPremium, discordId, session.user.name || "AI Assistant");
                     } else {
                         console.error("OpenRouter API error:", await orRes.text());
                     }
