@@ -27,7 +27,9 @@ async function processAiResponse(text: string, serverInfo: any, isPremium: boole
     let presetData: any[] = [];
     for (const law of laws) {
         const file = serverInfo.files.find((f: string) => {
-            const baseName = f.split('/').pop()?.replace('.txt', '').toLowerCase() || '';
+            const baseName = f.split('/').pop()?.replace('.txt', '').toLowerCase().trim() || '';
+            if (!baseName) return false;
+            
             const isShorthand = 
                 (law === 'uk' || law === 'ук') && baseName.includes('уголовн') ||
                 (law === 'proc' || law === 'пк') && baseName.includes('процессуал') ||

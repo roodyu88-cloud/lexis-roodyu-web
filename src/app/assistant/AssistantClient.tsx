@@ -629,6 +629,17 @@ export default function AssistantClient({ isAuthenticated = false, isPremium = f
                                     return <code className={isInline ? "bg-black/40 rounded px-1.5 py-0.5 text-[var(--blurple)] font-mono text-xs break-words whitespace-normal" : "break-words"} {...props} />;
                                   },
                                   a: ({node, href, children, ...props}) => {
+                                    if (href?.startsWith('/api/download/')) {
+                                      return (
+                                        <a href={href} className="mt-4 mb-2 flex items-center gap-4 p-4 bg-gradient-to-r from-[var(--blurple)]/20 to-transparent border border-[var(--blurple)]/30 rounded-xl hover:bg-[var(--blurple)]/30 transition-all cursor-pointer max-w-sm w-full shadow-lg" {...props}>
+                                          <div className="text-3xl drop-shadow-md">📦</div>
+                                          <div className="flex flex-col">
+                                            <span className="font-semibold text-white text-base leading-tight">Скачать JSON Пресет</span>
+                                            <span className="text-xs text-gray-400 mt-0.5">Нажмите, чтобы загрузить как вложение</span>
+                                          </div>
+                                        </a>
+                                      );
+                                    }
                                     if (href?.startsWith('quote:')) {
                                       const content = decodeURIComponent(href.replace('quote:', ''));
                                       const [title, text] = content.split('|');
