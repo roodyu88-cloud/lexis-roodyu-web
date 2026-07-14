@@ -121,6 +121,8 @@ const getFileContent = (filename: string) => {
             filePath = path.join(process.cwd(), 'crystalrp', restPath);
         } else if (rootFolder === 'public') {
             filePath = path.join(process.cwd(), 'public', restPath);
+        } else if (rootFolder === 'gta5rp') {
+            filePath = path.join(process.cwd(), 'gta5rp', restPath);
         }
 
         if (filePath && fs.existsSync(filePath)) {
