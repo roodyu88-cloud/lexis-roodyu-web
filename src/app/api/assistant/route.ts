@@ -77,11 +77,24 @@ async function processAiResponse(text: string, serverInfo: any, isPremium: boole
             
             if (isArticleStart) {
                if (currentArticle) currentCategory.articles.push(currentArticle);
-               currentArticle = { title: line, text: '' };
-            } else {
-               if (currentArticle) {
-                   currentArticle.text += line + '\n';
+               
+               let title = line;
+               let text = '';
+               const match = line.match(/^((?:Статья|Глава|Раздел|Пункт)\s+[\d\.\w]+|^\d+\.\d+\.?)\s*(.*)/i);
+               if (match) {
+                   if (match[2].length > 60) {
+                       title = match[1].trim();
+                       text = match[2].trim() + '\n';
+                   } else {
+                       title = line;
+                   }
                }
+               currentArticle = { title, text };
+            } else {
+               if (!currentArticle) {
+                   currentArticle = { title: "Введение / Преамбула", text: '' };
+               }
+               currentArticle.text += line + '\n';
             }
         }
         if (currentArticle) currentCategory.articles.push(currentArticle);
