@@ -108,10 +108,13 @@ async function processAiResponse(text: string, serverInfo: any, isPremium: boole
     const finalResponse = text.replace(/\[CREATE_PRESET:\s*(.+?)\]/i, link);
     
     // Lazy cleanup: Delete AI generated presets older than 30 days
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
     prisma.preset.deleteMany({
         where: {
             author: "Lexis AI",
-            createdAt: { lt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) }
+            createdAt: { lt: thirtyDaysAgo }
         }
     }).catch(console.error);
 
