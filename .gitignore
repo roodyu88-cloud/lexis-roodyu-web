@@ -61,3 +61,4 @@ patch_admin_ui_force.py
 gen.py
 gen_merge.py
 gen_all.js
+patch_assistant_preset2.js

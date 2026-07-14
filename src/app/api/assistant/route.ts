@@ -26,7 +26,16 @@ async function processAiResponse(text: string, serverInfo: any, isPremium: boole
     // Process files
     let presetData: any[] = [];
     for (const law of laws) {
-        const file = serverInfo.files.find((f: string) => f.toLowerCase().includes(law + '.txt') || f.split('/').pop()?.replace('.txt', '').toLowerCase() === law);
+        const file = serverInfo.files.find((f: string) => {
+            const baseName = f.split('/').pop()?.replace('.txt', '').toLowerCase() || '';
+            const isShorthand = 
+                (law === 'uk' || law === 'ук') && baseName.includes('уголовн') ||
+                (law === 'proc' || law === 'пк') && baseName.includes('процессуал') ||
+                (law === 'dk' || law === 'дк') && baseName.includes('дорожн') ||
+                (law === 'ak' || law === 'ак') && baseName.includes('административн') ||
+                (law === 'konst') && baseName.includes('конституц');
+            return baseName.includes(law) || law.includes(baseName) || isShorthand;
+        });
         if (!file) continue;
 
         const content = getFileContent(file);
@@ -166,7 +175,7 @@ export async function POST(req: Request) {
         // Собираем системный промпт + законы
         let systemPrompt = serverInfo.basePrompt;
         // Добавляем инструкцию для пресетов
-        systemPrompt += "\n\n[СОЗДАНИЕ ПРЕСЕТА]: Если пользователь просит создать пресет (например: 'создай пресет с уголовным и процессуальным кодексами'), ты должен обязательно вернуть специальный тег: [CREATE_PRESET: uk, proc, dk]. Названия законов бери из имен файлов. Перед тегом можешь написать пару слов подтверждения.";
+        systemPrompt += "\n\n[СОЗДАНИЕ ПРЕСЕТА]: Если пользователь просит создать пресет, ты должен обязательно вернуть специальный тег, перечислив в нем ТОЧНЫЕ названия нужных законов из списка твоей базы знаний (без .txt) ИЛИ их общепринятые сокращения (УК, ПК, ДК). Пример: [CREATE_PRESET: Уголовный кодекс штата Сан-Андреас, Процессуальный кодекс]. Перед тегом напиши пару слов подтверждения.";
 
         const latestMessage = messages[messages.length - 1].content;
 
