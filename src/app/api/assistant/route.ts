@@ -216,7 +216,11 @@ export async function POST(req: Request) {
             if (process.env.GROQ_API_KEY) {
                 try {
                     const availableFilesStr = serverInfo.files.map((f: string) => {
-                        const base = f.split('/').pop()?.replace('.txt', '') || '';
+                        const parts = f.split('|');
+                        const filePath = parts[0];
+                        const realName = parts.length > 1 ? parts[1] : '';
+                        if (realName) return `- ${filePath}: ${realName}`;
+                        const base = filePath.split('/').pop()?.replace('.txt', '') || '';
                         return `- ${base}: ${fileDescriptions[base] || 'Закон'}`;
                     }).join('\n');
 
@@ -243,8 +247,11 @@ ${availableFilesStr}
 
             // Запасная эвристика, если ИИ-маршрутизатор упал (или нет ключа)
             if (selectedFileNames.length === 0) {
-                for (const file of serverInfo.files) {
-                    const baseName = file.split('/').pop()?.replace('.txt', '').toLowerCase().trim() || '';
+                for (const fileItem of serverInfo.files) {
+                    const parts = fileItem.split('|');
+                    const file = parts[0];
+                    const realName = parts.length > 1 ? parts[1] : '';
+                    const baseName = realName ? realName.toLowerCase() : file.split('/').pop()?.replace('.txt', '').toLowerCase().trim() || '';
                     
                     let key = baseName;
                     if (baseName.includes('уголов')) key = 'uk';
@@ -315,16 +322,28 @@ ${availableFilesStr}
                         (key === 'usss' && (userMsg.includes('usss') || userMsg.includes('секретн') || userMsg.includes('служеб'))) ||
                         (key === 'nalog' && (userMsg.includes('налог') || userMsg.includes('пошлин')));
                     
-                    if (isCore || isMentioned) selectedFileNames.push(baseName);
+                    if (isCore || isMentioned) {
+                        selectedFileNames.push(baseName);
+                        if (realName) selectedFileNames.push(file.toLowerCase()); // Also push the path so the router fallback works
+                    }
                 }
             }
 
             // Загрузка выбранных файлов
             let loadedFiles = 0;
-            for (const file of serverInfo.files) {
-                const baseName = file.split('/').pop()?.replace('.txt', '') || '';
-                if (selectedFileNames.includes(baseName.toLowerCase().trim())) {
-                    systemPrompt += `\n\n--- ДОКУМЕНТ: ${file.toUpperCase()} ---\n` + getFileContent(file);
+            for (const fileItem of serverInfo.files) {
+                const parts = fileItem.split('|');
+                const file = parts[0];
+                const realName = parts.length > 1 ? parts[1] : '';
+                const baseName = realName ? realName.toLowerCase() : file.split('/').pop()?.replace('.txt', '').toLowerCase().trim() || '';
+                
+                const isSelected = selectedFileNames.some(selected => 
+                    (selected && file.toLowerCase().includes(selected)) || 
+                    (selected && baseName.includes(selected))
+                );
+
+                if (isSelected || selectedFileNames.includes(baseName)) {
+                    systemPrompt += `\n\n--- ДОКУМЕНТ: ${realName ? realName.toUpperCase() : file.toUpperCase()} ---\n` + getFileContent(file);
                     loadedFiles++;
                 }
                 // Лимит 8 файлов для стабильности контекста
