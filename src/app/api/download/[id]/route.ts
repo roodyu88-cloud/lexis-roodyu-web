@@ -4,7 +4,8 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
   const preset = await prisma.preset.findUnique({
-    where: { id: resolvedParams.id }
+    where: { id: resolvedParams.id },
+    include: { serverProject: true, server: true }
   });
 
   if (!preset) {
@@ -28,6 +29,9 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
   const output = {
     profile_name: preset.name,
     author: preset.author,
+    server: preset.server ? preset.server.name : "",
+    project: preset.serverProject ? preset.serverProject.name : "",
+    projectIconUrl: preset.serverProject ? preset.serverProject.iconUrl : "",
     data: Array.isArray(rawData) ? rawData : (rawData.data || [])
   };
 
