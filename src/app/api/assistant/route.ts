@@ -95,7 +95,18 @@ async function processAiResponse(text: string, serverInfo: any, isPremium: boole
     }
 
     const jsonStr = JSON.stringify(presetData, null, 2);
-    const link = `\n\n✅ **Пресет успешно создан!** Скопируйте содержимое ниже и сохраните его в файл \`.json\` (или воспользуйтесь функцией импорта напрямую из текста):\n\n\`\`\`json\n${jsonStr}\n\`\`\``;
+    
+    const dbPreset = await prisma.preset.create({
+        data: {
+            name: "AI Generated Preset",
+            description: "Сгенерировано ИИ-Ассистентом Lexis",
+            author: "Lexis AI",
+            discordId: discordId || "AI",
+            data: jsonStr,
+        }
+    });
+
+    const link = `\n\n✅ **Пресет успешно создан!**\n\n[Скачать пресет](/api/download/${dbPreset.id})`;
     const finalResponse = text.replace(/\[CREATE_PRESET:\s*(.+?)\]/i, link);
     
     // Log the creation to track limits
