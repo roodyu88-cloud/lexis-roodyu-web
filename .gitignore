@@ -65,3 +65,10 @@ patch_assistant_preset2.js
 test_match.js
 check_db.js
 test_regex.js
+test_ai.js
+test_gemini.js
+test_gemini2.js
+test_groq.js
+test_groq2.js
+test_loader.js
+test_size.js
