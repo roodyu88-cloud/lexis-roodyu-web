@@ -72,3 +72,8 @@ test_groq.js
 test_groq2.js
 test_loader.js
 test_size.js
+test_mistral_reply.js
+test_ds_reply.js
+test_ds_limit.js
+test_ds_fix.js
+test_groq_router.js
