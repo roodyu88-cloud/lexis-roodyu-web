@@ -235,7 +235,7 @@ ${availableFilesStr}
                     if (groqRes.ok) {
                         const groqData = await groqRes.json();
                         const routerText = groqData.choices[0]?.message?.content || "";
-                        selectedFileNames = routerText.toLowerCase().split(',').map((s: string) => s.trim().replace(/[^a-z0-9_]/g, '')).filter(Boolean);
+                        selectedFileNames = routerText.toLowerCase().split(',').map((s: string) => s.trim().replace(/[^\w\sа-яё\-]/gi, '')).filter(Boolean);
                     } else {
                         console.error("Groq Router API error:", await groqRes.text());
                     }
@@ -245,41 +245,76 @@ ${availableFilesStr}
             // Запасная эвристика, если ИИ-маршрутизатор упал (или нет ключа)
             if (selectedFileNames.length === 0) {
                 for (const file of serverInfo.files) {
-                    const baseName = file.split('/').pop()?.replace('.txt', '') || '';
-                    const isCore = ['uk', 'proc', 'konst'].includes(baseName);
-                    const isMentioned = userMsg.includes(baseName) ||
-                        (baseName === 'uk' && (userMsg.includes('ук') || userMsg.includes('уголовн'))) ||
-                        (baseName === 'proc' && (userMsg.includes('пк') || userMsg.includes('процессуал') || userMsg.includes('задержан') || userMsg.includes('миранд'))) ||
-                        (baseName === 'konst' && (userMsg.includes('конституц') || userMsg.includes('прав') || userMsg.includes('свобод'))) ||
-                        (baseName === 'adk' && (userMsg.includes('ак') || userMsg.includes('административн'))) ||
-                        (baseName === 'advokat' && (userMsg.includes('адвокат') || userMsg.includes('юрист') || userMsg.includes('защит'))) ||
-                        (baseName === 'chp' && (userMsg.includes('чп') || userMsg.includes('вп') || userMsg.includes('чрезвычайн') || userMsg.includes('военн'))) ||
-                        (baseName === 'dk' && (userMsg.includes('дк') || userMsg.includes('дорожн') || userMsg.includes('пдд') || userMsg.includes('штраф') || userMsg.includes('авто'))) ||
-                        (baseName === 'ems' && (userMsg.includes('емс') || userMsg.includes('медик') || userMsg.includes('больниц') || userMsg.includes('врач'))) ||
-                        (baseName === 'etk' && (userMsg.includes('эк') || userMsg.includes('этик') || userMsg.includes('дресс'))) ||
-                        (baseName === 'fib' && (userMsg.includes('фиб') || userMsg.includes('фбр') || userMsg.includes('федеральн') || userMsg.includes('бюро'))) ||
-                        (baseName === 'gosnag' && (userMsg.includes('наград') || userMsg.includes('медал') || userMsg.includes('орден'))) ||
-                        (baseName === 'gostay' && (userMsg.includes('гостайн') || userMsg.includes('государственн') || userMsg.includes('секрет'))) ||
-                        (baseName === 'grak' && (userMsg.includes('гк') || userMsg.includes('гражданск'))) ||
-                        (baseName === 'gun' && (userMsg.includes('оружи') || userMsg.includes('лиценз') || userMsg.includes('калибр') || userMsg.includes('ствол'))) ||
-                        (baseName === 'miting' && (userMsg.includes('митинг') || userMsg.includes('забастов') || userMsg.includes('собрани'))) ||
-                        (baseName === 'nej' && (userMsg.includes('нежелательн') || userMsg.includes('организаци'))) ||
-                        (baseName === 'neprikos' && (userMsg.includes('неприкос') || userMsg.includes('статус'))) ||
-                        (baseName === 'ogp' && (userMsg.includes('огп') || userMsg.includes('прокурор') || userMsg.includes('прокуратур'))) ||
-                        (baseName === 'order' && (userMsg.includes('ордер') || userMsg.includes('обыск') || userMsg.includes('рейд'))) ||
-                        (baseName === 'organ' && (userMsg.includes('орган') || userMsg.includes('власт'))) ||
-                        (baseName === 'orm' && (userMsg.includes('орм') || userMsg.includes('оперативн') || userMsg.includes('розыск') || userMsg.includes('внедрен'))) ||
-                        (baseName === 'prav' && (userMsg.includes('прав') || userMsg.includes('губернатор') || userMsg.includes('мэр'))) ||
-                        (baseName === 'predp' && (userMsg.includes('предпринимат') || userMsg.includes('бизнес') || userMsg.includes('ип'))) ||
-                        (baseName === 'prodr' && (userMsg.includes('процессуальн') || userMsg.includes('действи'))) ||
-                        (baseName === 'sang' && (userMsg.includes('санг') || userMsg.includes('арми') || userMsg.includes('нацгвард') || userMsg.includes('воен'))) ||
-                        (baseName === 'senat' && (userMsg.includes('сенат') || userMsg.includes('конгресс'))) ||
-                        (baseName === 'sredmass' && (userMsg.includes('сми') || userMsg.includes('weazel') || userMsg.includes('журналист') || userMsg.includes('новост'))) ||
-                        (baseName === 'sudk' && (userMsg.includes('суд') || userMsg.includes('иск') || userMsg.includes('заседан'))) ||
-                        (baseName === 'ter' && (userMsg.includes('территори') || userMsg.includes('кпз') || userMsg.includes('закрыт') || userMsg.includes('охран'))) ||
-                        (baseName === 'trudk' && (userMsg.includes('труд') || userMsg.includes('увольн') || userMsg.includes('работ') || userMsg.includes('выговор'))) ||
-                        (baseName === 'usss' && (userMsg.includes('usss') || userMsg.includes('секретн') || userMsg.includes('служеб'))) ||
-                        (baseName === 'nalog' && (userMsg.includes('налог') || userMsg.includes('пошлин')));
+                    const baseName = file.split('/').pop()?.replace('.txt', '').toLowerCase().trim() || '';
+                    
+                    let key = baseName;
+                    if (baseName.includes('уголов')) key = 'uk';
+                    else if (baseName.includes('процессуал')) key = 'proc';
+                    else if (baseName.includes('конституц')) key = 'konst';
+                    else if (baseName.includes('административ')) key = 'adk';
+                    else if (baseName.includes('адвокат')) key = 'advokat';
+                    else if (baseName.includes('чрезвычайн') || baseName.includes('военн')) key = 'chp';
+                    else if (baseName.includes('дорож')) key = 'dk';
+                    else if (baseName.includes('ems')) key = 'ems';
+                    else if (baseName.includes('этик') || baseName.includes('поведен')) key = 'etk';
+                    else if (baseName.includes('fib')) key = 'fib';
+                    else if (baseName.includes('наград')) key = 'gosnag';
+                    else if (baseName.includes('тайн')) key = 'gostay';
+                    else if (baseName.includes('гражданск')) key = 'grak';
+                    else if (baseName.includes('оружи')) key = 'gun';
+                    else if (baseName.includes('митинг')) key = 'miting';
+                    else if (baseName.includes('нежелательн')) key = 'nej';
+                    else if (baseName.includes('неприкос')) key = 'neprikos';
+                    else if (baseName.includes('прокурор') || baseName.includes('огп')) key = 'ogp';
+                    else if (baseName.includes('ордер')) key = 'order';
+                    else if (baseName.includes('орган')) key = 'organ';
+                    else if (baseName.includes('розыск') || baseName.includes('орм') || baseName.includes('оператив')) key = 'orm';
+                    else if (baseName.includes('правительств') || baseName.includes('gov')) key = 'prav';
+                    else if (baseName.includes('предпринимат')) key = 'predp';
+                    else if (baseName.includes('sang') || baseName.includes('арми') || baseName.includes('гвард')) key = 'sang';
+                    else if (baseName.includes('сенат')) key = 'senat';
+                    else if (baseName.includes('mass') || baseName.includes('сми') || baseName.includes('weazel')) key = 'sredmass';
+                    else if (baseName.includes('судеб') || baseName.includes('правосуд')) key = 'sudk';
+                    else if (baseName.includes('территори')) key = 'ter';
+                    else if (baseName.includes('трудов')) key = 'trudk';
+                    else if (baseName.includes('налог')) key = 'nalog';
+                    else if (baseName.includes('lscsd')) key = 'lscsd';
+                    else if (baseName.includes('lspd')) key = 'lspd';
+                    else if (baseName.includes('usss')) key = 'usss';
+
+                    const isCore = ['uk', 'proc', 'konst'].includes(key);
+                    const isMentioned = userMsg.includes(key) || userMsg.includes(baseName) ||
+                        (key === 'uk' && (userMsg.includes('ук') || userMsg.includes('уголовн'))) ||
+                        (key === 'proc' && (userMsg.includes('пк') || userMsg.includes('процессуал') || userMsg.includes('задержан') || userMsg.includes('миранд'))) ||
+                        (key === 'konst' && (userMsg.includes('конституц') || userMsg.includes('прав') || userMsg.includes('свобод'))) ||
+                        (key === 'adk' && (userMsg.includes('ак') || userMsg.includes('административн'))) ||
+                        (key === 'advokat' && (userMsg.includes('адвокат') || userMsg.includes('юрист') || userMsg.includes('защит'))) ||
+                        (key === 'chp' && (userMsg.includes('чп') || userMsg.includes('вп') || userMsg.includes('чрезвычайн') || userMsg.includes('военн'))) ||
+                        (key === 'dk' && (userMsg.includes('дк') || userMsg.includes('дорожн') || userMsg.includes('пдд') || userMsg.includes('штраф') || userMsg.includes('авто'))) ||
+                        (key === 'ems' && (userMsg.includes('емс') || userMsg.includes('медик') || userMsg.includes('больниц') || userMsg.includes('врач'))) ||
+                        (key === 'etk' && (userMsg.includes('эк') || userMsg.includes('этик') || userMsg.includes('дресс'))) ||
+                        (key === 'fib' && (userMsg.includes('фиб') || userMsg.includes('фбр') || userMsg.includes('федеральн') || userMsg.includes('бюро'))) ||
+                        (key === 'gosnag' && (userMsg.includes('наград') || userMsg.includes('медал') || userMsg.includes('орден'))) ||
+                        (key === 'gostay' && (userMsg.includes('гостайн') || userMsg.includes('государственн') || userMsg.includes('секрет'))) ||
+                        (key === 'grak' && (userMsg.includes('гк') || userMsg.includes('гражданск'))) ||
+                        (key === 'gun' && (userMsg.includes('оружи') || userMsg.includes('лиценз') || userMsg.includes('калибр') || userMsg.includes('ствол'))) ||
+                        (key === 'miting' && (userMsg.includes('митинг') || userMsg.includes('забастов') || userMsg.includes('собрани'))) ||
+                        (key === 'nej' && (userMsg.includes('нежелательн') || userMsg.includes('организаци'))) ||
+                        (key === 'neprikos' && (userMsg.includes('неприкос') || userMsg.includes('статус'))) ||
+                        (key === 'ogp' && (userMsg.includes('огп') || userMsg.includes('прокурор') || userMsg.includes('прокуратур'))) ||
+                        (key === 'order' && (userMsg.includes('ордер') || userMsg.includes('обыск') || userMsg.includes('рейд'))) ||
+                        (key === 'organ' && (userMsg.includes('орган') || userMsg.includes('власт'))) ||
+                        (key === 'orm' && (userMsg.includes('орм') || userMsg.includes('оперативн') || userMsg.includes('розыск') || userMsg.includes('внедрен'))) ||
+                        (key === 'prav' && (userMsg.includes('прав') || userMsg.includes('губернатор') || userMsg.includes('мэр'))) ||
+                        (key === 'predp' && (userMsg.includes('предпринимат') || userMsg.includes('бизнес') || userMsg.includes('ип'))) ||
+                        (key === 'sang' && (userMsg.includes('санг') || userMsg.includes('арми') || userMsg.includes('нацгвард') || userMsg.includes('воен'))) ||
+                        (key === 'senat' && (userMsg.includes('сенат') || userMsg.includes('конгресс'))) ||
+                        (key === 'sredmass' && (userMsg.includes('сми') || userMsg.includes('weazel') || userMsg.includes('журналист') || userMsg.includes('новост'))) ||
+                        (key === 'sudk' && (userMsg.includes('суд') || userMsg.includes('иск') || userMsg.includes('заседан'))) ||
+                        (key === 'ter' && (userMsg.includes('территори') || userMsg.includes('кпз') || userMsg.includes('закрыт') || userMsg.includes('охран'))) ||
+                        (key === 'trudk' && (userMsg.includes('труд') || userMsg.includes('увольн') || userMsg.includes('работ') || userMsg.includes('выговор'))) ||
+                        (key === 'usss' && (userMsg.includes('usss') || userMsg.includes('секретн') || userMsg.includes('служеб'))) ||
+                        (key === 'nalog' && (userMsg.includes('налог') || userMsg.includes('пошлин')));
                     
                     if (isCore || isMentioned) selectedFileNames.push(baseName);
                 }
