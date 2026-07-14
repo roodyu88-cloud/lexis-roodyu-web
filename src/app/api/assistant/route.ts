@@ -38,8 +38,12 @@ async function processAiResponse(text: string, serverInfo: any, isPremium: boole
     // Process files
     let presetData: any[] = [];
     for (const law of laws) {
-        const file = serverInfo.files.find((f: string) => {
-            const baseName = f.split('/').pop()?.replace('.txt', '').toLowerCase().trim() || '';
+        const fileItem = serverInfo.files.find((f: string) => {
+            const parts = f.split('|');
+            const file = parts[0];
+            const realName = parts.length > 1 ? parts[1] : '';
+            const baseName = realName ? realName.toLowerCase() : file.split('/').pop()?.replace('.txt', '').toLowerCase().trim() || '';
+            
             if (!baseName) return false;
             
             const isShorthand = 
@@ -50,12 +54,16 @@ async function processAiResponse(text: string, serverInfo: any, isPremium: boole
                 (law === 'konst') && baseName.includes('конституц');
             return baseName.includes(law) || law.includes(baseName) || isShorthand;
         });
-        if (!file) continue;
+        if (!fileItem) continue;
+        
+        const parts = fileItem.split('|');
+        const file = parts[0];
+        const realName = parts.length > 1 ? parts[1] : '';
 
         const content = getFileContent(file);
         if (!content) continue;
 
-        const lawTitle = file.split('/').pop()?.replace('.txt', '') || 'Закон';
+        const lawTitle = realName || file.split('/').pop()?.replace('.txt', '') || 'Закон';
         
         const lines = content.split('\n');
         let currentCategory = { name: lawTitle, articles: [] as any[] };
