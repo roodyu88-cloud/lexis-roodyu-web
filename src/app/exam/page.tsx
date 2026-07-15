@@ -13,7 +13,7 @@ export default async function ExamPage() {
   const isPremium = (session.user as any).isPremium || false;
 
   return (
-    <div className="min-h-screen text-white">
+    <div className="min-h-screen text-[var(--color-pure-white)]">
       <ExamClient isPremium={isPremium} />
     </div>
   );

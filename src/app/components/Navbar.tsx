@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { signIn, signOut } from "next-auth/react";
 import { useState, useEffect, useRef } from "react";
+import { Brain, GraduationCap, DownloadCloud, BookOpen, Gem, Crown, LogOut, Bell, Upload, Menu, X } from "lucide-react";
 
 interface NavbarProps {
   session: any;
@@ -94,46 +95,46 @@ export default function Navbar({ session }: NavbarProps) {
 
   return (
     <>
-      <nav className="fixed top-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-7xl z-50 glass-card rounded-2xl border border-white/10 px-6 py-3 flex justify-between items-center backdrop-blur-md">
+      <nav className="rc-nav fixed top-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-6xl z-50 px-4 sm:px-6 py-3 flex justify-between items-center">
         <div className="flex items-center gap-4">
-          <Link href="/" className="text-2xl font-bold tracking-tighter text-white hover:text-gray-300 transition-colors">
+          <Link href="/" className="text-xl font-medium tracking-tight text-[var(--color-pure-white)] hover:text-[var(--color-ash)] transition-colors">
             Lex<span className="relative inline-block">
               i
-              <span className="absolute top-[0.18em] left-[51%] -translate-x-[50%] w-[0.22em] h-[0.22em] bg-[#00F0FF] rounded-full shadow-[0_0_12px_3px_rgba(0,240,255,0.9)] mix-blend-screen pointer-events-none"></span>
+              <span className="absolute top-[0.18em] left-[51%] -translate-x-[50%] w-[0.22em] h-[0.22em] bg-[var(--color-coral-pulse)] rounded-full shadow-[0_0_10px_2px_rgba(124,108,240,0.8)] pointer-events-none"></span>
             </span>s
           </Link>
           {session?.user && (
-            <Link href="/upload" title="Загрузить пресет" className="w-8 h-8 rounded-lg bg-white/5 hover:bg-[#5865F2]/20 border border-white/10 hover:border-[#5865F2]/30 flex items-center justify-center text-gray-400 hover:text-[#5865F2] transition-all group">
-              <svg className="w-4 h-4 group-hover:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+            <Link href="/upload" title="Загрузить пресет" className="w-8 h-8 rounded-[var(--radius-lg)] border border-[var(--color-hairline)] flex items-center justify-center text-[var(--color-ash)] hover:text-[var(--color-pure-white)] hover:border-[#4a4b4d] transition-all group">
+              <Upload className="w-4 h-4 group-hover:-translate-y-0.5 transition-transform" strokeWidth={1.75} />
             </Link>
           )}
         </div>
         <div className="hidden md:flex gap-6 items-center">
-          <Link href="/presets" className="text-sm font-semibold text-gray-300 hover:text-white transition-colors">
+          <Link href="/presets" className="rc-link">
             Пресеты
           </Link>
-          <Link href="/assistant" className="text-sm font-semibold text-purple-400 hover:text-purple-300 transition-colors flex items-center gap-1">
-            🧠 Ассистент
+          <Link href="/assistant" className="rc-link flex items-center gap-1.5">
+            <Brain className="w-4 h-4" strokeWidth={2} /> Ассистент
           </Link>
-          <Link href="/exam" className="text-sm font-semibold text-gray-300 hover:text-white transition-colors flex items-center gap-1">
-            🎓 Тренажер <span className="text-[10px] text-amber-500 bg-amber-500/10 px-1.5 py-0.5 rounded font-bold ml-1">PRO</span>
+          <Link href="/exam" className="rc-link flex items-center gap-1.5">
+            <GraduationCap className="w-4 h-4" strokeWidth={2} /> Тренажер <span className="rc-badge">PRO</span>
           </Link>
-          
-          <div className="flex items-center gap-3 ml-2 pl-4 border-l border-white/10">
-            <Link href="/releases" title="Релизы" className="text-xl transition-all hover:scale-125 hover:rotate-12 opacity-90 hover:opacity-100 flex items-center justify-center">
-              💾
+
+          <div className="flex items-center gap-1 ml-2 pl-4 border-l border-[var(--color-hairline)]">
+            <Link href="/releases" title="Релизы" className="w-8 h-8 rounded-[var(--radius-lg)] flex items-center justify-center text-[var(--color-ash)] hover:text-[var(--color-pure-white)] hover:bg-[var(--overlay-soft)] transition-all">
+              <DownloadCloud className="w-[18px] h-[18px]" strokeWidth={1.75} />
             </Link>
-            <Link href="/guide" title="Инструкция" className="text-xl transition-all hover:scale-125 hover:rotate-12 opacity-90 hover:opacity-100 flex items-center justify-center">
-              📖
+            <Link href="/guide" title="Инструкция" className="w-8 h-8 rounded-[var(--radius-lg)] flex items-center justify-center text-[var(--color-ash)] hover:text-[var(--color-pure-white)] hover:bg-[var(--overlay-soft)] transition-all">
+              <BookOpen className="w-[18px] h-[18px]" strokeWidth={1.75} />
             </Link>
-            <Link href="/premium" title="Premium" className="text-xl transition-all hover:scale-125 hover:rotate-12 opacity-90 hover:opacity-100 flex items-center justify-center">
-              💎
+            <Link href="/premium" title="Premium" className="w-8 h-8 rounded-[var(--radius-lg)] flex items-center justify-center text-[var(--color-ash)] hover:text-[var(--color-pure-white)] hover:bg-[var(--overlay-soft)] transition-all">
+              <Gem className="w-[18px] h-[18px]" strokeWidth={1.75} />
             </Link>
           </div>
-          
+
           {(session?.user?.role === "admin" || session?.user?.role === "developer") && (
-            <Link href="/admin" className="text-sm font-semibold text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1">
-              👑 Панель
+            <Link href="/admin" className="rc-link flex items-center gap-1.5">
+              <Crown className="w-4 h-4" strokeWidth={2} /> Панель
             </Link>
           )}
 
@@ -142,51 +143,49 @@ export default function Navbar({ session }: NavbarProps) {
             <div className="flex items-center gap-4">
               {/* Notifications Bell */}
               <div className="relative" ref={notificationsRef}>
-                <button 
+                <button
                   onClick={() => setShowNotifications(!showNotifications)}
-                  className="relative p-1.5 rounded-full hover:bg-white/5 text-gray-400 hover:text-white transition-colors focus:outline-none"
+                  className="relative p-1.5 rounded-full hover:bg-[var(--overlay-soft)] text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors focus:outline-none"
                   aria-label="Уведомления"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                  </svg>
+                  <Bell className="w-5 h-5" strokeWidth={1.75} />
                   {unreadCount > 0 && (
                     <span className="absolute top-1.5 right-1.5 flex h-2.5 w-2.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-coral-pulse)] opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[var(--color-coral-pulse)]"></span>
                     </span>
                   )}
                 </button>
 
                 {/* Notifications Dropdown */}
                 {showNotifications && (
-                  <div className="absolute right-0 mt-3 w-80 bg-[#1e1f22]/95 p-4 rounded-xl border border-white/10 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] backdrop-blur-3xl z-50 text-left max-h-96 overflow-y-auto animate-fade-in">
-                    <div className="flex justify-between items-center mb-3 pb-2 border-b border-white/10">
-                      <h4 className="font-bold text-white text-sm">Уведомления</h4>
+                  <div className="rc-card-edge absolute right-0 mt-3 w-80 !p-4 bg-[var(--color-ink)] z-50 text-left max-h-96 overflow-y-auto animate-fade-in">
+                    <div className="flex justify-between items-center mb-3 pb-2 border-b border-[var(--color-hairline)]">
+                      <h4 className="font-medium text-[var(--color-pure-white)] text-sm">Уведомления</h4>
                       {unreadCount > 0 && (
-                        <button 
-                          onClick={markAllAsRead} 
-                          className="text-xs text-[#5865F2] hover:underline"
+                        <button
+                          onClick={markAllAsRead}
+                          className="text-xs text-[var(--color-ash)] hover:text-[var(--color-pure-white)] hover:underline"
                         >
                           Прочитать все
                         </button>
                       )}
                     </div>
                     {notifications.length === 0 ? (
-                      <p className="text-sm text-gray-500 text-center py-4">Нет уведомлений</p>
+                      <p className="text-sm text-[var(--color-smoke)] text-center py-4">Нет уведомлений</p>
                     ) : (
                       <div className="space-y-3">
                         {notifications.map((n) => (
-                          <div 
-                            key={n.id} 
-                            className={`p-3 rounded-lg border text-xs transition-colors ${
-                              n.read 
-                                ? "bg-white/5 border-white/5 text-gray-400" 
-                                : "bg-[#5865F2]/10 border-[#5865F2]/20 text-white"
+                          <div
+                            key={n.id}
+                            className={`p-3 rounded-[var(--radius-lg)] border text-xs transition-colors ${
+                              n.read
+                                ? "bg-[var(--overlay-soft)] border-[var(--color-hairline)] text-[var(--color-smoke)]"
+                                : "bg-[var(--overlay-soft-strong)] border-[var(--color-hairline)] text-[var(--color-pure-white)]"
                             }`}
                           >
                             <p className="leading-relaxed">{n.message}</p>
-                            <span className="block text-[10px] text-gray-500 mt-1.5">
+                            <span className="block text-[10px] text-[var(--color-smoke)] mt-1.5">
                               {new Date(n.createdAt).toLocaleString("ru-RU")}
                             </span>
                           </div>
@@ -199,20 +198,20 @@ export default function Navbar({ session }: NavbarProps) {
 
               {/* User Profile Info */}
               <div className="flex items-center gap-3">
-                <img src={session.user.image || ""} alt="Avatar" className="w-8 h-8 rounded-full border border-white/20" />
-                <span className="text-sm font-medium text-white">{session.user.name}</span>
-                <button 
-                  onClick={() => setShowLogoutModal(true)} 
-                  className="text-xs text-red-400 hover:text-red-300 font-semibold cursor-pointer ml-1.5"
+                <img src={session.user.image || ""} alt="Avatar" className="w-8 h-8 rounded-full border border-[var(--color-hairline)]" />
+                <span className="text-sm font-medium text-[var(--color-pure-white)]">{session.user.name}</span>
+                <button
+                  onClick={() => setShowLogoutModal(true)}
+                  className="text-xs text-[var(--color-ash)] hover:text-[var(--color-pure-white)] font-medium cursor-pointer ml-1.5"
                 >
                   Выйти
                 </button>
               </div>
             </div>
           ) : (
-            <button 
-              onClick={handleLogin} 
-              className="btn-secondary text-sm !py-2 !px-4 cursor-pointer"
+            <button
+              onClick={handleLogin}
+              className="rc-btn cursor-pointer"
             >
               Войти (Discord)
             </button>
@@ -223,34 +222,32 @@ export default function Navbar({ session }: NavbarProps) {
         <div className="flex md:hidden items-center gap-3">
           {session?.user && (
             <div className="relative" ref={notificationsRef}>
-              <button 
+              <button
                 onClick={() => setShowNotifications(!showNotifications)}
-                className="relative p-1.5 rounded-full hover:bg-white/5 text-gray-400 hover:text-white transition-colors focus:outline-none"
+                className="relative p-1.5 rounded-full hover:bg-[var(--overlay-soft)] text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors focus:outline-none"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                </svg>
+                <Bell className="w-5 h-5" strokeWidth={1.75} />
                 {unreadCount > 0 && (
                   <span className="absolute top-1.5 right-1.5 flex h-2.5 w-2.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-coral-pulse)] opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[var(--color-coral-pulse)]"></span>
                   </span>
                 )}
               </button>
               {showNotifications && (
-                <div className="absolute right-0 mt-3 w-72 bg-[#1e1f22]/95 p-4 rounded-xl border border-white/10 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] backdrop-blur-3xl z-50 text-left max-h-80 overflow-y-auto animate-fade-in">
-                  <div className="flex justify-between items-center mb-3 pb-2 border-b border-white/10">
-                    <h4 className="font-bold text-white text-sm">Уведомления</h4>
+                <div className="rc-card-edge absolute right-0 mt-3 w-72 !p-4 bg-[var(--color-ink)] z-50 text-left max-h-80 overflow-y-auto animate-fade-in">
+                  <div className="flex justify-between items-center mb-3 pb-2 border-b border-[var(--color-hairline)]">
+                    <h4 className="font-medium text-[var(--color-pure-white)] text-sm">Уведомления</h4>
                     {unreadCount > 0 && (
-                      <button onClick={markAllAsRead} className="text-xs text-[#5865F2]">Прочитать</button>
+                      <button onClick={markAllAsRead} className="text-xs text-[var(--color-ash)] hover:text-[var(--color-pure-white)]">Прочитать</button>
                     )}
                   </div>
                   {notifications.length === 0 ? (
-                    <p className="text-sm text-gray-500 text-center py-4">Нет уведомлений</p>
+                    <p className="text-sm text-[var(--color-smoke)] text-center py-4">Нет уведомлений</p>
                   ) : (
                     <div className="space-y-3">
                       {notifications.map((n) => (
-                        <div key={n.id} className={`p-3 rounded-lg border text-xs transition-colors ${n.read ? "bg-white/5 border-white/5 text-gray-400" : "bg-[#5865F2]/10 border-[#5865F2]/20 text-white"}`}>
+                        <div key={n.id} className={`p-3 rounded-[var(--radius-lg)] border text-xs transition-colors ${n.read ? "bg-[var(--overlay-soft)] border-[var(--color-hairline)] text-[var(--color-smoke)]" : "bg-[var(--overlay-soft-strong)] border-[var(--color-hairline)] text-[var(--color-pure-white)]"}`}>
                           <p>{n.message}</p>
                         </div>
                       ))}
@@ -260,66 +257,64 @@ export default function Navbar({ session }: NavbarProps) {
               )}
             </div>
           )}
-          
-          <button 
+
+          <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="text-gray-300 hover:text-white p-1 focus:outline-none"
+            className="text-[var(--color-ash)] hover:text-[var(--color-pure-white)] p-1 focus:outline-none"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={isMobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}></path>
-            </svg>
+            {isMobileMenuOpen ? <X className="w-6 h-6" strokeWidth={1.75} /> : <Menu className="w-6 h-6" strokeWidth={1.75} />}
           </button>
         </div>
       </nav>
 
       {/* Mobile Menu Dropdown */}
       {isMobileMenuOpen && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] z-40 glass-card p-5 rounded-2xl border border-white/10 shadow-2xl backdrop-blur-xl md:hidden animate-fade-in flex flex-col gap-4">
-          <Link href="/presets" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-semibold text-gray-300 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/5">
+        <div className="rc-card-edge fixed top-20 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] z-40 !p-5 bg-[var(--color-ink)] md:hidden animate-fade-in flex flex-col gap-4">
+          <Link href="/presets" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-medium text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors p-2 rounded-[var(--radius-lg)] hover:bg-[var(--overlay-soft)]">
             Пресеты
           </Link>
-          <Link href="/guide" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-semibold text-[#00F0FF] hover:text-white transition-colors p-2 rounded-lg hover:bg-white/5 flex items-center gap-2">
-            📖 Инструкция
+          <Link href="/guide" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-medium text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors p-2 rounded-[var(--radius-lg)] hover:bg-[var(--overlay-soft)] flex items-center gap-2">
+            <BookOpen className="w-4 h-4" strokeWidth={1.75} /> Инструкция
           </Link>
-          <Link href="/assistant" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-semibold text-purple-400 hover:text-purple-300 transition-colors p-2 rounded-lg hover:bg-white/5 flex items-center gap-2">
-            🧠 Ассистент
+          <Link href="/assistant" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-medium text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors p-2 rounded-[var(--radius-lg)] hover:bg-[var(--overlay-soft)] flex items-center gap-2">
+            <Brain className="w-4 h-4" strokeWidth={1.75} /> Ассистент
           </Link>
-          <Link href="/exam" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-semibold text-gray-300 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/5 flex items-center gap-2">
-            🎓 Тренажер <span className="text-[10px] text-amber-500 bg-amber-500/10 px-1.5 py-0.5 rounded font-bold ml-1">PRO</span>
+          <Link href="/exam" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-medium text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors p-2 rounded-[var(--radius-lg)] hover:bg-[var(--overlay-soft)] flex items-center gap-2">
+            <GraduationCap className="w-4 h-4" strokeWidth={1.75} /> Тренажер <span className="rc-badge">PRO</span>
           </Link>
-          <Link href="/premium" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-semibold text-amber-500 hover:text-amber-400 transition-colors p-2 rounded-lg hover:bg-white/5 flex items-center gap-2">
-            💎 Premium
+          <Link href="/premium" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-medium text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors p-2 rounded-[var(--radius-lg)] hover:bg-[var(--overlay-soft)] flex items-center gap-2">
+            <Gem className="w-4 h-4" strokeWidth={1.75} /> Premium
           </Link>
           {session?.user && (
-            <Link href="/upload" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-semibold text-[#5865F2] hover:text-[#4752C4] transition-colors p-2 rounded-lg hover:bg-white/5">
+            <Link href="/upload" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-medium text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors p-2 rounded-[var(--radius-lg)] hover:bg-[var(--overlay-soft)]">
               Загрузить пресет
             </Link>
           )}
           {(session?.user?.role === "admin" || session?.user?.role === "developer") && (
-            <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-semibold text-amber-400 hover:text-amber-300 transition-colors p-2 rounded-lg hover:bg-white/5 flex items-center gap-2">
-              👑 Панель управления
+            <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-medium text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors p-2 rounded-[var(--radius-lg)] hover:bg-[var(--overlay-soft)] flex items-center gap-2">
+              <Crown className="w-4 h-4" strokeWidth={1.75} /> Панель управления
             </Link>
           )}
 
-          <div className="h-px w-full bg-white/10 my-2"></div>
+          <div className="h-px w-full bg-[var(--color-hairline)] my-2"></div>
 
           {session?.user ? (
             <div className="flex flex-col gap-4">
               <div className="flex items-center gap-3 px-2">
-                <img src={session.user.image || ""} alt="Avatar" className="w-10 h-10 rounded-full border border-white/20" />
-                <span className="text-sm font-medium text-white">{session.user.name}</span>
+                <img src={session.user.image || ""} alt="Avatar" className="w-10 h-10 rounded-full border border-[var(--color-hairline)]" />
+                <span className="text-sm font-medium text-[var(--color-pure-white)]">{session.user.name}</span>
               </div>
-              <button 
+              <button
                 onClick={() => { setIsMobileMenuOpen(false); setShowLogoutModal(true); }}
-                className="text-sm text-red-400 hover:text-red-300 font-semibold p-2 rounded-lg hover:bg-white/5 text-left"
+                className="text-sm text-[var(--color-ash)] hover:text-[var(--color-pure-white)] font-medium p-2 rounded-[var(--radius-lg)] hover:bg-[var(--overlay-soft)] text-left"
               >
                 Выйти из аккаунта
               </button>
             </div>
           ) : (
-            <button 
-              onClick={handleLogin} 
-              className="btn-secondary text-sm w-full"
+            <button
+              onClick={handleLogin}
+              className="rc-btn w-full"
             >
               Войти через Discord
             </button>
@@ -330,30 +325,26 @@ export default function Navbar({ session }: NavbarProps) {
       {/* Logout Confirmation Modal */}
       {showLogoutModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm animate-fade-in">
-          <div className="glass-card p-8 max-w-sm w-full mx-4 text-center border border-white/10 shadow-2xl relative overflow-hidden rounded-2xl animate-scale-up">
-            {/* Background glowing gradients */}
-            <div className="absolute -top-10 -left-10 w-32 h-32 bg-[#5865F2]/20 rounded-full blur-3xl pointer-events-none"></div>
-            <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-[#00F0FF]/20 rounded-full blur-3xl pointer-events-none"></div>
-
-            <div className="w-16 h-16 bg-red-500/10 border border-red-500/20 text-red-400 rounded-full flex items-center justify-center mx-auto mb-5 text-2xl">
-              🚪
+          <div className="rc-card-edge !p-8 max-w-sm w-full mx-4 text-center bg-[var(--color-ink)] relative overflow-hidden animate-scale-up">
+            <div className="w-16 h-16 bg-[var(--overlay-soft)] border border-[var(--color-hairline)] text-[var(--color-ash)] rounded-full flex items-center justify-center mx-auto mb-5">
+              <LogOut className="w-7 h-7" strokeWidth={1.75} />
             </div>
-            
-            <h3 className="text-xl font-bold text-white mb-2">Выход из аккаунта</h3>
-            <p className="text-gray-400 text-sm mb-6">
+
+            <h3 className="text-xl font-medium text-[var(--color-pure-white)] mb-2">Выход из аккаунта</h3>
+            <p className="text-[var(--color-ash)] text-sm mb-6">
               Вы уверены, что хотите выйти из своего профиля Lexis?
             </p>
-            
+
             <div className="flex gap-4">
-              <button 
+              <button
                 onClick={() => setShowLogoutModal(false)}
-                className="flex-1 btn-secondary text-sm !py-2.5 cursor-pointer"
+                className="rc-btn-ghost flex-1 !py-2.5 cursor-pointer"
               >
                 Отмена
               </button>
-              <button 
+              <button
                 onClick={() => signOut({ callbackUrl: "/" })}
-                className="flex-1 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold text-sm py-2.5 transition-colors cursor-pointer"
+                className="flex-1 bg-[var(--color-coral-pulse)] hover:opacity-90 text-white rounded-[var(--radius-lg)] font-medium text-sm py-2.5 transition-opacity cursor-pointer"
               >
                 Да, выйти
               </button>
@@ -362,23 +353,22 @@ export default function Navbar({ session }: NavbarProps) {
         </div>
       )}
 
-      {/* Floating Theme Switcher FAB (glowing glass dot) */}
-      <button 
+      {/* Floating Theme Switcher FAB */}
+      <button
         onClick={toggleTheme}
-        className="fixed bottom-6 right-6 w-10 h-10 rounded-full z-[9999] flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110 border border-white/5 group shadow-[0_10px_30px_rgba(0,0,0,0.6)]"
+        className="fixed bottom-6 right-6 w-10 h-10 rounded-full z-[9999] flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110 border border-[var(--color-hairline)] group"
         style={{
-          background: "rgba(25, 25, 30, 0.45)",
+          background: "color-mix(in srgb, var(--color-void-black) 72%, transparent)",
           backdropFilter: "blur(24px)",
-          WebkitBackdropFilter: "blur(24px)",
-          boxShadow: "inset 0 1px 1.5px rgba(255, 255, 255, 0.15), 0 10px 30px rgba(0, 0, 0, 0.5)",
+          boxShadow: "var(--shadow-key)",
         }}
-        title={theme === "glass" ? "Включить классическую тему" : "Включить тему серого стекла"}
+        title={theme === "glass" ? "Включить темную тему" : "Включить светлую тему"}
         aria-label="Сменить тему оформления"
       >
         <span className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-          theme === "glass" 
-            ? "bg-[#FFFFFF] shadow-[0_0_12px_rgba(255,255,255,0.95)]" 
-            : "bg-[#5865F2] shadow-[0_0_12px_rgba(88,101,242,0.95)]"
+          theme === "glass"
+            ? "bg-white shadow-[0_0_12px_rgba(255,255,255,0.95)]"
+            : "bg-[var(--color-coral-pulse)] shadow-[0_0_12px_rgba(124,108,240,0.85)]"
         }`} />
       </button>
     </>

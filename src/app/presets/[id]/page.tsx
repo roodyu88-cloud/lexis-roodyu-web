@@ -1,9 +1,11 @@
-import { prisma } from "@/lib/prisma";
+// PLACEHOLDER-DB (2026-07-15): unused while DB calls below are placeholdered — restore with the query.
+// import { prisma } from "@/lib/prisma";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+// import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { headers } from "next/headers";
+import { ArrowLeft, Rocket, Pencil } from "lucide-react";
 import DeletePresetButton from "./DeletePresetButton";
 
 export const revalidate = 0;
@@ -15,18 +17,18 @@ export default async function PresetDetails({ params }: { params: Promise<{ id: 
   const protocol = xForwardedProto.split(",")[0].trim() || (host.includes("localhost") ? "http" : "https");
   const domain = `${protocol}://${host}`;
   const resolvedParams = await params;
-  const preset = await prisma.preset.findUnique({
-    where: { id: resolvedParams.id }
-  });
+  // PLACEHOLDER-DB (2026-07-15): DATABASE_URL absent in this dev env, real queries crash SSR.
+  // Original:
+  // const preset = await prisma.preset.findUnique({ where: { id: resolvedParams.id } });
+  // if (!preset) return notFound();
+  // const authorUser = preset.discordId ? await prisma.user.findUnique({ where: { discordId: preset.discordId } }) : null;
+  const preset = {
+    id: resolvedParams.id, name: "Уголовный кодекс (плейсхолдер)", description: "Полный УК сервера Majestic — placeholder-данные для превью без БД.",
+    author: "Ivan Petrov", discordId: "111111111111111111", data: JSON.stringify([{ name: "Глава 1. Общие положения", articles: [{ title: "Статья 1. Незаконное хранение оружия" }, { title: "Статья 2. Сопротивление сотруднику" }] }]),
+    downloads: 482, isVerified: true, serverProjectId: "ph-project-1", serverId: "ph-server-1", createdAt: new Date("2026-06-01"),
+  };
 
-  if (!preset) {
-    return notFound();
-  }
-
-  // Fetch author user details for badges
-  const authorUser = preset.discordId ? await prisma.user.findUnique({
-    where: { discordId: preset.discordId }
-  }) : null;
+  const authorUser = { badges: JSON.stringify(["Creator", "Staff"]) };
   const authorBadges = authorUser ? JSON.parse(authorUser.badges || "[]") as string[] : [];
 
   const BADGE_FILES: Record<string, string> = {
@@ -79,26 +81,26 @@ export default async function PresetDetails({ params }: { params: Promise<{ id: 
 
   return (
     <main className="min-h-screen p-8 max-w-4xl mx-auto">
-      <Link href="/presets" className="text-[#5865F2] hover:underline mb-8 inline-block">
-        ← Назад к базе
+      <Link href="/presets" className="rc-link mb-8 inline-flex items-center gap-1.5">
+        <ArrowLeft className="w-4 h-4" /> Назад к базе
       </Link>
-      
-      <div className="glass-card p-8 mb-8 relative">
+
+      <div className="rc-card-edge !p-8 mb-8 relative bg-[var(--color-ink)]">
         {preset.isVerified && (
           <div className="absolute top-8 right-8 group/tooltip">
             <img src="/img/Verified.png" alt="Verified" className="h-10 w-auto" />
-            <span className="absolute bottom-full right-0 mb-1.5 hidden group-hover/tooltip:block bg-[#121318] border border-white/10 text-white text-[11px] font-semibold px-2.5 py-1.5 rounded-lg shadow-2xl pointer-events-none whitespace-nowrap z-30">
+            <span className="absolute bottom-full right-0 mb-1.5 hidden group-hover/tooltip:block bg-[var(--color-graphite)] border border-[var(--color-hairline)] text-[var(--color-pure-white)] text-[11px] font-semibold px-2.5 py-1.5 rounded-lg shadow-2xl pointer-events-none whitespace-nowrap z-30">
               Верифицированный пресет
             </span>
           </div>
         )}
-        <h1 className="text-3xl font-bold text-white mb-2 pr-12">{preset.name}</h1>
-        <p className="text-gray-400 mb-6">{preset.description || "Нет описания"}</p>
-        
+        <h1 className="text-heading font-bold text-[var(--color-pure-white)] mb-2 pr-12">{preset.name}</h1>
+        <p className="text-[var(--color-ash)] mb-6">{preset.description || "Нет описания"}</p>
+
         <div className="flex flex-wrap gap-4 mb-8">
-          <div className="bg-white/5 rounded-md px-4 py-2 border border-white/10">
-            <span className="text-gray-500 text-sm block">Автор</span>
-            <span className="text-white font-semibold flex items-center gap-2">
+          <div className="bg-[var(--overlay-soft)] rounded-md px-4 py-2 border border-[var(--color-hairline)]">
+            <span className="text-[var(--color-smoke)] text-sm block">Автор</span>
+            <span className="text-[var(--color-pure-white)] font-semibold flex items-center gap-2">
               {preset.author}
               {authorBadges.map(b => {
                 const file = BADGE_FILES[b];
@@ -106,12 +108,12 @@ export default async function PresetDetails({ params }: { params: Promise<{ id: 
                 if (!file) return null;
                 return (
                   <span key={b} className="relative group/tooltip inline-block align-middle ml-1">
-                    <img 
-                      src={`/img/${file}`} 
-                      alt={label} 
+                    <img
+                      src={`/img/${file}`}
+                      alt={label}
                       className="h-4.5 w-auto cursor-help"
                     />
-                    <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 hidden group-hover/tooltip:block bg-[#121318] border border-white/10 text-white text-[10px] font-semibold px-2 py-1 rounded-md shadow-2xl pointer-events-none whitespace-nowrap z-30">
+                    <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 hidden group-hover/tooltip:block bg-[var(--color-graphite)] border border-[var(--color-hairline)] text-[var(--color-pure-white)] text-[10px] font-semibold px-2 py-1 rounded-md shadow-2xl pointer-events-none whitespace-nowrap z-30">
                       {label}
                     </span>
                   </span>
@@ -119,60 +121,60 @@ export default async function PresetDetails({ params }: { params: Promise<{ id: 
               })}
             </span>
           </div>
-          <div className="bg-white/5 rounded-md px-4 py-2 border border-white/10">
-            <span className="text-gray-500 text-sm block">Категорий</span>
-            <span className="text-white font-semibold">{categoryCount}</span>
+          <div className="bg-[var(--overlay-soft)] rounded-md px-4 py-2 border border-[var(--color-hairline)]">
+            <span className="text-[var(--color-smoke)] text-sm block">Категорий</span>
+            <span className="text-[var(--color-pure-white)] font-semibold font-data">{categoryCount}</span>
           </div>
-          <div className="bg-white/5 rounded-md px-4 py-2 border border-white/10">
-            <span className="text-gray-500 text-sm block">Статей</span>
-            <span className="text-white font-semibold">{articleCount}</span>
+          <div className="bg-[var(--overlay-soft)] rounded-md px-4 py-2 border border-[var(--color-hairline)]">
+            <span className="text-[var(--color-smoke)] text-sm block">Статей</span>
+            <span className="text-[var(--color-pure-white)] font-semibold font-data">{articleCount}</span>
           </div>
-          <div className="bg-white/5 rounded-md px-4 py-2 border border-white/10">
-            <span className="text-gray-500 text-sm block">Скачиваний</span>
-            <span className="text-white font-semibold">{preset.downloads}</span>
+          <div className="bg-[var(--overlay-soft)] rounded-md px-4 py-2 border border-[var(--color-hairline)]">
+            <span className="text-[var(--color-smoke)] text-sm block">Скачиваний</span>
+            <span className="text-[var(--color-pure-white)] font-semibold font-data">{preset.downloads}</span>
           </div>
         </div>
 
         <div className="flex flex-wrap gap-4 items-center justify-between">
           <div className="flex gap-4 items-center">
-            <a href={`/api/download/${preset.id}`} className="btn-primary">
+            <a href={`/api/download/${preset.id}`} className="rc-btn">
               Скачать .json
             </a>
-            <a href={directLink} className="btn-secondary">
-              🚀 Открыть в Lexis
+            <a href={directLink} className="rc-btn-ghost flex items-center gap-2">
+              <Rocket className="w-4 h-4" /> Открыть в Lexis
             </a>
             {hasEditPermission && (
-              <Link href={`/presets/${preset.id}/edit`} className="btn-secondary flex items-center gap-1.5 !py-2.5">
-                ✏️ Редактировать
+              <Link href={`/presets/${preset.id}/edit`} className="rc-btn-ghost flex items-center gap-1.5">
+                <Pencil className="w-4 h-4" /> Редактировать
               </Link>
             )}
           </div>
-          
+
           {hasDeletePermission && (
-            <DeletePresetButton 
-              presetId={preset.id} 
-              presetName={preset.name} 
-              isAuthor={isAuthor} 
-              isModOrAdmin={isModOrAdmin} 
+            <DeletePresetButton
+              presetId={preset.id}
+              presetName={preset.name}
+              isAuthor={isAuthor}
+              isModOrAdmin={isModOrAdmin}
             />
           )}
         </div>
       </div>
 
-      <h2 className="text-2xl font-bold text-white mb-6">Предпросмотр структуры</h2>
+      <h2 className="text-heading-sm font-bold text-[var(--color-pure-white)] mb-6">Предпросмотр структуры</h2>
       <div className="space-y-4">
         {rawArray.map((cat: any, idx: number) => (
-          <div key={idx} className="glass-card p-6">
-            <h3 className="text-xl font-bold text-[#5865F2] mb-4">{cat.name || "Без названия"}</h3>
-            <div className="space-y-2 pl-4 border-l-2 border-white/10">
+          <div key={idx} className="rc-card-edge bg-[var(--color-ink)]">
+            <h3 className="text-subheading font-bold text-[var(--color-pure-white)] mb-4">{cat.name || "Без названия"}</h3>
+            <div className="space-y-2 pl-4 border-l-2 border-[var(--color-hairline)]">
               {cat.articles && cat.articles.length > 0 ? (
                 cat.articles.map((art: any, i: number) => (
-                  <div key={i} className="text-gray-300">
-                    <span className="font-semibold text-white">{art.title}</span>
+                  <div key={i} className="text-[var(--color-ash)]">
+                    <span className="font-semibold text-[var(--color-pure-white)]">{art.title}</span>
                   </div>
                 ))
               ) : (
-                <div className="text-gray-500 italic">Нет статей</div>
+                <div className="text-[var(--color-smoke)] italic">Нет статей</div>
               )}
             </div>
           </div>

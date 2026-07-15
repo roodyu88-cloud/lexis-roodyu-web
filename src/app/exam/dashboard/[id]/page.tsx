@@ -11,5 +11,9 @@ export default async function ExamDashboardPage({ params }: { params: Promise<{ 
     redirect("/api/auth/signin");
   }
 
-  return <DashboardClient examId={id} />;
+  return (
+    <div className="min-h-screen text-[var(--color-pure-white)]">
+      <DashboardClient examId={id} />
+    </div>
+  );
 }

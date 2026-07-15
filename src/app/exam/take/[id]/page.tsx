@@ -12,5 +12,9 @@ export default async function TakeExamPage({ params }: { params: Promise<{ id: s
     redirect(`/api/auth/signin?callbackUrl=/exam/take/${id}`);
   }
 
-  return <TakeExamClient examId={id} user={session.user} />;
+  return (
+    <div className="min-h-screen text-[var(--color-pure-white)]">
+      <TakeExamClient examId={id} user={session.user} />
+    </div>
+  );
 }

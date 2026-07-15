@@ -2,6 +2,29 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import {
+  User,
+  FolderOpen,
+  Gamepad2,
+  Tag,
+  Settings,
+  BarChart3,
+  ChevronDown,
+  Check,
+  CheckCircle2,
+  XCircle,
+  Crown,
+  Ban,
+  Sparkles,
+  AlertTriangle,
+  Bot,
+  FileText,
+  Plus,
+  Bell,
+  Image as ImageIcon,
+  Trash2,
+  X,
+} from "lucide-react";
 
 interface User {
   id: string;
@@ -233,64 +256,43 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
     }
   };
 
+  const TABS: { id: typeof activeTab; label: string; icon: React.ElementType; count?: number }[] = [
+    { id: "users", label: "Пользователи", icon: User, count: users.length },
+    { id: "presets", label: "Пресеты", icon: FolderOpen, count: presets.length },
+    { id: "servers", label: "Проекты", icon: Gamepad2, count: servers.length },
+    { id: "promocodes", label: "Промокоды", icon: Tag, count: promocodes.length },
+    { id: "settings", label: "Настройки", icon: Settings },
+    { id: "stats", label: "Статистика", icon: BarChart3 },
+  ];
+
   return (
     <div className="space-y-6">
       {/* Tabs Menu */}
-      <div className="flex gap-4 border-b border-white/10 pb-4">
-        <button
-          onClick={() => { setActiveTab("users"); setSelectedUser(null); }}
-          className={`px-4 py-2 rounded-lg font-bold transition-all cursor-pointer ${activeTab === "users"
-              ? "bg-[#5865F2] text-white shadow-lg shadow-[#5865F2]/20"
-              : "bg-white/5 text-gray-400 hover:text-white"
-            }`}
-        >
-          👤 Пользователи ({users.length})
-        </button>
-        <button
-          onClick={() => { setActiveTab("presets"); setSelectedUser(null); }}
-          className={`px-4 py-2 rounded-lg font-bold transition-all cursor-pointer ${activeTab === "presets"
-              ? "bg-[#5865F2] text-white shadow-lg shadow-[#5865F2]/20"
-              : "bg-white/5 text-gray-400 hover:text-white"
-            }`}
-        >
-          📂 Пресеты ({presets.length})
-        </button>
-        <button
-          onClick={() => { setActiveTab("servers"); setSelectedUser(null); }}
-          className={`px-4 py-2 rounded-lg font-bold transition-all cursor-pointer ${activeTab === "servers"
-              ? "bg-[#5865F2] text-white shadow-lg shadow-[#5865F2]/20"
-              : "bg-white/5 text-gray-400 hover:text-white"
-            }`}
-        >
-          🎮 Проекты ({servers.length})
-        </button>
-        <button
-          onClick={() => { setActiveTab("promocodes"); setSelectedUser(null); }}
-          className={`px-4 py-2 rounded-lg font-bold transition-all cursor-pointer ${activeTab === "promocodes"
-              ? "bg-[#5865F2] text-white shadow-lg shadow-[#5865F2]/20"
-              : "bg-white/5 text-gray-400 hover:text-white"
-            }`}
-        >
-          🏷️ Промокоды ({promocodes.length})
-        </button>
-        <button
-          onClick={() => { setActiveTab("settings"); setSelectedUser(null); }}
-          className={`px-4 py-2 rounded-lg font-bold transition-all cursor-pointer ${activeTab === "settings"
-              ? "bg-[#5865F2] text-white shadow-lg shadow-[#5865F2]/20"
-              : "bg-white/5 text-gray-400 hover:text-white"
-            }`}
-        >
-          ⚙️ Настройки
-        </button>
-        <button
-          onClick={() => { setActiveTab("stats"); setSelectedUser(null); }}
-          className={`px-4 py-2 rounded-lg font-bold transition-all cursor-pointer ${activeTab === "stats"
-              ? "bg-[#5865F2] text-white shadow-lg shadow-[#5865F2]/20"
-              : "bg-white/5 text-gray-400 hover:text-white"
-            }`}
-        >
-          📊 Статистика
-        </button>
+      <div className="rc-card-edge bg-[var(--color-ink)] p-2">
+        <div className="flex gap-2 overflow-x-auto no-scrollbar">
+          {TABS.map(tab => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => { setActiveTab(tab.id); setSelectedUser(null); }}
+                className={`shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all cursor-pointer ${isActive
+                    ? "bg-[var(--color-mist)] text-[var(--color-iron)] shadow-[var(--shadow-button-lift)]"
+                    : "text-[var(--color-ash)] hover:text-[var(--color-pure-white)] hover:bg-[var(--overlay-soft)]"
+                  }`}
+              >
+                <Icon className="w-4 h-4" strokeWidth={2.25} />
+                <span>{tab.label}</span>
+                {typeof tab.count === "number" && (
+                  <span className={`font-data text-xs px-1.5 py-0.5 rounded-full ${isActive ? "bg-black/15" : "bg-[var(--overlay-soft)] text-[var(--color-smoke)]"}`}>
+                    {tab.count}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Main Content Area */}
@@ -299,12 +301,12 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
         {/* Table / List list (Left / Two-thirds width) */}
         <div className={`${selectedUser ? "lg:col-span-2" : "lg:col-span-3"} transition-all`}>
           {activeTab === "users" ? (
-            <div className="glass-card overflow-hidden p-6">
-              <h2 className="text-xl font-bold text-white mb-4">Список пользователей</h2>
+            <div className="rc-card-edge bg-[var(--color-ink)] overflow-hidden p-6">
+              <h2 className="text-xl font-bold text-[var(--color-pure-white)] mb-4">Список пользователей</h2>
               <div className="overflow-x-auto no-scrollbar">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="border-b border-white/10 text-gray-400 text-sm">
+                    <tr className="border-b text-sm" style={{ borderColor: "var(--color-hairline)", color: "var(--color-ash)" }}>
                       <th className="py-3 px-3">Пользователь</th>
                       <th className="py-3 px-3">Discord ID</th>
                       <th className="py-3 px-3">Роль</th>
@@ -312,18 +314,19 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
                       <th className="py-3 px-3 text-right">Действия</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/5">
+                  <tbody className="divide-y divide-[var(--color-hairline)]">
                     {users.map(u => (
-                      <tr key={u.id} className="hover:bg-white/20 transition-colors">
+                      <tr key={u.id} className="hover:bg-[var(--overlay-soft)] transition-colors">
                         <td className="py-3 px-3 flex items-center gap-3">
                           <img
                             src={u.avatar || "/img/window.svg"}
                             alt={u.username}
-                            className="w-8 h-8 rounded-full border border-white/10"
+                            className="w-8 h-8 rounded-full border"
+                            style={{ borderColor: "var(--color-hairline)" }}
                           />
-                          <span className="font-semibold text-white">{u.username}</span>
+                          <span className="font-semibold text-[var(--color-pure-white)]">{u.username}</span>
                         </td>
-                        <td className="py-3 px-3 text-xs font-mono text-gray-400">{u.discordId}</td>
+                        <td className="py-3 px-3 text-xs font-data text-[var(--color-ash)]">{u.discordId}</td>
                         <td className="py-3 px-3">
                           <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${u.role === "admin"
                               ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
@@ -331,7 +334,7 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
                                 ? "bg-blue-500/20 text-blue-300 border border-blue-500/30"
                                 : u.role === "moderator"
                                   ? "bg-purple-500/20 text-purple-300 border border-purple-500/30"
-                                  : "bg-white/5 text-gray-400"
+                                  : "bg-[var(--overlay-soft)] text-[var(--color-ash)]"
                             }`}>
                             {u.role === "admin" ? "Администратор" : u.role === "developer" ? "Разработчик" : u.role === "moderator" ? "Модератор" : "Юзер"}
                           </span>
@@ -351,13 +354,13 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
                                 />
                               );
                             })}
-                            {u.badges.length === 0 && <span className="text-xs text-gray-600">-</span>}
+                            {u.badges.length === 0 && <span className="text-xs text-[var(--color-smoke)]">-</span>}
                           </div>
                         </td>
                         <td className="py-3 px-3 text-right">
                           <button
                             onClick={() => handleSelectUser(u)}
-                            className="text-sm bg-white/5 hover:bg-[#5865F2] hover:text-white px-2.5 py-1.5 rounded-lg border border-white/10 text-gray-300 font-medium transition-all cursor-pointer"
+                            className="rc-btn-ghost text-sm px-2.5 py-1.5"
                           >
                             Редактировать
                           </button>
@@ -369,50 +372,55 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
               </div>
             </div>
           ) : activeTab === "presets" ? (
-            <div className="glass-card overflow-hidden p-6">
+            <div className="rc-card-edge bg-[var(--color-ink)] overflow-hidden p-6">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
-                <h2 className="text-xl font-bold text-white">Управление пресетами</h2>
+                <h2 className="text-xl font-bold text-[var(--color-pure-white)]">Управление пресетами</h2>
                 <div className="flex items-center gap-2 relative">
-                  <label className="text-sm text-gray-400 font-semibold">Фильтр по серверу:</label>
+                  <label className="text-sm text-[var(--color-ash)] font-semibold">Фильтр по серверу:</label>
                   <div className="relative">
                     <button
                       type="button"
                       onClick={() => setIsPresetFilterOpen(!isPresetFilterOpen)}
-                      className="bg-black/40 border border-white/10 text-white rounded-lg px-4 py-2 text-sm outline-none focus:border-[#5865F2] min-w-[200px] flex justify-between items-center gap-2 hover:bg-white/5 transition-colors cursor-pointer"
+                      className="rc-input rounded-lg px-4 py-2 text-sm min-w-[200px] flex justify-between items-center gap-2 hover:bg-[var(--overlay-soft-strong)] transition-colors cursor-pointer"
                     >
                       <span>
-                        {presetFilterServer === "all" 
-                          ? "Все серверы" 
+                        {presetFilterServer === "all"
+                          ? "Все серверы"
                           : presetFilterServer.startsWith("project_")
                             ? `Любой сервер (${servers.find(p => p.id === presetFilterServer.replace("project_", ""))?.name || "Неизвестно"})`
                             : servers.flatMap(p => p.servers || []).find(s => s.id === presetFilterServer)?.name || "Неизвестно"
                         }
                       </span>
-                      <svg className={`w-4 h-4 text-gray-500 transition-transform ${isPresetFilterOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className={`w-4 h-4 text-[var(--color-smoke)] transition-transform ${isPresetFilterOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                       </svg>
                     </button>
                     {isPresetFilterOpen && (
                       <>
                         <div className="fixed inset-0 z-10" onClick={() => setIsPresetFilterOpen(false)} />
-                        <div className="absolute right-0 mt-2 w-[240px] bg-[#0d0e12]/95 border border-white/10 rounded-xl overflow-hidden z-20 shadow-2xl animate-scale-up backdrop-blur-xl max-h-80 overflow-y-auto no-scrollbar">
+                        <div
+                          className="absolute right-0 mt-2 w-[240px] rounded-xl overflow-hidden z-20 shadow-2xl animate-scale-up max-h-80 overflow-y-auto no-scrollbar"
+                          style={{ background: "color-mix(in srgb, var(--color-ink) 95%, transparent)", border: "1px solid var(--color-hairline)", backdropFilter: "blur(24px)" }}
+                        >
                           <button
                             type="button"
                             onClick={() => { setPresetFilterServer("all"); setIsPresetFilterOpen(false); }}
-                            className={`w-full text-left px-4 py-2.5 text-sm transition-colors hover:bg-white/5 cursor-pointer ${presetFilterServer === "all" ? 'text-[#5865F2] font-bold bg-white/5' : 'text-gray-400'}`}
+                            className={`w-full text-left px-4 py-2.5 text-sm transition-colors hover:bg-[var(--overlay-soft)] cursor-pointer ${presetFilterServer === "all" ? 'font-bold bg-[var(--overlay-soft)]' : 'text-[var(--color-ash)]'}`}
+                            style={presetFilterServer === "all" ? { color: "var(--color-pure-white)" } : undefined}
                           >
                             Все серверы
                           </button>
                           {servers.map(p => (
                             <div key={p.id}>
-                              <div className="px-4 py-1.5 text-xs font-bold text-gray-500 uppercase tracking-wider bg-black/40 flex items-center gap-2">
+                              <div className="px-4 py-1.5 text-xs font-bold uppercase tracking-wider flex items-center gap-2" style={{ color: "var(--color-smoke)", background: "var(--color-obsidian)" }}>
                                 {p.iconUrl && <img src={p.iconUrl} className="w-4 h-4 rounded" alt="icon" />}
                                 {p.name}
                               </div>
                               <button
                                 type="button"
                                 onClick={() => { setPresetFilterServer(`project_${p.id}`); setIsPresetFilterOpen(false); }}
-                                className={`w-full text-left px-4 py-2.5 pl-8 text-sm transition-colors hover:bg-white/5 flex items-center gap-2 cursor-pointer ${presetFilterServer === `project_${p.id}` ? 'text-[#5865F2] font-bold bg-white/5' : 'text-gray-400'}`}
+                                className={`w-full text-left px-4 py-2.5 pl-8 text-sm transition-colors hover:bg-[var(--overlay-soft)] flex items-center gap-2 cursor-pointer ${presetFilterServer === `project_${p.id}` ? 'font-bold bg-[var(--overlay-soft)]' : 'text-[var(--color-ash)]'}`}
+                                style={presetFilterServer === `project_${p.id}` ? { color: "var(--color-pure-white)" } : undefined}
                               >
                                 <span>Любой сервер</span>
                               </button>
@@ -421,7 +429,8 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
                                   key={s.id}
                                   type="button"
                                   onClick={() => { setPresetFilterServer(s.id); setIsPresetFilterOpen(false); }}
-                                  className={`w-full text-left px-4 py-2.5 pl-8 text-sm transition-colors hover:bg-white/5 flex items-center gap-2 cursor-pointer ${presetFilterServer === s.id ? 'text-[#5865F2] font-bold bg-white/5' : 'text-gray-400'}`}
+                                  className={`w-full text-left px-4 py-2.5 pl-8 text-sm transition-colors hover:bg-[var(--overlay-soft)] flex items-center gap-2 cursor-pointer ${presetFilterServer === s.id ? 'font-bold bg-[var(--overlay-soft)]' : 'text-[var(--color-ash)]'}`}
+                                  style={presetFilterServer === s.id ? { color: "var(--color-pure-white)" } : undefined}
                                 >
                                   <span>{s.name}</span>
                                 </button>
@@ -437,7 +446,7 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
               <div className="overflow-x-auto no-scrollbar">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="border-b border-white/10 text-gray-400 text-sm">
+                    <tr className="border-b text-sm" style={{ borderColor: "var(--color-hairline)", color: "var(--color-ash)" }}>
                       <th className="py-3 px-3">Название</th>
                       <th className="py-3 px-3">Автор</th>
                       <th className="py-3 px-3">Загружен</th>
@@ -445,16 +454,16 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
                       <th className="py-3 px-3 text-right">Верификация</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/5">
+                  <tbody className="divide-y divide-[var(--color-hairline)]">
                     {presets.filter(p => presetFilterServer === "all" || (presetFilterServer.startsWith("project_") ? p.serverProjectId === presetFilterServer.replace("project_", "") : p.serverId === presetFilterServer)).map(p => (
-                      <tr key={p.id} className="hover:bg-white/20 transition-colors">
+                      <tr key={p.id} className="hover:bg-[var(--overlay-soft)] transition-colors">
                         <td className="py-3 px-3">
-                          <Link href={`/presets/${p.id}`} className="font-semibold text-white hover:text-[#5865F2] transition-colors line-clamp-1">
+                          <Link href={`/presets/${p.id}`} className="font-semibold text-[var(--color-pure-white)] hover:text-[var(--color-coral-text)] transition-colors line-clamp-1">
                             {p.name}
                           </Link>
                         </td>
-                        <td className="py-3 px-3 text-gray-300 text-sm">{p.author}</td>
-                        <td className="py-3 px-3 text-sm text-gray-400">
+                        <td className="py-3 px-3 text-[var(--color-ash)] text-sm">{p.author}</td>
+                        <td className="py-3 px-3 text-sm text-[var(--color-ash)] font-data">
                           {new Date(p.createdAt).toLocaleDateString("ru-RU")}
                         </td>
                         <td className="py-3 px-3">
@@ -464,7 +473,7 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
                               Верифицирован
                             </span>
                           ) : (
-                            <span className="text-gray-500 text-xs">Обычный</span>
+                            <span className="text-[var(--color-smoke)] text-xs">Обычный</span>
                           )}
                         </td>
                         <td className="py-3 px-3 text-right">
@@ -491,23 +500,23 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
               </div>
             </div>
           ) : activeTab === "servers" ? (
-            <div className="glass-card overflow-hidden p-6">
-              <h2 className="text-xl font-bold text-white mb-4">Управление проектами серверов</h2>
+            <div className="rc-card-edge bg-[var(--color-ink)] overflow-hidden p-6">
+              <h2 className="text-xl font-bold text-[var(--color-pure-white)] mb-4">Управление проектами серверов</h2>
               <ServerAdminTab servers={servers} setServers={setServers} showToast={showToast} />
             </div>
           ) : activeTab === "promocodes" ? (
-            <div className="glass-card overflow-hidden p-6">
-              <h2 className="text-xl font-bold text-white mb-4">Управление промокодами</h2>
+            <div className="rc-card-edge bg-[var(--color-ink)] overflow-hidden p-6">
+              <h2 className="text-xl font-bold text-[var(--color-pure-white)] mb-4">Управление промокодами</h2>
               <PromocodesAdminTab promocodes={promocodes} setPromocodes={setPromocodes} showToast={showToast} />
             </div>
           ) : activeTab === "stats" && initialStats ? (
-            <div className="glass-card overflow-hidden p-6">
-              <h2 className="text-xl font-bold text-white mb-4">Глобальная статистика</h2>
+            <div className="rc-card-edge bg-[var(--color-ink)] overflow-hidden p-6">
+              <h2 className="text-xl font-bold text-[var(--color-pure-white)] mb-4">Глобальная статистика</h2>
               <StatsAdminTab stats={initialStats.global} />
             </div>
           ) : (
-            <div className="glass-card overflow-hidden p-6">
-              <h2 className="text-xl font-bold text-white mb-4">Глобальные настройки</h2>
+            <div className="rc-card-edge bg-[var(--color-ink)] overflow-hidden p-6">
+              <h2 className="text-xl font-bold text-[var(--color-pure-white)] mb-4">Глобальные настройки</h2>
               <SettingsAdminTab initialSettings={initialSettings} showToast={showToast} />
             </div>
           )}
@@ -515,27 +524,28 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
 
         {/* User edit sidebar pane (Right / One-third width) */}
         {selectedUser && activeTab === "users" && (
-          <div className="glass-card p-6 animate-scale-up border-[#5865F2]/20 shadow-2xl self-start">
-            <div className="flex justify-between items-center mb-5 pb-3 border-b border-white/10">
-              <h3 className="font-bold text-white text-lg">Редактор профиля</h3>
+          <div className="rc-card-edge bg-[var(--color-ink)] p-6 animate-scale-up shadow-2xl self-start" style={{ borderColor: "var(--color-hairline)" }}>
+            <div className="flex justify-between items-center mb-5 pb-3 border-b" style={{ borderColor: "var(--color-hairline)" }}>
+              <h3 className="font-bold text-[var(--color-pure-white)] text-lg">Редактор профиля</h3>
               <button
                 onClick={() => setSelectedUser(null)}
-                className="text-gray-500 hover:text-white font-semibold text-lg cursor-pointer"
+                className="text-[var(--color-smoke)] hover:text-[var(--color-pure-white)] cursor-pointer p-1 rounded-lg hover:bg-[var(--overlay-soft)] transition-colors"
               >
-                &times;
+                <X className="w-4 h-4" strokeWidth={2.5} />
               </button>
             </div>
 
             {/* Profile Brief */}
-            <div className="flex items-center gap-4 mb-6 bg-white/5 p-3 rounded-xl border border-white/5">
+            <div className="flex items-center gap-4 mb-6 p-3 rounded-xl border" style={{ background: "var(--overlay-soft)", borderColor: "var(--color-hairline)" }}>
               <img
                 src={selectedUser.avatar || "/img/window.svg"}
                 alt={selectedUser.username}
-                className="w-12 h-12 rounded-full border border-white/10"
+                className="w-12 h-12 rounded-full border"
+                style={{ borderColor: "var(--color-hairline)" }}
               />
               <div>
-                <h4 className="font-bold text-white">{selectedUser.username}</h4>
-                <p className="text-xs text-gray-500 truncate max-w-[180px]">{selectedUser.discordId}</p>
+                <h4 className="font-bold text-[var(--color-pure-white)]">{selectedUser.username}</h4>
+                <p className="text-xs text-[var(--color-smoke)] truncate max-w-[180px] font-data">{selectedUser.discordId}</p>
               </div>
             </div>
 
@@ -544,7 +554,7 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
 
               {/* Role Selection */}
               <div>
-                <label className="block text-sm font-semibold text-gray-400 mb-2">Роль на сайте</label>
+                <label className="block text-sm font-semibold text-[var(--color-ash)] mb-2">Роль на сайте</label>
                 <div className="relative" ref={roleDropdownRef}>
                   <button
                     type="button"
@@ -554,7 +564,7 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
                       }
                     }}
                     disabled={selectedUser.discordId === "546005790864048140"}
-                    className="w-full flex items-center justify-between bg-black/40 border border-white/10 text-white rounded-lg p-2.5 outline-none focus:border-[var(--blurple)] transition-all cursor-pointer text-left text-sm"
+                    className="rc-input w-full flex items-center justify-between rounded-lg p-2.5 transition-all cursor-pointer text-left text-sm"
                   >
                     <span>
                       {editRole === "admin" && "Администратор (Admin)"}
@@ -562,19 +572,17 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
                       {editRole === "moderator" && "Модератор (Moderator)"}
                       {editRole === "user" && "Пользователь (User)"}
                     </span>
-                    <span className={`transition-transform duration-200 text-gray-400 text-xs ${isRoleDropdownOpen ? "rotate-180" : ""}`}>
-                      ▼
-                    </span>
+                    <ChevronDown className={`w-4 h-4 text-[var(--color-ash)] transition-transform duration-200 ${isRoleDropdownOpen ? "rotate-180" : ""}`} strokeWidth={2.25} />
                   </button>
 
                   {isRoleDropdownOpen && (
-                    <div className="absolute left-0 right-0 mt-1.5 z-[100] glass-card p-1.5 border border-white/10 shadow-2xl backdrop-blur-2xl rounded-xl space-y-1">
+                    <div className="absolute left-0 right-0 mt-1.5 z-[100] rc-card-edge bg-[var(--color-ink)] p-1.5 shadow-2xl rounded-xl space-y-1" style={{ backdropFilter: "blur(24px)" }}>
                       <button
                         type="button"
                         onClick={() => { setEditRole("user"); setIsRoleDropdownOpen(false); }}
                         className={`w-full text-left p-2.5 rounded-lg text-sm transition-colors cursor-pointer ${editRole === "user"
-                            ? "bg-[var(--blurple)] text-[var(--user-msg-text)] font-semibold"
-                            : "text-gray-300 hover:bg-white/5 hover:text-white"
+                            ? "bg-[var(--color-mist)] text-[var(--color-iron)] font-semibold"
+                            : "text-[var(--color-ash)] hover:bg-[var(--overlay-soft)] hover:text-[var(--color-pure-white)]"
                           }`}
                       >
                         Пользователь (User)
@@ -583,8 +591,8 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
                         type="button"
                         onClick={() => { setEditRole("moderator"); setIsRoleDropdownOpen(false); }}
                         className={`w-full text-left p-2.5 rounded-lg text-sm transition-colors cursor-pointer ${editRole === "moderator"
-                            ? "bg-[var(--blurple)] text-[var(--user-msg-text)] font-semibold"
-                            : "text-gray-300 hover:bg-white/5 hover:text-white"
+                            ? "bg-[var(--color-mist)] text-[var(--color-iron)] font-semibold"
+                            : "text-[var(--color-ash)] hover:bg-[var(--overlay-soft)] hover:text-[var(--color-pure-white)]"
                           }`}
                       >
                         Модератор (Moderator)
@@ -593,8 +601,8 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
                         type="button"
                         onClick={() => { setEditRole("developer"); setIsRoleDropdownOpen(false); }}
                         className={`w-full text-left p-2.5 rounded-lg text-sm transition-colors cursor-pointer ${editRole === "developer"
-                            ? "bg-[var(--blurple)] text-[var(--user-msg-text)] font-semibold"
-                            : "text-gray-300 hover:bg-white/5 hover:text-white"
+                            ? "bg-[var(--color-mist)] text-[var(--color-iron)] font-semibold"
+                            : "text-[var(--color-ash)] hover:bg-[var(--overlay-soft)] hover:text-[var(--color-pure-white)]"
                           }`}
                       >
                         Разработчик (Developer)
@@ -604,8 +612,8 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
                           type="button"
                           onClick={() => { setEditRole("admin"); setIsRoleDropdownOpen(false); }}
                           className={`w-full text-left p-2.5 rounded-lg text-sm transition-colors cursor-pointer ${editRole === "admin"
-                              ? "bg-[var(--blurple)] text-[var(--user-msg-text)] font-semibold"
-                              : "text-gray-300 hover:bg-white/5 hover:text-white"
+                              ? "bg-[var(--color-mist)] text-[var(--color-iron)] font-semibold"
+                              : "text-[var(--color-ash)] hover:bg-[var(--overlay-soft)] hover:text-[var(--color-pure-white)]"
                             }`}
                         >
                           Администратор (Admin)
@@ -621,7 +629,7 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
 
               {/* Badges Toggles */}
               <div>
-                <label className="block text-sm font-semibold text-gray-400 mb-2.5">Бейджи пользователя</label>
+                <label className="block text-sm font-semibold text-[var(--color-ash)] mb-2.5">Бейджи пользователя</label>
                 <div className="space-y-2">
                   {AVAILABLE_BADGES.map(badge => {
                     const isChecked = editBadges.includes(badge.id);
@@ -630,19 +638,20 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
                         key={badge.id}
                         onClick={() => handleToggleBadge(badge.id)}
                         className={`w-full flex items-center justify-between p-2 rounded-lg border text-left text-xs font-semibold transition-all cursor-pointer ${isChecked
-                            ? "bg-[#5865F2]/10 border-[#5865F2]/30 text-white"
-                            : "bg-white/5 border-white/5 text-gray-400 hover:bg-white/10 hover:text-white"
+                            ? "text-[var(--color-pure-white)]"
+                            : "bg-[var(--overlay-soft)] border-[var(--overlay-soft)] text-[var(--color-ash)] hover:bg-[var(--overlay-soft-strong)] hover:text-[var(--color-pure-white)]"
                           }`}
+                        style={isChecked ? { background: "var(--overlay-soft-strong)", borderColor: "var(--color-pure-white)" } : undefined}
                       >
                         <div className="flex items-center gap-2">
                           <img src={`/img/${badge.file}`} alt={badge.label} className="h-5 w-auto" />
                           <span>{badge.label}</span>
                         </div>
-                        <div className={`w-4 h-4 rounded border flex items-center justify-center text-[10px] ${isChecked
-                            ? "bg-[#5865F2] border-[#5865F2] text-white"
-                            : "border-gray-600 bg-transparent"
-                          }`}>
-                          {isChecked && "✓"}
+                        <div
+                          className={`w-4 h-4 rounded border flex items-center justify-center ${isChecked ? "text-[var(--color-mist)]" : "bg-transparent"}`}
+                          style={isChecked ? { background: "var(--color-pure-white)", borderColor: "var(--color-pure-white)" } : { borderColor: "var(--color-hairline)" }}
+                        >
+                          {isChecked && <Check className="w-3 h-3" strokeWidth={3} />}
                         </div>
                       </button>
                     );
@@ -652,7 +661,7 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
 
               {/* Upload Access Toggle */}
               <div>
-                <label className="block text-sm font-semibold text-gray-400 mb-2.5">Загрузка пресетов</label>
+                <label className="block text-sm font-semibold text-[var(--color-ash)] mb-2.5">Загрузка пресетов</label>
                 <button
                   onClick={() => setEditCanUpload(!editCanUpload)}
                   className={`w-full flex items-center justify-between p-3 rounded-lg border text-left text-sm font-semibold transition-all cursor-pointer ${editCanUpload
@@ -661,7 +670,7 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
                     }`}
                 >
                   <div className="flex items-center gap-2">
-                    <span className="text-xl">{editCanUpload ? "✅" : "❌"}</span>
+                    {editCanUpload ? <CheckCircle2 className="w-5 h-5" strokeWidth={2} /> : <XCircle className="w-5 h-5" strokeWidth={2} />}
                     <span>{editCanUpload ? "Разрешено" : "Заблокировано"}</span>
                   </div>
                 </button>
@@ -670,13 +679,14 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
               {/* Premium Status & Revoke */}
               {selectedUser.isPremium && (
                 <div>
-                  <label className="block text-sm font-semibold text-gray-400 mb-2.5">Premium Подписка</label>
+                  <label className="block text-sm font-semibold text-[var(--color-ash)] mb-2.5">Premium Подписка</label>
                   <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-3">
                     <p className="text-amber-400 text-sm font-semibold mb-1 flex items-center gap-2">
-                      <span>👑 Активна</span>
+                      <Crown className="w-4 h-4" strokeWidth={2.25} />
+                      <span>Активна</span>
                     </p>
                     {selectedUser.premiumUntil && (
-                      <p className="text-xs text-gray-400 mb-3">
+                      <p className="text-xs text-[var(--color-ash)] mb-3 font-data">
                         До: {new Date(selectedUser.premiumUntil).toLocaleDateString("ru-RU")}
                       </p>
                     )}
@@ -694,24 +704,27 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
               {/* User Statistics */}
               {initialStats && initialStats.users[selectedUser.discordId] && (
                 <div>
-                  <label className="block text-sm font-semibold text-gray-400 mb-2.5">📊 Статистика активности</label>
-                  <div className="bg-white/5 border border-white/10 rounded-lg p-3 space-y-3">
+                  <label className="flex items-center gap-1.5 text-sm font-semibold text-[var(--color-ash)] mb-2.5">
+                    <BarChart3 className="w-3.5 h-3.5" strokeWidth={2.25} />
+                    Статистика активности
+                  </label>
+                  <div className="rounded-lg p-3 space-y-3" style={{ background: "var(--overlay-soft)", border: "1px solid var(--color-hairline)" }}>
                     <div>
-                      <h5 className="text-xs font-bold text-[#5865F2] mb-1">Запросы к ИИ-ассистенту</h5>
-                      <div className="grid grid-cols-4 gap-2 text-center text-xs">
-                        <div className="bg-black/30 p-1.5 rounded"><span className="block text-gray-500">24ч</span><strong className="text-white">{initialStats.users[selectedUser.discordId].ai.day}</strong></div>
-                        <div className="bg-black/30 p-1.5 rounded"><span className="block text-gray-500">30д</span><strong className="text-white">{initialStats.users[selectedUser.discordId].ai.month}</strong></div>
-                        <div className="bg-black/30 p-1.5 rounded"><span className="block text-gray-500">Год</span><strong className="text-white">{initialStats.users[selectedUser.discordId].ai.year}</strong></div>
-                        <div className="bg-black/30 p-1.5 rounded"><span className="block text-gray-500">Всего</span><strong className="text-emerald-400">{initialStats.users[selectedUser.discordId].ai.total}</strong></div>
+                      <h5 className="text-xs font-bold mb-1" style={{ color: "var(--color-coral-text)" }}>Запросы к ИИ-ассистенту</h5>
+                      <div className="grid grid-cols-4 gap-2 text-center text-xs font-data">
+                        <div className="bg-[var(--color-obsidian)] p-1.5 rounded"><span className="block text-[var(--color-smoke)]">24ч</span><strong className="text-[var(--color-pure-white)]">{initialStats.users[selectedUser.discordId].ai.day}</strong></div>
+                        <div className="bg-[var(--color-obsidian)] p-1.5 rounded"><span className="block text-[var(--color-smoke)]">30д</span><strong className="text-[var(--color-pure-white)]">{initialStats.users[selectedUser.discordId].ai.month}</strong></div>
+                        <div className="bg-[var(--color-obsidian)] p-1.5 rounded"><span className="block text-[var(--color-smoke)]">Год</span><strong className="text-[var(--color-pure-white)]">{initialStats.users[selectedUser.discordId].ai.year}</strong></div>
+                        <div className="bg-[var(--color-obsidian)] p-1.5 rounded"><span className="block text-[var(--color-smoke)]">Всего</span><strong className="text-emerald-400">{initialStats.users[selectedUser.discordId].ai.total}</strong></div>
                       </div>
                     </div>
                     <div>
-                      <h5 className="text-xs font-bold text-[#5865F2] mb-1">Созданные экзамены</h5>
-                      <div className="grid grid-cols-4 gap-2 text-center text-xs">
-                        <div className="bg-black/30 p-1.5 rounded"><span className="block text-gray-500">24ч</span><strong className="text-white">{initialStats.users[selectedUser.discordId].exams.day}</strong></div>
-                        <div className="bg-black/30 p-1.5 rounded"><span className="block text-gray-500">30д</span><strong className="text-white">{initialStats.users[selectedUser.discordId].exams.month}</strong></div>
-                        <div className="bg-black/30 p-1.5 rounded"><span className="block text-gray-500">Год</span><strong className="text-white">{initialStats.users[selectedUser.discordId].exams.year}</strong></div>
-                        <div className="bg-black/30 p-1.5 rounded"><span className="block text-gray-500">Всего</span><strong className="text-emerald-400">{initialStats.users[selectedUser.discordId].exams.total}</strong></div>
+                      <h5 className="text-xs font-bold mb-1" style={{ color: "var(--color-coral-text)" }}>Созданные экзамены</h5>
+                      <div className="grid grid-cols-4 gap-2 text-center text-xs font-data">
+                        <div className="bg-[var(--color-obsidian)] p-1.5 rounded"><span className="block text-[var(--color-smoke)]">24ч</span><strong className="text-[var(--color-pure-white)]">{initialStats.users[selectedUser.discordId].exams.day}</strong></div>
+                        <div className="bg-[var(--color-obsidian)] p-1.5 rounded"><span className="block text-[var(--color-smoke)]">30д</span><strong className="text-[var(--color-pure-white)]">{initialStats.users[selectedUser.discordId].exams.month}</strong></div>
+                        <div className="bg-[var(--color-obsidian)] p-1.5 rounded"><span className="block text-[var(--color-smoke)]">Год</span><strong className="text-[var(--color-pure-white)]">{initialStats.users[selectedUser.discordId].exams.year}</strong></div>
+                        <div className="bg-[var(--color-obsidian)] p-1.5 rounded"><span className="block text-[var(--color-smoke)]">Всего</span><strong className="text-emerald-400">{initialStats.users[selectedUser.discordId].exams.total}</strong></div>
                       </div>
                     </div>
                   </div>
@@ -719,9 +732,9 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
               )}
 
               {/* Ban & Save/Cancel buttons */}
-              <div className="space-y-4 pt-4 border-t border-white/10">
+              <div className="space-y-4 pt-4 border-t" style={{ borderColor: "var(--color-hairline)" }}>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-400 mb-2.5">Глобальная блокировка</label>
+                  <label className="block text-sm font-semibold text-[var(--color-ash)] mb-2.5">Глобальная блокировка</label>
                   <button
                     onClick={() => setEditIsBanned(!editIsBanned)}
                     className={`w-full flex items-center justify-between p-3 rounded-lg border text-left text-sm font-semibold transition-all cursor-pointer ${
@@ -731,20 +744,21 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
                     }`}
                   >
                     <div className="flex items-center gap-2">
-                      <span className="text-xl">{!editIsBanned ? "✅" : "⛔"}</span>
+                      {!editIsBanned ? <CheckCircle2 className="w-5 h-5" strokeWidth={2} /> : <Ban className="w-5 h-5" strokeWidth={2} />}
                       <span>{!editIsBanned ? "Аккаунт активен" : "Аккаунт заблокирован"}</span>
                     </div>
                   </button>
                 </div>
-                
+
                 {editIsBanned && (
                   <div>
-                    <label className="block text-sm font-semibold text-gray-400 mb-2.5">Причина блокировки</label>
+                    <label className="block text-sm font-semibold text-[var(--color-ash)] mb-2.5">Причина блокировки</label>
                     <textarea
                       value={editBanReason}
                       onChange={e => setEditBanReason(e.target.value)}
                       placeholder="Например: Нарушение правил сайта, спам пресетами..."
-                      className="w-full bg-black/40 border border-white/10 text-white rounded-lg p-3 outline-none focus:border-red-500 text-sm h-20 resize-none"
+                      className="rc-input w-full rounded-lg p-3 outline-none focus:border-red-500 text-sm h-20 resize-none"
+                      style={{ border: "1px solid var(--color-hairline)" }}
                     />
                   </div>
                 )}
@@ -752,14 +766,14 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
                 <div className="flex gap-3 pt-2">
                   <button
                     onClick={() => setSelectedUser(null)}
-                    className="flex-1 btn-secondary text-xs !py-2 cursor-pointer"
+                    className="rc-btn-ghost flex-1 text-xs !py-2"
                   >
                     Отмена
                   </button>
                   <button
                     onClick={handleSaveUser}
                     disabled={savingUserId === selectedUser.id}
-                    className="flex-1 btn-primary text-xs !py-2 cursor-pointer flex items-center justify-center gap-2"
+                    className="rc-btn flex-1 text-xs !py-2 flex items-center justify-center gap-2"
                   >
                     {savingUserId === selectedUser.id ? "Сохранение..." : "Сохранить"}
                   </button>
@@ -774,17 +788,24 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
       {/* Premium Toast Notification */}
       {toast && (
         <div className="fixed bottom-6 right-6 z-50 animate-scale-up">
-          <div className={`glass-card p-4 flex items-center gap-3 border shadow-2xl backdrop-blur-xl ${toast.type === "success"
-              ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300 shadow-emerald-950/20"
-              : "border-red-500/30 bg-red-500/10 text-red-300 shadow-red-950/20"
-            }`}>
-            <span className="text-xl">{toast.type === "success" ? "✨" : "⚠️"}</span>
+          <div
+            className={`rc-card-edge bg-[var(--color-ink)] p-4 flex items-center gap-3 shadow-2xl ${toast.type === "success"
+                ? "text-emerald-300 shadow-emerald-950/20"
+                : "text-red-300 shadow-red-950/20"
+              }`}
+            style={{
+              backdropFilter: "blur(24px)",
+              borderColor: toast.type === "success" ? "rgba(16, 185, 129, 0.3)" : "rgba(239, 68, 68, 0.3)",
+              background: toast.type === "success" ? "color-mix(in srgb, var(--color-ink) 90%, rgb(16 185 129))" : "color-mix(in srgb, var(--color-ink) 90%, rgb(239 68 68))",
+            }}
+          >
+            {toast.type === "success" ? <Sparkles className="w-5 h-5 shrink-0" strokeWidth={2} /> : <AlertTriangle className="w-5 h-5 shrink-0" strokeWidth={2} />}
             <span className="text-sm font-semibold pr-4">{toast.message}</span>
             <button
               onClick={() => setToast(null)}
-              className="text-gray-400 hover:text-white cursor-pointer font-bold text-xs"
+              className="text-[var(--color-ash)] hover:text-[var(--color-pure-white)] cursor-pointer p-0.5 rounded hover:bg-[var(--overlay-soft)] transition-colors"
             >
-              &times;
+              <X className="w-3.5 h-3.5" strokeWidth={2.5} />
             </button>
           </div>
         </div>
@@ -801,25 +822,27 @@ function StatsAdminTab({ stats }: { stats: any }) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         
         {/* AI Stats */}
-        <div className="bg-[#5865F2]/10 border border-[#5865F2]/30 rounded-2xl p-6">
+        <div className="rounded-2xl p-6" style={{ background: "var(--overlay-soft)", border: "1px solid var(--color-hairline)" }}>
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-[#5865F2]/20 text-[#5865F2] rounded-xl flex items-center justify-center text-2xl">🤖</div>
-            <h3 className="text-xl font-bold text-white">ИИ-Ассистент</h3>
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: "var(--color-obsidian)", color: "var(--color-coral-text)" }}>
+              <Bot className="w-6 h-6" strokeWidth={2} />
+            </div>
+            <h3 className="text-xl font-bold text-[var(--color-pure-white)]">ИИ-Ассистент</h3>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-black/40 p-4 rounded-xl text-center">
-              <span className="block text-gray-400 text-sm mb-1">За 24 часа</span>
-              <strong className="text-3xl text-white font-black">{stats.ai.day}</strong>
+          <div className="grid grid-cols-2 gap-4 font-data">
+            <div className="bg-[var(--color-obsidian)] p-4 rounded-xl text-center">
+              <span className="block text-[var(--color-ash)] text-sm mb-1">За 24 часа</span>
+              <strong className="text-3xl text-[var(--color-pure-white)] font-black">{stats.ai.day}</strong>
             </div>
-            <div className="bg-black/40 p-4 rounded-xl text-center">
-              <span className="block text-gray-400 text-sm mb-1">За месяц</span>
-              <strong className="text-3xl text-white font-black">{stats.ai.month}</strong>
+            <div className="bg-[var(--color-obsidian)] p-4 rounded-xl text-center">
+              <span className="block text-[var(--color-ash)] text-sm mb-1">За месяц</span>
+              <strong className="text-3xl text-[var(--color-pure-white)] font-black">{stats.ai.month}</strong>
             </div>
-            <div className="bg-black/40 p-4 rounded-xl text-center">
-              <span className="block text-gray-400 text-sm mb-1">За год</span>
-              <strong className="text-3xl text-white font-black">{stats.ai.year}</strong>
+            <div className="bg-[var(--color-obsidian)] p-4 rounded-xl text-center">
+              <span className="block text-[var(--color-ash)] text-sm mb-1">За год</span>
+              <strong className="text-3xl text-[var(--color-pure-white)] font-black">{stats.ai.year}</strong>
             </div>
-            <div className="bg-black/40 p-4 rounded-xl text-center border border-emerald-500/30">
+            <div className="bg-[var(--color-obsidian)] p-4 rounded-xl text-center border border-emerald-500/30">
               <span className="block text-emerald-400 text-sm mb-1 font-bold">Всё время</span>
               <strong className="text-3xl text-emerald-400 font-black">{stats.ai.total}</strong>
             </div>
@@ -829,23 +852,25 @@ function StatsAdminTab({ stats }: { stats: any }) {
         {/* Exams Stats */}
         <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-6">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center text-2xl">📝</div>
-            <h3 className="text-xl font-bold text-white">Экзамены</h3>
+            <div className="w-12 h-12 bg-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center">
+              <FileText className="w-6 h-6" strokeWidth={2} />
+            </div>
+            <h3 className="text-xl font-bold text-[var(--color-pure-white)]">Экзамены</h3>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-black/40 p-4 rounded-xl text-center">
-              <span className="block text-gray-400 text-sm mb-1">За 24 часа</span>
-              <strong className="text-3xl text-white font-black">{stats.exams.day}</strong>
+          <div className="grid grid-cols-2 gap-4 font-data">
+            <div className="bg-[var(--color-obsidian)] p-4 rounded-xl text-center">
+              <span className="block text-[var(--color-ash)] text-sm mb-1">За 24 часа</span>
+              <strong className="text-3xl text-[var(--color-pure-white)] font-black">{stats.exams.day}</strong>
             </div>
-            <div className="bg-black/40 p-4 rounded-xl text-center">
-              <span className="block text-gray-400 text-sm mb-1">За месяц</span>
-              <strong className="text-3xl text-white font-black">{stats.exams.month}</strong>
+            <div className="bg-[var(--color-obsidian)] p-4 rounded-xl text-center">
+              <span className="block text-[var(--color-ash)] text-sm mb-1">За месяц</span>
+              <strong className="text-3xl text-[var(--color-pure-white)] font-black">{stats.exams.month}</strong>
             </div>
-            <div className="bg-black/40 p-4 rounded-xl text-center">
-              <span className="block text-gray-400 text-sm mb-1">За год</span>
-              <strong className="text-3xl text-white font-black">{stats.exams.year}</strong>
+            <div className="bg-[var(--color-obsidian)] p-4 rounded-xl text-center">
+              <span className="block text-[var(--color-ash)] text-sm mb-1">За год</span>
+              <strong className="text-3xl text-[var(--color-pure-white)] font-black">{stats.exams.year}</strong>
             </div>
-            <div className="bg-black/40 p-4 rounded-xl text-center border border-emerald-500/30">
+            <div className="bg-[var(--color-obsidian)] p-4 rounded-xl text-center border border-emerald-500/30">
               <span className="block text-emerald-400 text-sm mb-1 font-bold">Всё время</span>
               <strong className="text-3xl text-emerald-400 font-black">{stats.exams.total}</strong>
             </div>
@@ -1010,22 +1035,26 @@ function ServerAdminTab({ servers, setServers, showToast }: {
   return (
     <div className="space-y-6">
       {/* Create form */}
-      <div className="space-y-4 bg-white/5 p-4 rounded-xl border border-white/10">
-        <h3 className="text-sm font-bold text-gray-300">➕ Добавить проект или сервер</h3>
-        <p className="text-xs text-gray-500 mb-2">
+      <div className="space-y-4 p-4 rounded-xl" style={{ background: "var(--overlay-soft)", border: "1px solid var(--color-hairline)" }}>
+        <h3 className="text-sm font-bold text-[var(--color-mist)] flex items-center gap-1.5">
+          <Plus className="w-4 h-4" strokeWidth={2.5} />
+          Добавить проект или сервер
+        </h3>
+        <p className="text-xs text-[var(--color-smoke)] mb-2">
           Чтобы создать новый проект (например, Majestic RP), введите его название в поле «Проект» и загрузите иконку. <br/>
           Чтобы добавить сервер в существующий проект (например, Boston), выберите проект из списка и укажите «Название сервера».
         </p>
         <div className="flex gap-4 items-end flex-wrap">
           <div className="flex-1 min-w-[160px]">
-            <label className="block text-xs font-bold text-[#5865F2] mb-1">1. Проект (выберите или введите)</label>
+            <label className="block text-xs font-bold mb-1" style={{ color: "var(--color-coral-text)" }}>1. Проект (выберите или введите)</label>
             <input
               type="text"
               list="project-names-datalist"
               value={projectName}
               onChange={e => setProjectName(e.target.value)}
               placeholder="Например: Majestic RP"
-              className="w-full bg-black/40 border border-[#5865F2]/30 text-white rounded-lg p-2 outline-none focus:border-[#5865F2] text-sm"
+              className="rc-input w-full rounded-lg p-2 text-sm"
+              style={{ border: "1px solid color-mix(in srgb, var(--color-coral-text) 30%, transparent)" }}
             />
             <datalist id="project-names-datalist">
               {servers.map(p => (
@@ -1040,69 +1069,77 @@ function ServerAdminTab({ servers, setServers, showToast }: {
               value={name}
               onChange={e => setName(e.target.value)}
               placeholder="Например: Boston (оставьте пустым для создания самого проекта)"
-              className="w-full bg-black/40 border border-emerald-500/30 text-white rounded-lg p-2 outline-none focus:border-emerald-500 text-sm"
+              className="rc-input w-full rounded-lg p-2 text-sm border border-emerald-500/30 focus:border-emerald-500"
             />
           </div>
           <div className="flex-1 min-w-[160px]">
-            <label className="block text-xs text-gray-400 mb-1">Иконка (PNG)</label>
+            <label className="block text-xs text-[var(--color-ash)] mb-1">Иконка (PNG)</label>
             <input
               type="file"
               accept="image/png"
               onChange={handleFileChange}
-              className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-white/10 file:text-white hover:file:bg-white/20"
+              className="w-full text-sm text-[var(--color-ash)] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[var(--color-graphite)] file:text-[var(--color-pure-white)] hover:file:opacity-80"
             />
           </div>
         </div>
         <div className="flex gap-4 flex-wrap">
           <div className="flex-1 min-w-[200px]">
-            <label className="block text-xs text-gray-400 mb-1">
-              🔔 Discord Webhook URL
-              <span className="text-gray-600 ml-1">(опционально)</span>
+            <label className="flex items-center gap-1.5 text-xs text-[var(--color-ash)] mb-1">
+              <Bell className="w-3.5 h-3.5" strokeWidth={2.25} />
+              Discord Webhook URL
+              <span className="text-[var(--color-smoke)] ml-1">(опционально)</span>
             </label>
             <input
               type="text"
               value={webhookUrl}
               onChange={e => setWebhookUrl(e.target.value)}
               placeholder="https://discord.com/api/webhooks/..."
-              className="w-full bg-black/40 border border-white/10 text-white rounded-lg p-2 outline-none focus:border-[#5865F2] text-sm font-mono"
+              className="rc-input w-full rounded-lg p-2 text-sm font-data"
             />
           </div>
           <div className="flex-1 min-w-[160px]">
-            <label className="block text-xs text-gray-400 mb-1">
-              🏷️ ID роли для пинга
-              <span className="text-gray-600 ml-1">(опционально)</span>
+            <label className="flex items-center gap-1.5 text-xs text-[var(--color-ash)] mb-1">
+              <Tag className="w-3.5 h-3.5" strokeWidth={2.25} />
+              ID роли для пинга
+              <span className="text-[var(--color-smoke)] ml-1">(опционально)</span>
             </label>
             <input
               type="text"
               value={discordRoleId}
               onChange={e => setDiscordRoleId(e.target.value)}
               placeholder="123456789012345678"
-              className="w-full bg-black/40 border border-white/10 text-white rounded-lg p-2 outline-none focus:border-[#5865F2] text-sm font-mono"
+              className="rc-input w-full rounded-lg p-2 text-sm font-data"
             />
           </div>
         </div>
         <button
           onClick={handleCreate}
           disabled={loading}
-          className="btn-primary py-2 px-6 mt-1"
+          className="rc-btn py-2 px-6 mt-1"
         >
           {loading ? "Создаётся..." : "Добавить"}
         </button>
       </div>
 
-      {/* Project/Server list */}
+      {/* Project/Server list — icon-hero tile pattern: bordered card with a distinct
+          top zone (project icon over a subtle coral radial glow, hairline separator)
+          above the management content. These are management panels rather than pure
+          navigation links, so the hover arrow badge + lift from the presets/home
+          reference is intentionally omitted — actions here are inline buttons that
+          are always visible, not a click-through destination. */}
       <div className="grid grid-cols-1 gap-6 mb-6">
         {servers.map(p => (
-          <div key={p.id} className="bg-white/5 border border-white/10 rounded-xl overflow-hidden p-4">
-            <div className="flex items-start justify-between mb-4 pb-4 border-b border-white/10">
-              <div className="flex items-center gap-3">
-                 <img src={p.iconUrl} alt={p.name} className="w-10 h-10 rounded-lg" />
+          <div key={p.id} className="rc-card-edge bg-[var(--color-ink)] !p-0 overflow-hidden">
+            <div className="relative flex items-start justify-between gap-3 px-5 py-4 overflow-hidden" style={{ background: "var(--color-obsidian)", borderBottom: "1px solid var(--color-hairline)" }}>
+              <div className="absolute inset-0 opacity-40" style={{ background: "radial-gradient(circle at 22% 20%, rgba(124,108,240,0.10), transparent 60%)" }} />
+              <div className="flex items-center gap-3 relative z-10">
+                 <img src={p.iconUrl} alt={p.name} className="w-11 h-11 rounded-xl" style={{ border: "1px solid var(--color-hairline)", boxShadow: "var(--shadow-key)" }} />
                  <div>
-                    <span className="font-bold text-white text-lg block uppercase tracking-wider">{p.name}</span>
-                    <span className="text-[10px] text-gray-500 font-mono">Project ID: {p.id.slice(0, 12)}…</span>
+                    <span className="font-bold text-[var(--color-pure-white)] text-lg block uppercase tracking-wider">{p.name}</span>
+                    <span className="text-[10px] text-[var(--color-smoke)] font-data">Project ID: {p.id.slice(0, 12)}…</span>
                  </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 relative z-10">
                 <button
                   onClick={() => {
                     if (editingId === p.id) setEditingId(null);
@@ -1113,37 +1150,43 @@ function ServerAdminTab({ servers, setServers, showToast }: {
                       setEditIconBase64(null);
                     }
                   }}
-                  className="text-xs px-2.5 py-1.5 rounded-lg bg-white/5 border border-white/10 text-gray-300 hover:bg-[#5865F2]/20 hover:text-white hover:border-[#5865F2]/30 transition-all cursor-pointer"
+                  className="rc-btn-ghost flex items-center gap-1.5 text-xs px-2.5 py-1.5"
                   title="Настройки проекта"
                 >
-                  ⚙️ Настройки
+                  <Settings className="w-3.5 h-3.5" strokeWidth={2.25} />
+                  Настройки
                 </button>
                 <button
                   onClick={() => setDeleteConfirmId(p.id)}
                   disabled={loading}
-                  className="text-red-400 hover:text-red-300 text-xl leading-none p-1 cursor-pointer"
+                  className="text-red-400 hover:text-red-300 leading-none p-1.5 rounded-lg hover:bg-red-500/10 transition-colors cursor-pointer"
                   title="Удалить проект целиком"
                 >
-                  ×
+                  <X className="w-4 h-4" strokeWidth={2.5} />
                 </button>
               </div>
             </div>
-            
+
+            <div className="p-5">
             {/* Servers inside this project */}
-            <div className="bg-black/20 rounded-lg p-4 mb-4">
-              <h5 className="text-xs font-bold text-gray-400 mb-3 flex items-center gap-2">
+            <div className="rounded-lg p-4 mb-4" style={{ background: "var(--color-obsidian)", border: "1px solid var(--color-hairline)" }}>
+              <h5 className="text-xs font-bold text-[var(--color-ash)] mb-3 flex items-center gap-2">
                 СЕРВЕРЫ ПРОЕКТА
-                <span className="bg-[#5865F2]/20 text-[#5865F2] px-1.5 rounded-full text-[10px]">{p.servers?.length || 0}</span>
+                <span className="px-1.5 rounded-full text-[10px]" style={{ background: "var(--overlay-soft-strong)", color: "var(--color-pure-white)" }}>{p.servers?.length || 0}</span>
               </h5>
               <div className="flex flex-wrap gap-2">
                 {p.servers?.map((s: any) => (
-                  <div key={s.id} className="flex items-center gap-1.5 bg-[#5865F2]/10 text-[#5865F2] px-3 py-1.5 rounded-lg text-sm font-semibold border border-[#5865F2]/20 hover:bg-[#5865F2]/20 transition-colors">
+                  <div
+                    key={s.id}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors"
+                    style={{ background: "var(--overlay-soft)", color: "var(--color-pure-white)", border: "1px solid var(--color-hairline)" }}
+                  >
                     <span>{s.name}</span>
-                    <button onClick={() => handleDeleteServer(s.id)} className="text-[#5865F2] hover:text-red-400 ml-1.5 opacity-70 hover:opacity-100 cursor-pointer">×</button>
+                    <button onClick={() => handleDeleteServer(s.id)} className="text-[var(--color-ash)] hover:text-red-400 ml-1.5 opacity-70 hover:opacity-100 cursor-pointer">×</button>
                   </div>
                 ))}
                 {(!p.servers || p.servers.length === 0) && (
-                  <span className="text-xs text-gray-500 italic">Нет добавленных серверов</span>
+                  <span className="text-xs text-[var(--color-smoke)] italic">Нет добавленных серверов</span>
                 )}
               </div>
             </div>
@@ -1151,84 +1194,105 @@ function ServerAdminTab({ servers, setServers, showToast }: {
             {/* Webhook status badges */}
             <div className="flex gap-2 flex-wrap">
               {p.webhookUrl ? (
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                  ✓ Вебхук настроен
+                <span className="flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  <Check className="w-3 h-3" strokeWidth={3} />
+                  Вебхук настроен
                 </span>
               ) : (
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-gray-500 border border-white/10">
+                <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: "var(--overlay-soft)", color: "var(--color-smoke)", border: "1px solid var(--color-hairline)" }}>
                   Вебхук не настроен
                 </span>
               )}
               {p.discordRoleId && (
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#5865F2]/10 text-[#5865F2] border border-[#5865F2]/20">
-                  🏷️ Роль: {p.discordRoleId}
+                <span className="flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full font-data" style={{ background: "var(--overlay-soft)", color: "var(--color-pure-white)", border: "1px solid var(--color-hairline)" }}>
+                  <Tag className="w-3 h-3" strokeWidth={2.5} />
+                  Роль: {p.discordRoleId}
                 </span>
               )}
             </div>
 
             {/* Inline edit panel */}
             {editingId === p.id && (
-              <div className="mt-4 border-t border-white/10 pt-4 space-y-3">
-                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">⚙️ Настройки проекта</p>
+              <div className="mt-4 border-t pt-4 space-y-3" style={{ borderColor: "var(--color-hairline)" }}>
+                <p className="flex items-center gap-1.5 text-xs font-bold text-[var(--color-ash)] uppercase tracking-wider mb-2">
+                  <Settings className="w-3.5 h-3.5" strokeWidth={2.25} />
+                  Настройки проекта
+                </p>
                 <div>
-                  <label className="block text-xs text-gray-400 mb-1">🖼️ Изменить иконку (PNG)</label>
+                  <label className="flex items-center gap-1.5 text-xs text-[var(--color-ash)] mb-1">
+                    <ImageIcon className="w-3.5 h-3.5" strokeWidth={2.25} />
+                    Изменить иконку (PNG)
+                  </label>
                   <input
                     type="file"
                     accept="image/png"
                     onChange={handleEditFileChange}
-                    className="w-full text-xs text-gray-400 file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-white/10 file:text-white hover:file:bg-white/20"
+                    className="w-full text-xs text-[var(--color-ash)] file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[var(--color-graphite)] file:text-[var(--color-pure-white)] hover:file:opacity-80"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-gray-400 mb-1">🔔 Webhook URL</label>
+                  <label className="flex items-center gap-1.5 text-xs text-[var(--color-ash)] mb-1">
+                    <Bell className="w-3.5 h-3.5" strokeWidth={2.25} />
+                    Webhook URL
+                  </label>
                   <input
                     type="text"
                     value={editWebhook}
                     onChange={e => setEditWebhook(e.target.value)}
                     placeholder="https://discord.com/api/webhooks/..."
-                    className="w-full bg-black/40 border border-white/10 text-white rounded-lg p-2 outline-none focus:border-[#5865F2] text-xs font-mono"
+                    className="rc-input w-full rounded-lg p-2 text-xs font-data"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-gray-400 mb-1">🏷️ ID роли для пинга</label>
+                  <label className="flex items-center gap-1.5 text-xs text-[var(--color-ash)] mb-1">
+                    <Tag className="w-3.5 h-3.5" strokeWidth={2.25} />
+                    ID роли для пинга
+                  </label>
                   <input
                     type="text"
                     value={editRoleId}
                     onChange={e => setEditRoleId(e.target.value)}
                     placeholder="123456789012345678"
-                    className="w-full bg-black/40 border border-white/10 text-white rounded-lg p-2 outline-none focus:border-[#5865F2] text-xs font-mono"
+                    className="rc-input w-full rounded-lg p-2 text-xs font-data"
                   />
                 </div>
                 <div className="flex gap-2 pt-1">
                   <button
                     onClick={() => setEditingId(null)}
-                    className="flex-1 text-xs py-2 px-3 rounded-lg bg-white/5 text-gray-400 hover:text-white transition-colors cursor-pointer"
+                    className="rc-btn-ghost flex-1 text-xs py-2 px-3"
                   >
                     Отмена
                   </button>
                   <button
                     onClick={() => handleSaveEdit(p.id)}
                     disabled={editLoading}
-                    className="flex-1 text-xs py-2 px-3 rounded-lg bg-[#5865F2] hover:bg-[#4752C4] text-white font-semibold transition-colors cursor-pointer"
+                    className="rc-btn flex-1 text-xs py-2 px-3"
                   >
                     {editLoading ? "Сохранение..." : "Сохранить"}
                   </button>
                 </div>
               </div>
             )}
+            </div>
           </div>
         ))}
       </div>
 
       {deleteConfirmId && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#1e1e1e] border border-white/10 rounded-2xl p-6 max-w-md w-full shadow-2xl">
-            <h3 className="text-xl font-bold text-white mb-2">Подтвердите действие</h3>
-            <p className="text-gray-400 mb-6">Удалить проект? Пресеты могут потерять привязку.</p>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in"
+          style={{ background: "color-mix(in srgb, var(--color-void-black) 70%, transparent)", backdropFilter: "blur(8px)" }}
+        >
+          <div className="rc-card-edge bg-[var(--color-ink)] p-6 max-w-md w-full animate-scale-up">
+            <div className="w-12 h-12 bg-red-500/10 border border-red-500/20 text-red-400 rounded-full flex items-center justify-center mb-4">
+              <Trash2 className="w-5 h-5" strokeWidth={2} />
+            </div>
+            <h3 className="text-xl font-bold text-[var(--color-pure-white)] mb-2">Подтвердите действие</h3>
+            <p className="text-[var(--color-ash)] mb-6">Удалить проект? Пресеты могут потерять привязку.</p>
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setDeleteConfirmId(null)}
-                className="px-4 py-2 rounded-lg bg-white/5 text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
+                className="rc-btn-ghost px-4 py-2"
                 disabled={loading}
               >
                 Отмена
@@ -1236,7 +1300,7 @@ function ServerAdminTab({ servers, setServers, showToast }: {
               <button
                 onClick={performDelete}
                 disabled={loading}
-                className="px-4 py-2 rounded-lg bg-red-500/20 text-red-400 border border-red-500/50 hover:bg-red-500/30 transition-colors"
+                className="px-4 py-2 rounded-lg bg-red-500/20 text-red-400 border border-red-500/50 hover:bg-red-500/30 transition-colors cursor-pointer"
               >
                 {loading ? "Ожидайте..." : "Удалить"}
               </button>
@@ -1277,42 +1341,42 @@ function SettingsAdminTab({ initialSettings, showToast }: {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white/5 p-4 rounded-xl border border-white/10 max-w-lg">
-        <label className="block text-sm font-bold text-gray-300 mb-2">Ссылка на Discord сервер</label>
-        <p className="text-xs text-gray-500 mb-3">Отображается на главной странице и в программе.</p>
+      <div className="p-4 rounded-xl max-w-lg" style={{ background: "var(--overlay-soft)", border: "1px solid var(--color-hairline)" }}>
+        <label className="block text-sm font-bold text-[var(--color-mist)] mb-2">Ссылка на Discord сервер</label>
+        <p className="text-xs text-[var(--color-smoke)] mb-3">Отображается на главной странице и в программе.</p>
         <div className="flex gap-2">
           <input
             type="text"
             value={discordUrl}
             onChange={e => setDiscordUrl(e.target.value)}
             placeholder="https://dsc.gg/lexis"
-            className="flex-1 bg-black/40 border border-white/10 text-white rounded-lg p-2 outline-none focus:border-[#5865F2] text-sm"
+            className="rc-input flex-1 rounded-lg p-2 text-sm"
           />
           <button
             onClick={() => handleSave("discordUrl", discordUrl)}
             disabled={loading}
-            className="btn-primary py-2 px-4 whitespace-nowrap cursor-pointer"
+            className="rc-btn py-2 px-4 whitespace-nowrap"
           >
             {loading ? "..." : "Сохранить"}
           </button>
         </div>
       </div>
 
-      <div className="bg-white/5 p-4 rounded-xl border border-white/10 max-w-lg">
-        <label className="block text-sm font-bold text-gray-300 mb-2">Discord Webhook для новых Релизов</label>
-        <p className="text-xs text-gray-500 mb-3">Сюда будут автоматически отправляться уведомления о новых релизах.</p>
+      <div className="p-4 rounded-xl max-w-lg" style={{ background: "var(--overlay-soft)", border: "1px solid var(--color-hairline)" }}>
+        <label className="block text-sm font-bold text-[var(--color-mist)] mb-2">Discord Webhook для новых Релизов</label>
+        <p className="text-xs text-[var(--color-smoke)] mb-3">Сюда будут автоматически отправляться уведомления о новых релизах.</p>
         <div className="flex gap-2">
           <input
             type="text"
             value={releasesWebhookUrl}
             onChange={e => setReleasesWebhookUrl(e.target.value)}
             placeholder="https://discord.com/api/webhooks/..."
-            className="flex-1 bg-black/40 border border-white/10 text-white rounded-lg p-2 outline-none focus:border-[#5865F2] text-sm font-mono"
+            className="rc-input flex-1 rounded-lg p-2 text-sm font-mono"
           />
           <button
             onClick={() => handleSave("RELEASES_WEBHOOK_URL", releasesWebhookUrl)}
             disabled={loading}
-            className="btn-primary py-2 px-4 whitespace-nowrap cursor-pointer"
+            className="rc-btn py-2 px-4 whitespace-nowrap"
           >
             {loading ? "..." : "Сохранить"}
           </button>
@@ -1383,43 +1447,46 @@ function PromocodesAdminTab({ promocodes, setPromocodes, showToast }: {
   return (
     <div className="space-y-6">
       {/* Create form */}
-      <div className="space-y-3 bg-white/5 p-4 rounded-xl border border-white/10">
-        <h3 className="text-sm font-bold text-gray-300 mb-3">➕ Создать промокод</h3>
+      <div className="space-y-3 p-4 rounded-xl" style={{ background: "var(--overlay-soft)", border: "1px solid var(--color-hairline)" }}>
+        <h3 className="flex items-center gap-1.5 text-sm font-bold text-[var(--color-mist)] mb-3">
+          <Plus className="w-4 h-4" strokeWidth={2.5} />
+          Создать промокод
+        </h3>
         <div className="flex gap-4 items-end flex-wrap">
           <div className="flex-1 min-w-[160px]">
-            <label className="block text-xs text-gray-400 mb-1">Код (любые символы)</label>
+            <label className="block text-xs text-[var(--color-ash)] mb-1">Код (любые символы)</label>
             <input
               type="text"
               value={code}
               onChange={e => setCode(e.target.value.toUpperCase())}
               placeholder="SUMMER2026"
-              className="w-full bg-black/40 border border-white/10 text-white rounded-lg p-2 outline-none focus:border-[#5865F2] text-sm font-mono"
+              className="rc-input w-full rounded-lg p-2 text-sm font-data"
             />
           </div>
           <div className="w-[100px]">
-            <label className="block text-xs text-gray-400 mb-1">Дней премиума</label>
+            <label className="block text-xs text-[var(--color-ash)] mb-1">Дней премиума</label>
             <input
               type="number"
               min="1"
               value={days}
               onChange={e => setDays(parseInt(e.target.value) || 1)}
-              className="w-full bg-black/40 border border-white/10 text-white rounded-lg p-2 outline-none focus:border-[#5865F2] text-sm"
+              className="rc-input w-full rounded-lg p-2 text-sm"
             />
           </div>
           <div className="w-[120px]">
-            <label className="block text-xs text-gray-400 mb-1">Макс. активаций</label>
+            <label className="block text-xs text-[var(--color-ash)] mb-1">Макс. активаций</label>
             <input
               type="number"
               min="1"
               value={maxUses}
               onChange={e => setMaxUses(parseInt(e.target.value) || 1)}
-              className="w-full bg-black/40 border border-white/10 text-white rounded-lg p-2 outline-none focus:border-[#5865F2] text-sm"
+              className="rc-input w-full rounded-lg p-2 text-sm"
             />
           </div>
           <button
             onClick={handleCreate}
             disabled={loading}
-            className="btn-primary py-2 px-6 mt-1"
+            className="rc-btn py-2 px-6 mt-1"
           >
             {loading ? "..." : "Создать"}
           </button>
@@ -1427,10 +1494,10 @@ function PromocodesAdminTab({ promocodes, setPromocodes, showToast }: {
       </div>
 
       {/* List */}
-      <div className="overflow-x-auto no-scrollbar border border-white/10 rounded-xl">
+      <div className="overflow-x-auto no-scrollbar rounded-xl" style={{ border: "1px solid var(--color-hairline)" }}>
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-white/5 border-b border-white/10 text-gray-400 text-sm">
+            <tr className="border-b text-sm" style={{ background: "var(--overlay-soft)", borderColor: "var(--color-hairline)", color: "var(--color-ash)" }}>
               <th className="py-3 px-4">Промокод</th>
               <th className="py-3 px-4">Длительность</th>
               <th className="py-3 px-4">Активации</th>
@@ -1438,17 +1505,17 @@ function PromocodesAdminTab({ promocodes, setPromocodes, showToast }: {
               <th className="py-3 px-4 text-right">Действия</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/5 bg-black/20">
+          <tbody className="divide-y divide-[var(--color-hairline)] bg-[var(--color-obsidian)]">
             {promocodes.map(p => (
-              <tr key={p.id} className="hover:bg-white/10 transition-colors">
-                <td className="py-3 px-4 font-mono font-bold text-white tracking-widest">{p.code}</td>
-                <td className="py-3 px-4 text-sm text-[#5865F2] font-semibold">{p.days} дней</td>
-                <td className="py-3 px-4 text-sm text-gray-300">
+              <tr key={p.id} className="hover:bg-[var(--overlay-soft)] transition-colors">
+                <td className="py-3 px-4 font-data font-bold text-[var(--color-pure-white)] tracking-widest">{p.code}</td>
+                <td className="py-3 px-4 text-sm font-semibold font-data" style={{ color: "var(--color-pure-white)" }}>{p.days} дней</td>
+                <td className="py-3 px-4 text-sm text-[var(--color-ash)] font-data">
                   <span className={p.uses >= p.maxUses ? "text-red-400 font-bold" : "text-emerald-400"}>
                     {p.uses}
                   </span> / {p.maxUses}
                 </td>
-                <td className="py-3 px-4 text-sm text-gray-500">
+                <td className="py-3 px-4 text-sm text-[var(--color-smoke)] font-data">
                   {new Date(p.createdAt).toLocaleDateString("ru-RU")}
                 </td>
                 <td className="py-3 px-4 text-right">
@@ -1464,7 +1531,9 @@ function PromocodesAdminTab({ promocodes, setPromocodes, showToast }: {
             ))}
             {promocodes.length === 0 && (
               <tr>
-                <td colSpan={5} className="py-6 text-center text-gray-500 text-sm">Нет активных промокодов</td>
+                <td colSpan={5} className="py-10 text-center">
+                  <span className="text-[var(--color-smoke)] text-sm">Нет активных промокодов</span>
+                </td>
               </tr>
             )}
           </tbody>
@@ -1473,19 +1542,22 @@ function PromocodesAdminTab({ promocodes, setPromocodes, showToast }: {
 
       {/* Delete Confirmation Modal */}
       {deleteConfirmId && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm animate-fade-in">
-          <div className="glass-card p-6 max-w-sm w-full mx-4 border border-white/10 shadow-2xl relative rounded-xl animate-scale-up">
-            <div className="w-12 h-12 bg-red-500/10 border border-red-500/20 text-red-400 rounded-full flex items-center justify-center mb-4 text-xl shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]">
-              🗑️
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center animate-fade-in"
+          style={{ background: "color-mix(in srgb, var(--color-void-black) 70%, transparent)", backdropFilter: "blur(8px)" }}
+        >
+          <div className="rc-card-edge bg-[var(--color-ink)] p-6 max-w-sm w-full mx-4 shadow-2xl relative animate-scale-up">
+            <div className="w-12 h-12 bg-red-500/10 border border-red-500/20 text-red-400 rounded-full flex items-center justify-center mb-4">
+              <Trash2 className="w-5 h-5" strokeWidth={2} />
             </div>
-            <h3 className="text-lg font-bold text-white mb-2">Удаление промокода</h3>
-            <p className="text-gray-400 text-sm mb-6 leading-relaxed">
+            <h3 className="text-lg font-bold text-[var(--color-pure-white)] mb-2">Удаление промокода</h3>
+            <p className="text-[var(--color-ash)] text-sm mb-6 leading-relaxed">
               Вы уверены, что хотите удалить этот промокод? Это действие нельзя отменить.
             </p>
             <div className="flex gap-3">
               <button
                 onClick={() => setDeleteConfirmId(null)}
-                className="flex-1 bg-white/5 hover:bg-white/10 text-white rounded-lg py-2 text-sm font-semibold transition-colors cursor-pointer border border-white/10"
+                className="rc-btn-ghost flex-1 py-2 text-sm"
               >
                 Отмена
               </button>

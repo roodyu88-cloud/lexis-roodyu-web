@@ -3,10 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { ArrowLeft, CheckCircle2, XCircle } from "lucide-react";
 
 export default function EditReleaseForm({ release }: { release: any }) {
   const router = useRouter();
-  
+
   const [version, setVersion] = useState(release.version || "");
   const [title, setTitle] = useState(release.title || "");
   const [description, setDescription] = useState(release.description || "");
@@ -24,24 +25,24 @@ export default function EditReleaseForm({ release }: { release: any }) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     setIsLoading(true);
     try {
       const res = await fetch("/api/admin/releases", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          id: release.id, 
-          version, 
-          title, 
-          description, 
-          downloadUrl, 
-          virusTotalUrl 
+        body: JSON.stringify({
+          id: release.id,
+          version,
+          title,
+          description,
+          downloadUrl,
+          virusTotalUrl
         }),
       });
 
       if (!res.ok) throw new Error("Failed to update release");
-      
+
       showToast("Релиз успешно обновлен!", "success");
       setTimeout(() => router.push("/releases"), 1500);
     } catch (error) {
@@ -55,74 +56,78 @@ export default function EditReleaseForm({ release }: { release: any }) {
   return (
     <div className="relative">
       {toastMessage && (
-        <div className={`fixed bottom-4 right-4 px-6 py-3 rounded-xl shadow-2xl animate-fade-in z-50 text-white font-bold flex items-center gap-3 ${toastType === "success" ? "bg-emerald-500" : "bg-red-500"}`}>
-          {toastType === "success" ? "✅" : "❌"}
+        <div
+          className={`fixed bottom-4 right-4 px-6 py-3 rounded-xl shadow-2xl animate-scale-up z-50 text-white font-bold flex items-center gap-3 ${toastType === "success" ? "" : "bg-red-500"}`}
+          style={toastType === "success" ? { background: "var(--color-success-green)" } : undefined}
+        >
+          {toastType === "success" ? <CheckCircle2 className="w-5 h-5 shrink-0" strokeWidth={2} /> : <XCircle className="w-5 h-5 shrink-0" strokeWidth={2} />}
           {toastMessage}
         </div>
       )}
 
-      <Link href="/releases" className="text-gray-400 hover:text-white mb-6 inline-block transition-colors">
-        &larr; Назад к релизам
+      <Link href="/releases" className="rc-link inline-flex items-center gap-1.5 mb-6">
+        <ArrowLeft className="w-4 h-4" strokeWidth={2.25} />
+        Назад к релизам
       </Link>
 
-      <form onSubmit={handleSubmit} className="space-y-6 bg-[#121215]/60 backdrop-blur-2xl p-8 rounded-3xl border border-white/10 shadow-2xl">
+      <form onSubmit={handleSubmit} className="space-y-6 rc-card-edge bg-[var(--color-ink)] p-8">
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">Тег версии</label>
+          <label className="block text-sm font-medium text-[var(--color-ash)] mb-2">Тег версии</label>
           <input
             type="text"
             required
             value={version}
             onChange={(e) => setVersion(e.target.value)}
-            className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+            className="rc-input w-full px-4 py-3 rounded-xl"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">Название обновления</label>
+          <label className="block text-sm font-medium text-[var(--color-ash)] mb-2">Название обновления</label>
           <input
             type="text"
             required
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+            className="rc-input w-full px-4 py-3 rounded-xl"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">Внешняя ссылка на скачивание (заменяет загруженный файл)</label>
+          <label className="block text-sm font-medium text-[var(--color-ash)] mb-2">Внешняя ссылка на скачивание (заменяет загруженный файл)</label>
           <input
             type="url"
             value={downloadUrl}
             onChange={(e) => setDownloadUrl(e.target.value)}
-            className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+            className="rc-input w-full px-4 py-3 rounded-xl"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">Ссылка на VirusTotal (опционально)</label>
+          <label className="block text-sm font-medium text-[var(--color-ash)] mb-2">Ссылка на VirusTotal (опционально)</label>
           <input
             type="url"
             value={virusTotalUrl}
             onChange={(e) => setVirusTotalUrl(e.target.value)}
-            className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+            className="rc-input w-full px-4 py-3 rounded-xl"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">Список изменений (Changelog)</label>
+          <label className="block text-sm font-medium text-[var(--color-ash)] mb-2">Список изменений (Changelog)</label>
           <textarea
             required
             rows={8}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+            className="rc-input w-full px-4 py-3 rounded-xl"
           />
         </div>
 
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full py-4 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-500 hover:to-orange-500 text-white font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(202,138,4,0.3)] hover:shadow-[0_0_30px_rgba(202,138,4,0.5)] transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:transform-none"
+          className="rc-btn w-full py-4 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:transform-none cursor-pointer"
         >
           {isLoading ? "Сохранение..." : "Сохранить изменения"}
         </button>

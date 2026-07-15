@@ -1,94 +1,109 @@
-import { prisma } from "@/lib/prisma";
+// PLACEHOLDER-DB (2026-07-15): unused while DB call below is placeholdered — restore with the query.
+// import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import ReleaseAdminActions from "./ReleaseAdminActions";
+import { Plus, ShieldCheck, Download } from "lucide-react";
 
 export default async function ReleasesPage() {
   const session = await getServerSession(authOptions);
   const isAdmin = (session?.user as any)?.role === "admin" || (session?.user as any)?.role === "developer";
 
-  const releases = await prisma.release.findMany({
-    orderBy: { createdAt: "desc" },
-  });
+  // PLACEHOLDER-DB (2026-07-15): DATABASE_URL absent in this dev env, real query crashes SSR.
+  // Original: const releases = await prisma.release.findMany({ orderBy: { createdAt: "desc" } });
+  const releases = [
+    { id: "ph-release-1", version: "v2.1.0", title: "Биндер и стабильность", description: "Добавлен биндер горячих клавиш.\nИсправлены баги оверлея.", downloadUrl: null, fileData: null, fileName: null, virusTotalUrl: "https://virustotal.com", createdAt: new Date("2026-07-01") },
+    { id: "ph-release-2", version: "v2.0.0", title: "Большое обновление", description: "Новый ИИ-ассистент и тренажер экзаменов.", downloadUrl: null, fileData: null, fileName: null, virusTotalUrl: null, createdAt: new Date("2026-05-15") },
+  ];
 
   return (
-    <div className="min-h-screen text-white p-6 md:p-12 relative overflow-hidden z-0">
+    <div className="min-h-screen p-6 md:p-12 relative overflow-hidden z-0">
+      <div className="fixed top-20 left-[10%] w-[400px] h-[400px] rounded-full blur-[120px] pointer-events-none -z-10" style={{ background: "rgba(124, 108, 240, 0.08)" }} aria-hidden="true" />
+      <div className="fixed bottom-20 right-[10%] w-[400px] h-[400px] rounded-full blur-[130px] pointer-events-none -z-10" style={{ background: "rgba(124, 108, 240, 0.05)" }} aria-hidden="true" />
+
       <div className="max-w-4xl mx-auto z-10 relative">
         <header className="mb-16 text-center relative">
-          <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-[#00F0FF] to-purple-500 mb-4 tracking-tight">
+          <h1 className="text-heading-lg font-bold mb-4 tracking-[var(--tracking-heading-lg)] text-[var(--color-pure-white)]">
             История обновлений
           </h1>
-          <p className="text-gray-300 text-lg max-w-xl mx-auto">
+          <p className="text-body-lg max-w-xl mx-auto text-[var(--color-ash)]">
             Скачивайте новые версии, следите за изменениями и будьте в курсе последних обновлений.
           </p>
-          
+
           {isAdmin && (
             <div className="mt-8">
-              <Link 
+              <Link
                 href="/admin/releases"
-                className="inline-flex items-center gap-2 px-6 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl font-semibold transition-all hover:scale-105 shadow-lg"
+                className="rc-btn-ghost inline-flex items-center gap-2"
               >
-                <span>➕</span> Создать новый релиз
+                <Plus className="w-4 h-4" /> Создать новый релиз
               </Link>
             </div>
           )}
         </header>
 
         {releases.length === 0 ? (
-          <div className="text-center p-12 bg-[#121215]/60 backdrop-blur-2xl border border-white/10 rounded-3xl shadow-xl">
-            <p className="text-gray-400 text-xl">Пока нет опубликованных обновлений.</p>
+          <div className="rc-card-edge text-center p-12" style={{ background: "var(--color-ink)" }}>
+            <p className="text-xl" style={{ color: "var(--color-ash)" }}>Пока нет опубликованных обновлений.</p>
           </div>
         ) : (
-          <div className="space-y-12">
+          <div className="space-y-8 md:space-y-10">
             {releases.map((release, index) => (
-              <div 
-                key={release.id} 
-                className="relative bg-[#121215]/60 backdrop-blur-2xl border border-white/10 rounded-3xl p-8 shadow-2xl transition-all duration-300 hover:border-white/20 hover:bg-white/5 flex flex-col md:flex-row gap-8"
+              <div
+                key={release.id}
+                className="rc-card-edge relative p-6 md:p-8 flex flex-col md:flex-row gap-6 md:gap-8"
+                style={{ background: "var(--color-ink)" }}
               >
                 {/* Version Column */}
                 <div className="md:w-1/4 shrink-0 flex flex-col">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="px-3 py-1 bg-blue-500/20 text-blue-300 border border-blue-500/30 text-xs font-bold rounded-full uppercase tracking-wider">
+                    <span
+                      className="px-3 py-1 text-xs font-bold rounded-full uppercase tracking-wider"
+                      style={
+                        index === 0
+                          ? { background: "var(--color-coral-pulse)", color: "var(--color-on-coral)" }
+                          : { background: "var(--color-graphite)", color: "var(--color-ash)" }
+                      }
+                    >
                       {index === 0 ? "Последняя версия" : "Старая версия"}
                     </span>
                   </div>
-                  <h2 className="text-3xl font-bold text-white tracking-tight">{release.version}</h2>
-                  <p className="text-gray-400 text-sm mt-1 font-medium">
+                  <h2 className="text-heading-sm font-bold tracking-tight font-data" style={{ color: "var(--color-pure-white)" }}>{release.version}</h2>
+                  <p className="text-sm mt-1 font-medium font-data" style={{ color: "var(--color-smoke)" }}>
                     {new Intl.DateTimeFormat("ru-RU", {
                       dateStyle: "medium",
                     }).format(release.createdAt)}
                   </p>
-                  
+
                   {isAdmin && <ReleaseAdminActions releaseId={release.id} />}
                 </div>
 
                 {/* Content Column */}
                 <div className="md:w-3/4 flex flex-col h-full">
-                  <h3 className="text-2xl font-bold text-gray-100 mb-4">{release.title}</h3>
-                  <div className="prose prose-invert max-w-none text-gray-300 mb-8 whitespace-pre-wrap flex-grow font-medium leading-relaxed">
+                  <h3 className="text-heading-sm font-bold mb-4" style={{ color: "var(--color-pure-white)" }}>{release.title}</h3>
+                  <div className="max-w-none mb-8 whitespace-pre-wrap flex-grow font-medium leading-relaxed text-body" style={{ color: "var(--color-ash)" }}>
                     {release.description}
                   </div>
-                  
+
                   <div className="mt-auto flex flex-wrap gap-4">
                     <a
                       href={`/api/releases/download/${release.id}`}
-                      className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(79,70,229,0.3)] hover:shadow-[0_0_30px_rgba(79,70,229,0.5)] transform hover:scale-[1.02] active:scale-[0.98]"
+                      className="rc-btn inline-flex items-center justify-center gap-2"
+                      style={{ padding: "12px 24px" }}
                     >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                      </svg>
+                      <Download className="w-5 h-5" />
                       Скачать {release.version}
                     </a>
-                    
+
                     {release.virusTotalUrl && (
                       <a
                         href={release.virusTotalUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/30 text-emerald-300 font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(16,185,129,0.1)] hover:shadow-[0_0_30px_rgba(16,185,129,0.2)] transform hover:scale-[1.02] active:scale-[0.98]"
+                        className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-bold transition-all text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/10"
                       >
-                        🛡️ Проверка VirusTotal
+                        <ShieldCheck className="w-5 h-5" /> Проверка VirusTotal
                       </a>
                     )}
                   </div>

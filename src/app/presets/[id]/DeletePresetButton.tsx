@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Trash2, Sparkles, AlertTriangle } from "lucide-react";
 
 interface DeletePresetButtonProps {
   presetId: string;
@@ -57,38 +58,44 @@ export default function DeletePresetButton({ presetId, presetName, isAuthor, isM
         onClick={() => setShowModal(true)}
         className="px-4 py-2 bg-red-950/40 border border-red-500/30 hover:bg-red-600 hover:text-white text-red-400 font-semibold rounded-lg text-sm transition-all cursor-pointer flex items-center gap-1.5"
       >
-        🗑️ Удалить пресет
+        <Trash2 className="w-4 h-4" /> Удалить пресет
       </button>
 
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md animate-fade-in">
-          <div className="glass-card p-8 max-w-md w-full mx-4 border border-red-500/20 shadow-2xl relative overflow-hidden rounded-2xl animate-scale-up text-left">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center animate-fade-in"
+          style={{ background: "color-mix(in srgb, var(--color-void-black) 85%, transparent)", backdropFilter: "blur(12px)" }}
+        >
+          <div
+            className="rc-card-edge max-w-md w-full mx-4 relative overflow-hidden animate-scale-up text-left"
+            style={{ borderColor: "rgba(239, 68, 68, 0.2)", background: "var(--color-ink)", padding: "32px" }}
+          >
             <div className="absolute -top-10 -left-10 w-32 h-32 bg-red-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
             {deletedSuccessfully ? (
               <div className="text-center py-6 animate-scale-up">
-                <div className="w-16 h-16 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-5 text-2xl">
-                  ✨
+                <div className="w-16 h-16 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-5">
+                  <Sparkles className="w-7 h-7" />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">Пресет успешно удален</h3>
-                <p className="text-gray-400 text-sm">
+                <h3 className="text-subheading font-bold text-[var(--color-pure-white)] mb-2">Пресет успешно удален</h3>
+                <p className="text-[var(--color-ash)] text-sm">
                   Перенаправление обратно в базу пресетов...
                 </p>
               </div>
             ) : (
               <>
-                <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
-                  ⚠️ Удаление пресета
+                <h3 className="text-subheading font-bold text-[var(--color-pure-white)] mb-2 flex items-center gap-2">
+                  <AlertTriangle className="w-5 h-5 text-red-400" /> Удаление пресета
                 </h3>
-                <p className="text-gray-400 text-sm mb-4 leading-relaxed">
-                  Вы собираетесь удалить пресет <strong className="text-white">"{presetName}"</strong>.
+                <p className="text-[var(--color-ash)] text-sm mb-4 leading-relaxed">
+                  Вы собираетесь удалить пресет <strong className="text-[var(--color-pure-white)]">"{presetName}"</strong>.
                 </p>
 
                 {/* If moderator is deleting another person's preset, require reason */}
                 {!isAuthor && isModOrAdmin ? (
                   <div className="space-y-4 mb-6">
                     <div>
-                      <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+                      <label className="block text-xs font-bold text-[var(--color-ash)] uppercase tracking-wider mb-2">
                         Укажите причину удаления (будет отправлена автору)
                       </label>
                       <textarea
@@ -96,12 +103,12 @@ export default function DeletePresetButton({ presetId, presetName, isAuthor, isM
                         onChange={(e) => setReason(e.target.value)}
                         placeholder="Например: Пресет нарушает правила сайта, содержит оскорбления или спам..."
                         rows={3}
-                        className="w-full bg-black/50 border border-white/10 text-white rounded-lg p-3 text-sm outline-none focus:border-red-500 transition-colors resize-none placeholder-gray-600"
+                        className="w-full bg-[var(--color-obsidian)] border border-[var(--color-hairline)] text-[var(--color-pure-white)] rounded-lg p-3 text-sm outline-none focus:border-red-500 transition-colors resize-none placeholder:text-[var(--color-smoke)]"
                       />
                     </div>
                   </div>
                 ) : (
-                  <p className="text-sm text-gray-300 mb-6">
+                  <p className="text-sm text-[var(--color-ash)] mb-6">
                     Вы действительно хотите навсегда удалить свой пресет из базы данных? Это действие необратимо.
                   </p>
                 )}
@@ -115,7 +122,7 @@ export default function DeletePresetButton({ presetId, presetName, isAuthor, isM
                 <div className="flex gap-4 pt-2">
                   <button
                     onClick={() => { setShowModal(false); setReason(""); setErrorMsg(""); }}
-                    className="flex-1 btn-secondary text-sm !py-2.5 cursor-pointer"
+                    className="flex-1 rc-btn-ghost text-sm cursor-pointer"
                     disabled={deleting}
                   >
                     Отмена
