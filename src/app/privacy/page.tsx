@@ -10,7 +10,7 @@ export const metadata = {
 export default function PrivacyPolicyPage() {
   return (
     <main className="min-h-screen p-8 max-w-4xl mx-auto space-y-8 relative overflow-hidden animate-fade-in">
-      <div className="absolute top-40 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full blur-[120px] pointer-events-none -z-10" style={{ background: "rgba(124, 108, 240, 0.06)" }} aria-hidden="true" />
+      <div className="absolute top-40 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full blur-[120px] pointer-events-none -z-10" style={{ background: "color-mix(in srgb, var(--color-coral-pulse) 6%, transparent)" }} aria-hidden="true" />
 
       <Link href="/" className="rc-link inline-flex items-center gap-2 mb-4 group">
         <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" strokeWidth={2.5} />

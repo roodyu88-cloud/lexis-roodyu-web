@@ -40,7 +40,7 @@ export default function AdminPage() {
   // const allExams = await prisma.examSession.findMany({ select: { creatorId: true, createdAt: true }});
   const users = [
     { id: "ph-user-1", discordId: "111111111111111111", username: "roodyu", avatar: null, role: "admin", badges: JSON.stringify(["Creator", "Staff"]), canUpload: true, isPremium: true, premiumUntil: null, isBanned: false, banReason: null, createdAt: new Date("2026-01-01") },
-    { id: "ph-user-2", discordId: "222222222222222222", username: "Anna Volkova", avatar: null, role: "user", badges: JSON.stringify(["ActivePresetser"]), canUpload: true, isPremium: false, premiumUntil: null, isBanned: false, banReason: null, createdAt: new Date("2026-02-15") },
+    { id: "ph-user-2", discordId: "222222222222222222", username: "roodyu2", avatar: null, role: "user", badges: JSON.stringify(["ActivePresetser"]), canUpload: true, isPremium: false, premiumUntil: null, isBanned: false, banReason: null, createdAt: new Date("2026-02-15") },
   ];
   const presets = [
     { id: "ph-preset-1", name: "Уголовный кодекс", description: "Полный УК сервера Majestic", author: "roodyu", discordId: "111111111111111111", data: "[]", downloads: 482, isVerified: true, serverProjectId: "ph-project-1", serverId: "ph-server-1", createdAt: new Date("2026-06-01") },
@@ -74,6 +74,8 @@ export default function AdminPage() {
   const oneMonthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
   const oneYearAgo = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
 
+  // PLACEHOLDER-DB (2026-07-17): visit/IP/geo tracking has no real backing table yet.
+  // Would come from a PageView model logged per-request (ip, path, country, city, createdAt).
   const stats = {
     global: {
       ai: {
@@ -87,7 +89,34 @@ export default function AdminPage() {
         month: allExams.filter(e => e.createdAt >= oneMonthAgo).length,
         year: allExams.filter(e => e.createdAt >= oneYearAgo).length,
         total: allExams.length
-      }
+      },
+      visits: {
+        day: 214,
+        month: 5840,
+        year: 41200,
+        total: 68950,
+      },
+      topPages: [
+        { path: "/", views: 24310 },
+        { path: "/presets", views: 15720 },
+        { path: "/guide", views: 8940 },
+        { path: "/releases", views: 6180 },
+        { path: "/upload", views: 3410 },
+      ],
+      topLocations: [
+        { country: "Россия", city: "Москва", count: 18240 },
+        { country: "Россия", city: "Санкт-Петербург", count: 9870 },
+        { country: "Украина", city: "Киев", count: 6120 },
+        { country: "Казахстан", city: "Алматы", count: 4310 },
+        { country: "Беларусь", city: "Минск", count: 2890 },
+      ],
+      recentVisits: [
+        { ip: "185.22.14.108", location: "Москва, Россия", page: "/presets", time: "2 мин. назад" },
+        { ip: "92.63.197.44", location: "Киев, Украина", page: "/", time: "6 мин. назад" },
+        { ip: "77.51.203.9", location: "Санкт-Петербург, Россия", page: "/guide", time: "14 мин. назад" },
+        { ip: "213.87.120.6", location: "Алматы, Казахстан", page: "/upload", time: "31 мин. назад" },
+        { ip: "45.144.30.71", location: "Минск, Беларусь", page: "/releases", time: "48 мин. назад" },
+      ],
     },
     users: {} as Record<string, { ai: any, exams: any }>
   };

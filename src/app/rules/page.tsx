@@ -11,7 +11,7 @@ export default function RulesPage() {
 
       <div className="rc-card-edge p-8 md:p-12 relative overflow-hidden" style={{ background: "var(--color-ink)" }}>
         {/* Background glow */}
-        <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full blur-3xl pointer-events-none" style={{ background: "rgba(124, 108, 240, 0.06)" }}></div>
+        <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full blur-3xl pointer-events-none" style={{ background: "color-mix(in srgb, var(--color-coral-pulse) 6%, transparent)" }}></div>
 
         <header className="relative z-10 mb-8 pb-8 border-b" style={{ borderColor: "var(--color-hairline)" }}>
           <h1 className="text-heading-sm md:text-heading font-extrabold text-[var(--color-pure-white)] mb-4 tracking-tight">

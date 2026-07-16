@@ -76,13 +76,13 @@ export default function UploadPage() {
   if (!session?.user) {
     return (
       <main className="min-h-screen p-6 md:p-8 flex items-center justify-center relative overflow-hidden">
-        <div className="fixed top-20 left-[10%] w-[350px] h-[350px] rounded-full blur-[120px] pointer-events-none -z-10" style={{ background: "rgba(124, 108, 240, 0.08)" }} aria-hidden="true" />
-        <div className="fixed bottom-20 right-[10%] w-[350px] h-[350px] rounded-full blur-[130px] pointer-events-none -z-10" style={{ background: "rgba(124, 108, 240, 0.05)" }} aria-hidden="true" />
+        <div className="fixed top-20 left-[10%] w-[350px] h-[350px] rounded-full blur-[120px] pointer-events-none -z-10" style={{ background: "color-mix(in srgb, var(--color-coral-pulse) 8%, transparent)" }} aria-hidden="true" />
+        <div className="fixed bottom-20 right-[10%] w-[350px] h-[350px] rounded-full blur-[130px] pointer-events-none -z-10" style={{ background: "color-mix(in srgb, var(--color-coral-pulse) 5%, transparent)" }} aria-hidden="true" />
 
         <div className="rc-card-edge p-8 md:p-10 w-full max-w-md text-center relative overflow-hidden" style={{ background: "var(--color-ink)" }}>
           {/* Glow orbs */}
-          <div className="absolute -top-10 -left-10 w-40 h-40 rounded-full blur-3xl pointer-events-none" style={{ background: "rgba(124, 108, 240, 0.08)" }} />
-          <div className="absolute -bottom-10 -right-10 w-40 h-40 rounded-full blur-3xl pointer-events-none" style={{ background: "rgba(124, 108, 240, 0.05)" }} />
+          <div className="absolute -top-10 -left-10 w-40 h-40 rounded-full blur-3xl pointer-events-none" style={{ background: "color-mix(in srgb, var(--color-coral-pulse) 8%, transparent)" }} />
+          <div className="absolute -bottom-10 -right-10 w-40 h-40 rounded-full blur-3xl pointer-events-none" style={{ background: "color-mix(in srgb, var(--color-coral-pulse) 5%, transparent)" }} />
 
           <div className="relative">
             <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5" style={{ background: "var(--color-obsidian)", border: "1px solid var(--color-hairline)" }}>
@@ -110,8 +110,8 @@ export default function UploadPage() {
   // ── Authenticated — show form ───────────────────────────────────────────────
   return (
     <main className="min-h-screen p-6 md:p-8 flex items-center justify-center relative overflow-hidden">
-      <div className="fixed top-20 left-[10%] w-[350px] h-[350px] rounded-full blur-[120px] pointer-events-none -z-10" style={{ background: "rgba(124, 108, 240, 0.08)" }} aria-hidden="true" />
-      <div className="fixed bottom-20 right-[10%] w-[350px] h-[350px] rounded-full blur-[130px] pointer-events-none -z-10" style={{ background: "rgba(124, 108, 240, 0.05)" }} aria-hidden="true" />
+      <div className="fixed top-20 left-[10%] w-[350px] h-[350px] rounded-full blur-[120px] pointer-events-none -z-10" style={{ background: "color-mix(in srgb, var(--color-coral-pulse) 8%, transparent)" }} aria-hidden="true" />
+      <div className="fixed bottom-20 right-[10%] w-[350px] h-[350px] rounded-full blur-[130px] pointer-events-none -z-10" style={{ background: "color-mix(in srgb, var(--color-coral-pulse) 5%, transparent)" }} aria-hidden="true" />
 
       <form onSubmit={handleUpload} className="rc-card-edge p-6 md:p-8 w-full max-w-lg relative overflow-hidden" style={{ background: "var(--color-ink)" }}>
         <h1 className="text-heading-sm font-bold mb-6 text-center" style={{ color: "var(--color-pure-white)" }}>Поделиться пресетом</h1>

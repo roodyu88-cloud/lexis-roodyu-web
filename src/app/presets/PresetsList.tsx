@@ -138,7 +138,7 @@ export default function PresetsList({ presets, servers, userMap, badgeFiles, bad
               return (
                 <Link href={`/presets/${p.id}`} key={p.id} className="rc-card-edge group block relative bg-[var(--color-ink)] !p-0 overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:border-[color:var(--color-slate)]">
                   <div className="relative h-28 flex items-center justify-center overflow-hidden" style={{ background: "color-mix(in srgb, var(--color-obsidian) 100%, transparent)", borderBottom: "1px solid var(--color-hairline)" }}>
-                    <div className="absolute inset-0 opacity-40" style={{ background: "radial-gradient(circle at 30% 20%, rgba(124,108,240,0.10), transparent 60%)" }} />
+                    <div className="absolute inset-0 opacity-40" style={{ background: "radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--color-coral-pulse) 10%, transparent), transparent 60%)" }} />
                     {server?.iconUrl ? (
                       <img src={server.iconUrl} alt={server.name} className="w-12 h-12 rounded-xl relative z-10 shadow-lg" />
                     ) : (

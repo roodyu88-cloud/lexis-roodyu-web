@@ -24,6 +24,10 @@ import {
   Image as ImageIcon,
   Trash2,
   X,
+  Globe,
+  MapPin,
+  Eye,
+  Activity,
 } from "lucide-react";
 
 interface User {
@@ -878,6 +882,106 @@ function StatsAdminTab({ stats }: { stats: any }) {
         </div>
 
       </div>
+
+      {stats.visits && (
+        <>
+          {/* Visits Stats */}
+          <div className="rounded-2xl p-6" style={{ background: "var(--overlay-soft)", border: "1px solid var(--color-hairline)" }}>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: "var(--color-obsidian)", color: "var(--color-coral-text)" }}>
+                <Activity className="w-6 h-6" strokeWidth={2} />
+              </div>
+              <h3 className="text-xl font-bold text-[var(--color-pure-white)]">Посещаемость сайта</h3>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 font-data">
+              <div className="bg-[var(--color-obsidian)] p-4 rounded-xl text-center">
+                <span className="block text-[var(--color-ash)] text-sm mb-1">За 24 часа</span>
+                <strong className="text-3xl text-[var(--color-pure-white)] font-black">{stats.visits.day}</strong>
+              </div>
+              <div className="bg-[var(--color-obsidian)] p-4 rounded-xl text-center">
+                <span className="block text-[var(--color-ash)] text-sm mb-1">За месяц</span>
+                <strong className="text-3xl text-[var(--color-pure-white)] font-black">{stats.visits.month}</strong>
+              </div>
+              <div className="bg-[var(--color-obsidian)] p-4 rounded-xl text-center">
+                <span className="block text-[var(--color-ash)] text-sm mb-1">За год</span>
+                <strong className="text-3xl text-[var(--color-pure-white)] font-black">{stats.visits.year}</strong>
+              </div>
+              <div className="bg-[var(--color-obsidian)] p-4 rounded-xl text-center border border-emerald-500/30">
+                <span className="block text-emerald-400 text-sm mb-1 font-bold">Всё время</span>
+                <strong className="text-3xl text-emerald-400 font-black">{stats.visits.total}</strong>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Top Pages */}
+            <div className="rounded-2xl p-6" style={{ background: "var(--overlay-soft)", border: "1px solid var(--color-hairline)" }}>
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "var(--color-obsidian)", color: "var(--color-coral-text)" }}>
+                  <Eye className="w-5 h-5" strokeWidth={2} />
+                </div>
+                <h3 className="text-lg font-bold text-[var(--color-pure-white)]">Страницы</h3>
+              </div>
+              <div className="space-y-2 font-data">
+                {stats.topPages.map((p: { path: string; views: number }) => (
+                  <div key={p.path} className="flex items-center justify-between bg-[var(--color-obsidian)] px-4 py-2.5 rounded-lg">
+                    <span className="text-sm text-[var(--color-ash)]">{p.path}</span>
+                    <strong className="text-sm text-[var(--color-pure-white)]">{p.views}</strong>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Top Locations */}
+            <div className="rounded-2xl p-6" style={{ background: "var(--overlay-soft)", border: "1px solid var(--color-hairline)" }}>
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "var(--color-obsidian)", color: "var(--color-coral-text)" }}>
+                  <MapPin className="w-5 h-5" strokeWidth={2} />
+                </div>
+                <h3 className="text-lg font-bold text-[var(--color-pure-white)]">География</h3>
+              </div>
+              <div className="space-y-2 font-data">
+                {stats.topLocations.map((l: { country: string; city: string; count: number }) => (
+                  <div key={`${l.country}-${l.city}`} className="flex items-center justify-between bg-[var(--color-obsidian)] px-4 py-2.5 rounded-lg">
+                    <span className="text-sm text-[var(--color-ash)]">{l.city}, {l.country}</span>
+                    <strong className="text-sm text-[var(--color-pure-white)]">{l.count}</strong>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Recent IPs */}
+          <div className="rounded-2xl p-6 overflow-x-auto" style={{ background: "var(--overlay-soft)", border: "1px solid var(--color-hairline)" }}>
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "var(--color-obsidian)", color: "var(--color-coral-text)" }}>
+                <Globe className="w-5 h-5" strokeWidth={2} />
+              </div>
+              <h3 className="text-lg font-bold text-[var(--color-pure-white)]">Последние посещения</h3>
+            </div>
+            <table className="w-full text-sm font-data min-w-[500px]">
+              <thead>
+                <tr className="text-left text-[var(--color-smoke)] border-b" style={{ borderColor: "var(--color-hairline)" }}>
+                  <th className="pb-2 pr-4 font-medium">IP</th>
+                  <th className="pb-2 pr-4 font-medium">Местоположение</th>
+                  <th className="pb-2 pr-4 font-medium">Страница</th>
+                  <th className="pb-2 font-medium">Время</th>
+                </tr>
+              </thead>
+              <tbody>
+                {stats.recentVisits.map((v: { ip: string; location: string; page: string; time: string }, i: number) => (
+                  <tr key={i} className="border-b last:border-0" style={{ borderColor: "var(--color-hairline)" }}>
+                    <td className="py-2.5 pr-4 text-[var(--color-pure-white)]">{v.ip}</td>
+                    <td className="py-2.5 pr-4 text-[var(--color-ash)]">{v.location}</td>
+                    <td className="py-2.5 pr-4 text-[var(--color-ash)]">{v.page}</td>
+                    <td className="py-2.5 text-[var(--color-smoke)]">{v.time}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -1131,7 +1235,7 @@ function ServerAdminTab({ servers, setServers, showToast }: {
         {servers.map(p => (
           <div key={p.id} className="rc-card-edge bg-[var(--color-ink)] !p-0 overflow-hidden">
             <div className="relative flex items-start justify-between gap-3 px-5 py-4 overflow-hidden" style={{ background: "var(--color-obsidian)", borderBottom: "1px solid var(--color-hairline)" }}>
-              <div className="absolute inset-0 opacity-40" style={{ background: "radial-gradient(circle at 22% 20%, rgba(124,108,240,0.10), transparent 60%)" }} />
+              <div className="absolute inset-0 opacity-40" style={{ background: "radial-gradient(circle at 22% 20%, color-mix(in srgb, var(--color-coral-pulse) 10%, transparent), transparent 60%)" }} />
               <div className="flex items-center gap-3 relative z-10">
                  <img src={p.iconUrl} alt={p.name} className="w-11 h-11 rounded-xl" style={{ border: "1px solid var(--color-hairline)", boxShadow: "var(--shadow-key)" }} />
                  <div>

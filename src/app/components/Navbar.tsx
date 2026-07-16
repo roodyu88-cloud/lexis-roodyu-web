@@ -73,7 +73,10 @@ export default function Navbar() {
           <Link href="/" className="text-xl font-medium tracking-tight text-[var(--color-pure-white)] hover:text-[var(--color-ash)] transition-colors">
             Lex<span className="relative inline-block">
               i
-              <span className="absolute top-[0.18em] left-[51%] -translate-x-[50%] w-[0.22em] h-[0.22em] bg-[var(--color-coral-pulse)] rounded-full shadow-[0_0_10px_2px_rgba(124,108,240,0.8)] pointer-events-none"></span>
+              <span
+                className="absolute top-[0.18em] left-[51%] -translate-x-[50%] w-[0.22em] h-[0.22em] bg-[var(--color-coral-pulse)] rounded-full pointer-events-none"
+                style={{ boxShadow: "0 0 10px 2px color-mix(in srgb, var(--color-coral-pulse) 80%, transparent)" }}
+              ></span>
             </span>s
           </Link>
         </div>

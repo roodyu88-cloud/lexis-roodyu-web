@@ -20,8 +20,8 @@ export default function LoginPage() {
   return (
     <div className="min-h-[calc(100vh-5rem)] flex flex-col items-center justify-center p-4 relative overflow-hidden z-0">
       {/* Ambient background glow */}
-      <div className="fixed top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full blur-[130px] pointer-events-none -z-10" style={{ background: "rgba(124, 108, 240, 0.08)" }} aria-hidden="true" />
-      <div className="fixed bottom-0 right-[10%] w-[400px] h-[400px] rounded-full blur-[130px] pointer-events-none -z-10" style={{ background: "rgba(124, 108, 240, 0.05)" }} aria-hidden="true" />
+      <div className="fixed top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full blur-[130px] pointer-events-none -z-10" style={{ background: "color-mix(in srgb, var(--color-coral-pulse) 8%, transparent)" }} aria-hidden="true" />
+      <div className="fixed bottom-0 right-[10%] w-[400px] h-[400px] rounded-full blur-[130px] pointer-events-none -z-10" style={{ background: "color-mix(in srgb, var(--color-coral-pulse) 5%, transparent)" }} aria-hidden="true" />
 
       {/* Main Card */}
       <div className="w-full max-w-md relative z-10">

@@ -7,7 +7,7 @@ export default function NotFound() {
       {/* Background glow effect */}
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full blur-[120px] pointer-events-none"
-        style={{ background: "rgba(124, 108, 240, 0.06)" }}
+        style={{ background: "color-mix(in srgb, var(--color-coral-pulse) 6%, transparent)" }}
       />
 
       <div

@@ -250,7 +250,6 @@ html.theme-glass {
    reused as a generic page background. */
 .rc-hero {
   position: relative;
-  overflow: hidden;
   isolation: isolate;
 }
 
@@ -272,8 +271,8 @@ html.theme-glass {
     115deg,
     transparent 0px,
     transparent 36px,
-    rgba(124, 108, 240, 0.85) 36px,
-    rgba(124, 108, 240, 0.85) 88px,
+    color-mix(in srgb, var(--color-coral-pulse) 85%, transparent) 36px,
+    color-mix(in srgb, var(--color-coral-pulse) 85%, transparent) 88px,
     transparent 88px,
     transparent 168px
   );
@@ -303,22 +302,6 @@ html.theme-glass .rc-hero-beams {
   }
   .rc-hero-beams {
     opacity: 0.45;
-  }
-}
-
-/* The layout wraps <main> in a div with pt-20 to clear the fixed floating
-   nav; that gap sits above .rc-hero and paints as a flat black band with
-   nothing behind it. Pull the hero up to cover that gap with its own
-   gradient/beams so the nav floats directly over the background, then
-   restore the same visual clearance via top padding. */
-.rc-hero {
-  margin-top: -80px;
-  padding-top: 176px;
-}
-
-@media (min-width: 768px) {
-  .rc-hero {
-    padding-top: 224px;
   }
 }
 

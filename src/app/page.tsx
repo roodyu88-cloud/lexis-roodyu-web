@@ -83,7 +83,7 @@ export default function Home() {
                 className="rc-card-edge group relative bg-[var(--color-ink)] !p-0 overflow-hidden block transition-all duration-200 hover:-translate-y-1 hover:border-[color:var(--color-slate)]"
               >
                 <div className="relative h-24 flex items-center justify-center overflow-hidden" style={{ background: "var(--color-obsidian)", borderBottom: "1px solid var(--color-hairline)" }}>
-                  <div className="absolute inset-0 opacity-50" style={{ background: "radial-gradient(circle at 30% 20%, rgba(124,108,240,0.10), transparent 60%)" }} />
+                  <div className="absolute inset-0 opacity-50" style={{ background: "radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--color-coral-pulse) 10%, transparent), transparent 60%)" }} />
                   <div className="w-11 h-11 rounded-xl flex items-center justify-center relative z-10" style={{ background: "var(--color-graphite)", border: "1px solid var(--color-hairline)", boxShadow: "var(--shadow-key)" }}>
                     <tile.icon className="w-5 h-5" style={{ color: "var(--color-coral-text)" }} />
                   </div>

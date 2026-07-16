@@ -7,8 +7,8 @@ export default function GuidePage() {
   return (
     <div className="min-h-screen pt-12 pb-20 px-6 flex flex-col items-center justify-start relative overflow-hidden">
       {/* Background gradients */}
-      <div className="fixed top-20 left-[10%] w-[500px] h-[500px] rounded-full blur-[120px] pointer-events-none mix-blend-screen opacity-50" style={{ background: "rgba(124, 108, 240, 0.12)" }}></div>
-      <div className="fixed bottom-20 right-[10%] w-[600px] h-[600px] rounded-full blur-[150px] pointer-events-none mix-blend-screen opacity-50" style={{ background: "rgba(124, 108, 240, 0.06)" }}></div>
+      <div className="fixed top-20 left-[10%] w-[500px] h-[500px] rounded-full blur-[120px] pointer-events-none mix-blend-screen opacity-50" style={{ background: "color-mix(in srgb, var(--color-coral-pulse) 12%, transparent)" }}></div>
+      <div className="fixed bottom-20 right-[10%] w-[600px] h-[600px] rounded-full blur-[150px] pointer-events-none mix-blend-screen opacity-50" style={{ background: "color-mix(in srgb, var(--color-coral-pulse) 6%, transparent)" }}></div>
 
       <div className="max-w-4xl w-full z-10 space-y-12">
 

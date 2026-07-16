@@ -20,8 +20,8 @@ export default function ReleasesPage() {
 
   return (
     <div className="min-h-screen p-6 md:p-12 relative overflow-hidden z-0">
-      <div className="fixed top-20 left-[10%] w-[400px] h-[400px] rounded-full blur-[120px] pointer-events-none -z-10" style={{ background: "rgba(124, 108, 240, 0.08)" }} aria-hidden="true" />
-      <div className="fixed bottom-20 right-[10%] w-[400px] h-[400px] rounded-full blur-[130px] pointer-events-none -z-10" style={{ background: "rgba(124, 108, 240, 0.05)" }} aria-hidden="true" />
+      <div className="fixed top-20 left-[10%] w-[400px] h-[400px] rounded-full blur-[120px] pointer-events-none -z-10" style={{ background: "color-mix(in srgb, var(--color-coral-pulse) 8%, transparent)" }} aria-hidden="true" />
+      <div className="fixed bottom-20 right-[10%] w-[400px] h-[400px] rounded-full blur-[130px] pointer-events-none -z-10" style={{ background: "color-mix(in srgb, var(--color-coral-pulse) 5%, transparent)" }} aria-hidden="true" />
 
       <div className="max-w-4xl mx-auto z-10 relative">
         <header className="mb-16 text-center relative">
