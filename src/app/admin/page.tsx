@@ -39,11 +39,11 @@ export default function AdminPage() {
   // const allPrompts = await prisma.aIPromptLog.findMany({ select: { discordId: true, createdAt: true }});
   // const allExams = await prisma.examSession.findMany({ select: { creatorId: true, createdAt: true }});
   const users = [
-    { id: "ph-user-1", discordId: "111111111111111111", username: "Ivan Petrov", avatar: null, role: "admin", badges: JSON.stringify(["Creator", "Staff"]), canUpload: true, isPremium: true, premiumUntil: null, isBanned: false, banReason: null, createdAt: new Date("2026-01-01") },
+    { id: "ph-user-1", discordId: "111111111111111111", username: "roodyu", avatar: null, role: "admin", badges: JSON.stringify(["Creator", "Staff"]), canUpload: true, isPremium: true, premiumUntil: null, isBanned: false, banReason: null, createdAt: new Date("2026-01-01") },
     { id: "ph-user-2", discordId: "222222222222222222", username: "Anna Volkova", avatar: null, role: "user", badges: JSON.stringify(["ActivePresetser"]), canUpload: true, isPremium: false, premiumUntil: null, isBanned: false, banReason: null, createdAt: new Date("2026-02-15") },
   ];
   const presets = [
-    { id: "ph-preset-1", name: "Уголовный кодекс", description: "Полный УК сервера Majestic", author: "Ivan Petrov", discordId: "111111111111111111", data: "[]", downloads: 482, isVerified: true, serverProjectId: "ph-project-1", serverId: "ph-server-1", createdAt: new Date("2026-06-01") },
+    { id: "ph-preset-1", name: "Уголовный кодекс", description: "Полный УК сервера Majestic", author: "roodyu", discordId: "111111111111111111", data: "[]", downloads: 482, isVerified: true, serverProjectId: "ph-project-1", serverId: "ph-server-1", createdAt: new Date("2026-06-01") },
   ];
   const servers = [
     { id: "ph-project-1", name: "Majestic RP", iconUrl: "/img/Verified.png", discordRoleId: null, webhookUrl: null, createdAt: new Date("2026-01-01"), servers: [{ id: "ph-server-1", name: "Boston", serverProjectId: "ph-project-1", createdAt: new Date("2026-01-01") }] },

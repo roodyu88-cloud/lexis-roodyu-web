@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useDevSession, useDevAuth } from "./DevAuthProvider";
 import { useState, useEffect, useRef } from "react";
-import { Brain, GraduationCap, DownloadCloud, BookOpen, Gem, Crown, LogOut, Bell, Upload, Menu, X } from "lucide-react";
+import { Brain, GraduationCap, DownloadCloud, BookOpen, ScrollText, Gem, Crown, LogOut, Bell, Upload, Menu, X } from "lucide-react";
 
 export default function Navbar() {
   const { data: session } = useDevSession();
@@ -14,31 +14,6 @@ export default function Navbar() {
   const [notifications, setNotifications] = useState<any[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const notificationsRef = useRef<HTMLDivElement>(null);
-
-  const [theme, setTheme] = useState<"classic" | "glass">("classic");
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("lexis-theme") as "classic" | "glass";
-    if (savedTheme) {
-      setTheme(savedTheme);
-      if (savedTheme === "glass") {
-        document.documentElement.classList.add("theme-glass");
-      } else {
-        document.documentElement.classList.remove("theme-glass");
-      }
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    const newTheme = theme === "glass" ? "classic" : "glass";
-    setTheme(newTheme);
-    localStorage.setItem("lexis-theme", newTheme);
-    if (newTheme === "glass") {
-      document.documentElement.classList.add("theme-glass");
-    } else {
-      document.documentElement.classList.remove("theme-glass");
-    }
-  };
 
   // Fetch notifications if logged in
   useEffect(() => {
@@ -101,11 +76,6 @@ export default function Navbar() {
               <span className="absolute top-[0.18em] left-[51%] -translate-x-[50%] w-[0.22em] h-[0.22em] bg-[var(--color-coral-pulse)] rounded-full shadow-[0_0_10px_2px_rgba(124,108,240,0.8)] pointer-events-none"></span>
             </span>s
           </Link>
-          {session?.user && (
-            <Link href="/upload" title="Загрузить пресет" className="w-8 h-8 rounded-[var(--radius-lg)] border border-[var(--color-hairline)] flex items-center justify-center text-[var(--color-ash)] hover:text-[var(--color-pure-white)] hover:border-[#4a4b4d] transition-all group">
-              <Upload className="w-4 h-4 group-hover:-translate-y-0.5 transition-transform" strokeWidth={1.75} />
-            </Link>
-          )}
         </div>
         <div className="hidden md:flex gap-6 items-center">
           <Link href="/presets" className="rc-link">
@@ -139,6 +109,15 @@ export default function Navbar() {
 
           {session?.user ? (
             <div className="flex items-center gap-4">
+              {/* Upload Preset */}
+              <Link
+                href="/upload"
+                title="Загрузить пресет"
+                className="p-1.5 rounded-full hover:bg-[var(--overlay-soft)] text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors group"
+              >
+                <Upload className="w-5 h-5 group-hover:-translate-y-0.5 transition-transform" strokeWidth={1.75} />
+              </Link>
+
               {/* Notifications Bell */}
               <div className="relative" ref={notificationsRef}>
                 <button
@@ -219,6 +198,15 @@ export default function Navbar() {
         {/* Mobile Menu Toggle & Notifications */}
         <div className="flex md:hidden items-center gap-3">
           {session?.user && (
+            <Link
+              href="/upload"
+              title="Загрузить пресет"
+              className="p-1.5 rounded-full hover:bg-[var(--overlay-soft)] text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors"
+            >
+              <Upload className="w-5 h-5" strokeWidth={1.75} />
+            </Link>
+          )}
+          {session?.user && (
             <div className="relative" ref={notificationsRef}>
               <button
                 onClick={() => setShowNotifications(!showNotifications)}
@@ -268,8 +256,8 @@ export default function Navbar() {
       {/* Mobile Menu Dropdown */}
       {isMobileMenuOpen && (
         <div className="rc-card-edge fixed top-20 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] z-40 !p-5 bg-[var(--color-ink)] md:hidden animate-fade-in flex flex-col gap-4">
-          <Link href="/presets" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-medium text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors p-2 rounded-[var(--radius-lg)] hover:bg-[var(--overlay-soft)]">
-            Пресеты
+          <Link href="/presets" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-medium text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors p-2 rounded-[var(--radius-lg)] hover:bg-[var(--overlay-soft)] flex items-center gap-2">
+            <ScrollText className="w-4 h-4" strokeWidth={1.75} /> Пресеты
           </Link>
           <Link href="/guide" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-medium text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors p-2 rounded-[var(--radius-lg)] hover:bg-[var(--overlay-soft)] flex items-center gap-2">
             <BookOpen className="w-4 h-4" strokeWidth={1.75} /> Инструкция
@@ -284,8 +272,8 @@ export default function Navbar() {
             <Gem className="w-4 h-4" strokeWidth={1.75} /> Premium
           </Link>
           {session?.user && (
-            <Link href="/upload" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-medium text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors p-2 rounded-[var(--radius-lg)] hover:bg-[var(--overlay-soft)]">
-              Загрузить пресет
+            <Link href="/upload" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-medium text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors p-2 rounded-[var(--radius-lg)] hover:bg-[var(--overlay-soft)] flex items-center gap-2">
+              <Upload className="w-4 h-4" strokeWidth={1.75} /> Загрузить пресет
             </Link>
           )}
           {(session?.user?.role === "admin" || session?.user?.role === "developer") && (
@@ -304,9 +292,10 @@ export default function Navbar() {
               </div>
               <button
                 onClick={() => { setIsMobileMenuOpen(false); setShowLogoutModal(true); }}
-                className="text-sm text-[var(--color-ash)] hover:text-[var(--color-pure-white)] font-medium p-2 rounded-[var(--radius-lg)] hover:bg-[var(--overlay-soft)] text-left"
+                className="text-sm font-medium p-2 rounded-[var(--radius-lg)] hover:bg-red-500/10 text-left flex items-center gap-2 cursor-pointer transition-colors"
+                style={{ color: "rgba(239, 68, 68, 0.75)" }}
               >
-                Выйти из аккаунта
+                <LogOut className="w-4 h-4" strokeWidth={1.75} /> Выйти из аккаунта
               </button>
             </div>
           ) : (
@@ -350,25 +339,6 @@ export default function Navbar() {
           </div>
         </div>
       )}
-
-      {/* Floating Theme Switcher FAB */}
-      <button
-        onClick={toggleTheme}
-        className="fixed bottom-6 right-6 w-10 h-10 rounded-full z-[9999] flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110 border border-[var(--color-hairline)] group"
-        style={{
-          background: "color-mix(in srgb, var(--color-void-black) 72%, transparent)",
-          backdropFilter: "blur(24px)",
-          boxShadow: "var(--shadow-key)",
-        }}
-        title={theme === "glass" ? "Включить темную тему" : "Включить светлую тему"}
-        aria-label="Сменить тему оформления"
-      >
-        <span className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-          theme === "glass"
-            ? "bg-white shadow-[0_0_12px_rgba(255,255,255,0.95)]"
-            : "bg-[var(--color-coral-pulse)] shadow-[0_0_12px_rgba(124,108,240,0.85)]"
-        }`} />
-      </button>
     </>
   );
 }

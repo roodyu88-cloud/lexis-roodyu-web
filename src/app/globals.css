@@ -146,6 +146,11 @@ html.theme-glass {
   transform: translateY(-1px);
 }
 
+.rc-btn:active {
+  transform: scale(0.96);
+  transition: transform 0.1s ease;
+}
+
 .rc-btn-ghost {
   display: inline-flex;
   align-items: center;
@@ -165,6 +170,15 @@ html.theme-glass {
 .rc-btn-ghost:hover {
   color: var(--color-pure-white);
   border-color: #4a4b4d;
+}
+
+.rc-btn-ghost:active {
+  transform: scale(0.96);
+  transition: transform 0.1s ease;
+}
+
+.rc-link:active {
+  transform: scale(0.96);
 }
 
 .rc-card {
@@ -264,6 +278,7 @@ html.theme-glass {
     transparent 168px
   );
   filter: blur(26px);
+  -webkit-mask-image: radial-gradient(circle at 58% 48%, black 0%, transparent 85%);
   mask-image: radial-gradient(circle at 58% 48%, black 0%, transparent 85%);
   pointer-events: none;
   z-index: 0;
@@ -277,6 +292,34 @@ html.theme-glass {
 html.theme-glass .rc-hero-wash,
 html.theme-glass .rc-hero-beams {
   opacity: 0.55;
+}
+
+/* Mobile: the wash/beams read as loud, hard-edged stripes rather than an
+   ambient glow at phone viewing distance/size — dial back so text and
+   buttons stay legible over them. */
+@media (max-width: 640px) {
+  .rc-hero-wash {
+    opacity: 0.6;
+  }
+  .rc-hero-beams {
+    opacity: 0.45;
+  }
+}
+
+/* The layout wraps <main> in a div with pt-20 to clear the fixed floating
+   nav; that gap sits above .rc-hero and paints as a flat black band with
+   nothing behind it. Pull the hero up to cover that gap with its own
+   gradient/beams so the nav floats directly over the background, then
+   restore the same visual clearance via top padding. */
+.rc-hero {
+  margin-top: -80px;
+  padding-top: 176px;
+}
+
+@media (min-width: 768px) {
+  .rc-hero {
+    padding-top: 224px;
+  }
 }
 
 /* ============================================================
@@ -470,6 +513,37 @@ html.theme-glass .glow-text {
 
 .animate-scale-up {
   animation: scaleUp 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.rc-page-transition {
+  animation: pageIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Scroll-triggered reveal — toggled by the Reveal component's IntersectionObserver */
+.rc-reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.rc-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rc-page-transition,
+  .rc-reveal {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
 /* Принудительно скрываем иконку разработчика Next.js */

@@ -6,7 +6,7 @@ import PresetsList from "./PresetsList";
 
 // PLACEHOLDER-DB (2026-07-15): mock data standing in for the DB while DATABASE_URL is unset locally.
 const PLACEHOLDER_PRESETS = [
-  { id: "ph-preset-1", name: "Уголовный кодекс", description: "Полный УК сервера Majestic", author: "Ivan Petrov", discordId: "111111111111111111", data: "[]", downloads: 482, isVerified: true, serverProjectId: "ph-project-1", serverId: "ph-server-1", createdAt: new Date("2026-06-01") },
+  { id: "ph-preset-1", name: "Уголовный кодекс", description: "Полный УК сервера Majestic", author: "roodyu", discordId: "111111111111111111", data: "[]", downloads: 482, isVerified: true, serverProjectId: "ph-project-1", serverId: "ph-server-1", createdAt: new Date("2026-06-01") },
   { id: "ph-preset-2", name: "Кодекс ПДД", description: "Правила дорожного движения", author: "Anna Volkova", discordId: "222222222222222222", data: "[]", downloads: 210, isVerified: false, serverProjectId: "ph-project-1", serverId: "ph-server-2", createdAt: new Date("2026-06-10") },
   { id: "ph-preset-3", name: "Административный кодекс", description: null, author: "Server Staff", discordId: "111111111111111111", data: "[]", downloads: 96, isVerified: true, serverProjectId: "ph-project-2", serverId: null, createdAt: new Date("2026-06-18") },
 ];
@@ -15,7 +15,7 @@ const PLACEHOLDER_SERVERS = [
   { id: "ph-project-2", name: "GTA 5 RP", iconUrl: "/img/Verified.png", discordRoleId: null, webhookUrl: null, createdAt: new Date("2026-01-01"), servers: [] },
 ];
 const PLACEHOLDER_USERS = [
-  { id: "ph-user-1", discordId: "111111111111111111", username: "Ivan Petrov", avatar: null, role: "user", badges: JSON.stringify(["Creator", "Staff"]), canUpload: true, isPremium: true, premiumUntil: null, isBanned: false, banReason: null, createdAt: new Date("2026-01-01") },
+  { id: "ph-user-1", discordId: "111111111111111111", username: "roodyu", avatar: null, role: "user", badges: JSON.stringify(["Creator", "Staff"]), canUpload: true, isPremium: true, premiumUntil: null, isBanned: false, banReason: null, createdAt: new Date("2026-01-01") },
   { id: "ph-user-2", discordId: "222222222222222222", username: "Anna Volkova", avatar: null, role: "user", badges: JSON.stringify(["ActivePresetser"]), canUpload: true, isPremium: false, premiumUntil: null, isBanned: false, banReason: null, createdAt: new Date("2026-01-01") },
 ];
 

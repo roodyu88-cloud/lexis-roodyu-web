@@ -439,7 +439,7 @@ export default function AssistantClient({ isAuthenticated = false, isPremium = f
         {renderSidebarContent()}
       </div>
 
-      <div className="flex h-[calc(100vh-80px)] w-full max-w-[1400px] mx-auto px-2 md:px-6 relative flex-col md:flex-row">
+      <div className="flex h-[calc(100dvh-80px)] w-full max-w-[1400px] mx-auto px-2 md:px-6 relative flex-col md:flex-row">
         {/* Mobile Header Bar */}
         <div className="w-full flex items-center justify-between py-2 px-3 border-b border-[var(--color-hairline)] bg-black/20 md:hidden z-30">
           <button

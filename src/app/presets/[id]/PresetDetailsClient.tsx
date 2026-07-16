@@ -21,7 +21,7 @@ export default function PresetDetailsClient({ id }: { id: string }) {
   // const authorUser = preset.discordId ? await prisma.user.findUnique({ where: { discordId: preset.discordId } }) : null;
   const preset = {
     id, name: "Уголовный кодекс (плейсхолдер)", description: "Полный УК сервера Majestic — placeholder-данные для превью без БД.",
-    author: "Ivan Petrov", discordId: "111111111111111111", data: JSON.stringify([{ name: "Глава 1. Общие положения", articles: [{ title: "Статья 1. Незаконное хранение оружия" }, { title: "Статья 2. Сопротивление сотруднику" }] }]),
+    author: "roodyu", discordId: "111111111111111111", data: JSON.stringify([{ name: "Глава 1. Общие положения", articles: [{ title: "Статья 1. Незаконное хранение оружия" }, { title: "Статья 2. Сопротивление сотруднику" }] }]),
     downloads: 482, isVerified: true, serverProjectId: "ph-project-1", serverId: "ph-server-1", createdAt: new Date("2026-06-01"),
   };
 

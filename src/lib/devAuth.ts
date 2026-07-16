@@ -19,7 +19,7 @@ export interface DevUser {
 export const DEV_USERS: Record<Exclude<DevRole, "guest">, DevUser> = {
   user: {
     id: "111111111111111111",
-    name: "Ivan Petrov",
+    name: "roodyu",
     image: "/img/Verified.png",
     role: "user",
     isPremium: true,
@@ -28,7 +28,7 @@ export const DEV_USERS: Record<Exclude<DevRole, "guest">, DevUser> = {
   },
   admin: {
     id: "546005790864048140",
-    name: "Dev Admin",
+    name: "Admin",
     image: "/img/Verified.png",
     role: "admin",
     isPremium: true,

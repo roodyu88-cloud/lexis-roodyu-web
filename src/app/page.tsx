@@ -4,6 +4,7 @@ import Link from "next/link";
 // PLACEHOLDER-DB (2026-07-15): unused while DB call below is placeholdered — restore with the query.
 // import { prisma } from "@/lib/prisma";
 import { useDevSession } from "@/app/components/DevAuthProvider";
+import Reveal from "@/app/components/Reveal";
 import { GraduationCap, Zap, Globe, Palette, Wrench, Download, Gamepad2, Sparkles, Lightbulb, BookOpen, Brain, ArrowRight, ShieldCheck } from "lucide-react";
 
 export default function Home() {
@@ -28,7 +29,7 @@ export default function Home() {
             className="rc-eyebrow inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border"
             style={{ borderColor: "var(--color-hairline)", color: "var(--color-coral-text)" }}
           >
-            v2.1.0 — Теперь с биндером!
+            v2.1.0 – Теперь с биндером!
           </div>
           <h1 className="text-heading-lg font-normal text-[var(--color-pure-white)] leading-[var(--leading-heading-lg)] tracking-[var(--tracking-heading-lg)]">
             Твой идеальный <br />
@@ -65,39 +66,40 @@ export default function Home() {
           section of the product, not a marketplace item, so icons are Lexis's own features
           rather than per-item brand colors. */}
       <section className="max-w-6xl w-full mx-auto px-8 py-20">
-        <div className="text-center mb-12">
-          <h2 className="text-heading font-bold text-[var(--color-pure-white)] mb-3">Всё необходимое — в одном оверлее.</h2>
+        <Reveal className="text-center mb-12">
+          <h2 className="text-heading font-bold text-[var(--color-pure-white)] mb-3">Всё необходимое в одном оверлее.</h2>
           <p className="text-body-lg text-[var(--color-ash)] max-w-xl mx-auto">Пресеты, ИИ-юрист и тренажер экзаменов работают вместе, чтобы вы не открывали браузер во время ролплея.</p>
-        </div>
+        </Reveal>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {[
-            { href: "/presets", icon: BookOpen, title: "База Пресетов", desc: "Готовые своды законов популярных серверов — импорт в один клик." },
+            { href: "/presets", icon: BookOpen, title: "База Пресетов", desc: "Готовые своды законов популярных серверов – импорт в один клик." },
             { href: "/assistant", icon: Brain, title: "ИИ-Ассистент", desc: "Отвечает строго по законам вашего сервера, без выдумок." },
             { href: "/exam", icon: GraduationCap, title: "Тренажер экзаменов", desc: "Автогенерация тестов на знание кодекса перед приемом на фракцию." },
             { href: "/guide", icon: Gamepad2, title: "Игровой оверлей", desc: "Открывается по F9 поверх игры, не сворачивая GTA." },
-          ].map((tile) => (
-            <Link
-              key={tile.href}
-              href={tile.href}
-              className="rc-card-edge group relative bg-[var(--color-ink)] !p-0 overflow-hidden block transition-all duration-200 hover:-translate-y-1 hover:border-[color:var(--color-slate)]"
-            >
-              <div className="relative h-24 flex items-center justify-center overflow-hidden" style={{ background: "var(--color-obsidian)", borderBottom: "1px solid var(--color-hairline)" }}>
-                <div className="absolute inset-0 opacity-50" style={{ background: "radial-gradient(circle at 30% 20%, rgba(124,108,240,0.10), transparent 60%)" }} />
-                <div className="w-11 h-11 rounded-xl flex items-center justify-center relative z-10" style={{ background: "var(--color-graphite)", border: "1px solid var(--color-hairline)", boxShadow: "var(--shadow-key)" }}>
-                  <tile.icon className="w-5 h-5" style={{ color: "var(--color-coral-text)" }} />
+          ].map((tile, i) => (
+            <Reveal key={tile.href} delay={i * 80}>
+              <Link
+                href={tile.href}
+                className="rc-card-edge group relative bg-[var(--color-ink)] !p-0 overflow-hidden block transition-all duration-200 hover:-translate-y-1 hover:border-[color:var(--color-slate)]"
+              >
+                <div className="relative h-24 flex items-center justify-center overflow-hidden" style={{ background: "var(--color-obsidian)", borderBottom: "1px solid var(--color-hairline)" }}>
+                  <div className="absolute inset-0 opacity-50" style={{ background: "radial-gradient(circle at 30% 20%, rgba(124,108,240,0.10), transparent 60%)" }} />
+                  <div className="w-11 h-11 rounded-xl flex items-center justify-center relative z-10" style={{ background: "var(--color-graphite)", border: "1px solid var(--color-hairline)", boxShadow: "var(--shadow-key)" }}>
+                    <tile.icon className="w-5 h-5" style={{ color: "var(--color-coral-text)" }} />
+                  </div>
+                  <div
+                    className="absolute bottom-3 right-3 w-6 h-6 rounded-lg flex items-center justify-center z-10 opacity-0 translate-x-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0"
+                    style={{ background: "var(--color-graphite)", border: "1px solid var(--color-hairline)" }}
+                  >
+                    <ArrowRight className="w-3 h-3" style={{ color: "var(--color-pure-white)" }} />
+                  </div>
                 </div>
-                <div
-                  className="absolute bottom-3 right-3 w-6 h-6 rounded-lg flex items-center justify-center z-10 opacity-0 translate-x-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0"
-                  style={{ background: "var(--color-graphite)", border: "1px solid var(--color-hairline)" }}
-                >
-                  <ArrowRight className="w-3 h-3" style={{ color: "var(--color-pure-white)" }} />
+                <div className="p-5 text-left">
+                  <h3 className="font-bold text-[var(--color-pure-white)] mb-1.5">{tile.title}</h3>
+                  <p className="text-sm text-[var(--color-ash)] leading-relaxed">{tile.desc}</p>
                 </div>
-              </div>
-              <div className="p-5 text-left">
-                <h3 className="font-bold text-[var(--color-pure-white)] mb-1.5">{tile.title}</h3>
-                <p className="text-sm text-[var(--color-ash)] leading-relaxed">{tile.desc}</p>
-              </div>
-            </Link>
+              </Link>
+            </Reveal>
           ))}
         </div>
       </section>
@@ -105,15 +107,17 @@ export default function Home() {
       {/* AI showcase — contained echo of the hero's diagonal-beam signature, framing a
           mockup of an actual assistant answer instead of a generic screenshot. */}
       <section className="max-w-5xl w-full mx-auto px-8 py-12">
+        <Reveal>
         <div className="flex items-center gap-4 justify-center mb-10">
           <div className="h-px w-16" style={{ background: "var(--color-hairline)" }} />
           <span className="rc-eyebrow" style={{ color: "var(--color-coral-text)" }}>ИИ-Ассистент</span>
           <div className="h-px w-16" style={{ background: "var(--color-hairline)" }} />
         </div>
         <h2 className="text-heading font-bold text-[var(--color-pure-white)] text-center mb-3">Юрист, который знает только ваш сервер.</h2>
-        <p className="text-body-lg text-[var(--color-ash)] text-center max-w-xl mx-auto mb-12">Никаких выдуманных статей из реального УК — только то, что загружено в базу вашего сервера.</p>
+        <p className="text-body-lg text-[var(--color-ash)] text-center max-w-xl mx-auto mb-12">Никаких выдуманных статей из реального УК, только то, что загружено в базу вашего сервера.</p>
+        </Reveal>
 
-        <div className="relative overflow-hidden rounded-3xl" style={{ isolation: "isolate", border: "1px solid var(--color-hairline)", boxShadow: "var(--shadow-key)" }}>
+        <Reveal delay={100} className="relative overflow-hidden rounded-3xl" style={{ isolation: "isolate", border: "1px solid var(--color-hairline)", boxShadow: "var(--shadow-key)" }}>
           <div className="rc-hero-wash" aria-hidden="true" style={{ opacity: 0.6 }} />
           <div className="rc-hero-beams" aria-hidden="true" style={{ opacity: 0.7 }} />
           <div className="relative z-10 p-3 sm:p-6">
@@ -127,9 +131,9 @@ export default function Home() {
               <div className="p-6 text-left space-y-4">
                 <div className="font-semibold text-[var(--color-pure-white)]">Можно ли оспорить штраф за превышение скорости?</div>
                 <div className="text-sm text-[var(--color-ash)] leading-relaxed space-y-2">
-                  <p>Да, если нарушение зафиксировано без радара офицера — по УК сервера Majestic (ст. 14.3) штраф можно оспорить в течение 24 часов:</p>
+                  <p>Да, если нарушение зафиксировано без радара офицера по УК сервера Majestic (ст. 14.3) штраф можно оспорить в течение 24 часов:</p>
                   <p>1. Подайте жалобу через тикет-систему на форуме сервера.<br />2. Приложите пруф (видео/скриншот) момента фиксации.<br />3. Дождитесь ответа модератора фракции.</p>
-                  <p>Если радар не был включен официально — штраф аннулируется автоматически.</p>
+                  <p>Если радар не был включен официально – штраф аннулируется автоматически.</p>
                 </div>
                 <div className="flex items-center gap-2 pt-2" style={{ borderTop: "1px solid var(--color-hairline)" }}>
                   <span className="flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full" style={{ background: "var(--overlay-soft)", color: "var(--color-ash)", border: "1px solid var(--color-hairline)" }}>
@@ -139,13 +143,14 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       <div className="max-w-4xl w-full mx-auto flex flex-col items-center text-center space-y-8 px-8 pb-16">
 
         {/* Features */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full text-left">
+          <Reveal>
           <div className="rc-card bg-[var(--color-ink)]">
             <div
               className="w-12 h-12 rounded-full bg-[var(--color-obsidian)] flex items-center justify-center mb-6"
@@ -156,6 +161,8 @@ export default function Home() {
             <h3 className="text-subheading font-semibold text-[var(--color-pure-white)] mb-3">Моментально</h3>
             <p className="text-body text-[var(--color-ash)] leading-relaxed">Мгновенный вызов по кнопке F9. Никаких сворачиваний игры во время ареста.</p>
           </div>
+          </Reveal>
+          <Reveal delay={80}>
           <div className="rc-card bg-[var(--color-ink)]">
             <div
               className="w-12 h-12 rounded-full bg-[var(--color-obsidian)] flex items-center justify-center mb-6"
@@ -166,6 +173,8 @@ export default function Home() {
             <h3 className="text-subheading font-semibold text-[var(--color-pure-white)] mb-3">Облако Пресетов</h3>
             <p className="text-body text-[var(--color-ash)] leading-relaxed">Делитесь своими законами и скачивайте пресеты других серверов в один клик.</p>
           </div>
+          </Reveal>
+          <Reveal delay={160}>
           <div className="rc-card bg-[var(--color-ink)]">
             <div
               className="w-12 h-12 rounded-full bg-[var(--color-obsidian)] flex items-center justify-center mb-6"
@@ -176,10 +185,11 @@ export default function Home() {
             <h3 className="text-subheading font-semibold text-[var(--color-pure-white)] mb-3">Умный Дизайн</h3>
             <p className="text-body text-[var(--color-ash)] leading-relaxed">Темная тема, подсветка синтаксиса и никаких артефактов поверх вашего геймплея.</p>
           </div>
+          </Reveal>
         </div>
 
         {/* FAQ Section */}
-        <div className="w-full mt-24 mb-16 text-left">
+        <Reveal className="w-full mt-24 mb-16 text-left">
           <h2 className="text-heading font-bold mb-8 text-center text-[var(--color-pure-white)]">Частые вопросы (FAQ)</h2>
 
           <div className="space-y-4">
@@ -232,7 +242,7 @@ export default function Home() {
               </p>
             </div>
           </div>
-        </div>
+        </Reveal>
 
       </div>
     </main>

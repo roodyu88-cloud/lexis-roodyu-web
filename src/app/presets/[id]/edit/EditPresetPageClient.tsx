@@ -23,7 +23,7 @@ export default function EditPresetPageClient({ id }: { id: string }) {
   // if (!preset) return notFound();
   const preset = {
     id, name: "Уголовный кодекс (плейсхолдер)", description: "Placeholder-данные для превью без БД.",
-    author: "Ivan Petrov", discordId: "111111111111111111", data: "[]", downloads: 482, isVerified: true,
+    author: "roodyu", discordId: "111111111111111111", data: "[]", downloads: 482, isVerified: true,
     serverProjectId: "ph-project-1", serverId: "ph-server-1", createdAt: new Date("2026-06-01"),
   };
 

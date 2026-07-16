@@ -5,7 +5,7 @@ import Link from "next/link";
 import Navbar from "@/app/components/Navbar";
 import Providers from "@/app/components/Providers";
 import GlobalBanCheck from "@/app/components/GlobalBanCheck";
-import DevRoleToggle from "@/app/components/DevRoleToggle";
+import SettingsFab from "@/app/components/SettingsFab";
 import { Sparkles } from "lucide-react";
 
 const inter = Inter({ subsets: ["latin", "cyrillic"], variable: "--font-inter-loaded" });
@@ -32,6 +32,11 @@ export default function RootLayout({
             } else {
               document.documentElement.classList.remove('theme-glass');
             }
+            var accent = localStorage.getItem('lexis-accent');
+            if (accent) {
+              document.documentElement.style.setProperty('--color-coral-pulse', accent);
+              document.documentElement.style.setProperty('--color-coral-text', accent);
+            }
           })();
         ` }} />
       </head>
@@ -44,7 +49,7 @@ export default function RootLayout({
               {children}
             </div>
           </div>
-          <DevRoleToggle />
+          <SettingsFab />
         </Providers>
 
         {/* Premium footer */}
