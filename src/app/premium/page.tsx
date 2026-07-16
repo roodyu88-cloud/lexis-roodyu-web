@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useSession } from "next-auth/react";
+import { useDevSession } from "@/app/components/DevAuthProvider";
 import Link from "next/link";
 import { Scale, Briefcase, Siren, Crown, Lock } from "lucide-react";
 
 export default function PremiumPage() {
-  const { data: session, update } = useSession();
+  const { data: session, update } = useDevSession();
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);

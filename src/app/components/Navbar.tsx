@@ -1,15 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { signIn, signOut } from "next-auth/react";
+import { useDevSession, useDevAuth } from "./DevAuthProvider";
 import { useState, useEffect, useRef } from "react";
 import { Brain, GraduationCap, DownloadCloud, BookOpen, Gem, Crown, LogOut, Bell, Upload, Menu, X } from "lucide-react";
 
-interface NavbarProps {
-  session: any;
-}
-
-export default function Navbar({ session }: NavbarProps) {
+export default function Navbar() {
+  const { data: session } = useDevSession();
+  const { setRole } = useDevAuth();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -89,8 +87,8 @@ export default function Navbar({ session }: NavbarProps) {
   };
 
   const handleLogin = () => {
-    // Instant redirect to discord auth
-    signIn("discord");
+    // Dev build: no real Discord OAuth — logging in just switches the mock role.
+    setRole("user");
   };
 
   return (
@@ -343,7 +341,7 @@ export default function Navbar({ session }: NavbarProps) {
                 Отмена
               </button>
               <button
-                onClick={() => signOut({ callbackUrl: "/" })}
+                onClick={() => { setRole("guest"); setShowLogoutModal(false); }}
                 className="flex-1 bg-[var(--color-coral-pulse)] hover:opacity-90 text-white rounded-[var(--radius-lg)] font-medium text-sm py-2.5 transition-opacity cursor-pointer"
               >
                 Да, выйти

@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
+import { useDevSession } from "./DevAuthProvider";
 import { Ban } from "lucide-react";
 
 export default function GlobalBanCheck() {
-  const { data: session } = useSession();
+  const { data: session } = useDevSession();
   const [isBanned, setIsBanned] = useState(false);
   const [banReason, setBanReason] = useState<string | null>(null);
   const [discordUrl, setDiscordUrl] = useState<string>("https://dsc.gg/lexis");

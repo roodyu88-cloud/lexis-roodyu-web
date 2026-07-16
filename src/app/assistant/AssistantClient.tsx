@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Bot, Scale, Briefcase, Siren, Crown, Lock, Package, BookOpen, Clock } from 'lucide-react';
-import { SERVERS, PROJECTS } from "../api/assistant/serverLaws";
+import { SERVERS, PROJECTS } from "@/lib/serverLaws";
 
 type Message = {
   role: 'user' | 'model';

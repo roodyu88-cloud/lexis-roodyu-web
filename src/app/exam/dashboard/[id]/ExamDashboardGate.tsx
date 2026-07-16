@@ -2,22 +2,20 @@
 
 import { useDevSession } from "@/app/components/DevAuthProvider";
 import LoginRequiredCard from "@/app/components/LoginRequiredCard";
-import ExamClient from "./ExamClient";
+import DashboardClient from "./DashboardClient";
 
-export default function ExamPage() {
+export default function ExamDashboardGate({ id }: { id: string }) {
   const { data: session, status } = useDevSession();
 
   if (status === "loading") return null;
 
   if (!session?.user) {
-    return <LoginRequiredCard message="Тренажер экзаменов доступен только авторизованным пользователям." />;
+    return <LoginRequiredCard />;
   }
-
-  const isPremium = (session.user as any).isPremium || false;
 
   return (
     <div className="min-h-screen text-[var(--color-pure-white)]">
-      <ExamClient isPremium={isPremium} />
+      <DashboardClient examId={id} />
     </div>
   );
 }

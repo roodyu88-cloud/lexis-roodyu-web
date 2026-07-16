@@ -2,12 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useSession, signIn } from "next-auth/react";
+import { useDevSession, useDevAuth } from "@/app/components/DevAuthProvider";
 import { Lock, ChevronDown } from "lucide-react";
 
 export default function UploadPage() {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { data: session, status } = useDevSession();
+  const { setRole } = useDevAuth();
   const [file, setFile] = useState<File | null>(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -69,14 +70,7 @@ export default function UploadPage() {
     }
   };
 
-  // ── Loading state ──────────────────────────────────────────────────────────
-  if (status === "loading") {
-    return (
-      <main className="min-h-screen flex items-center justify-center">
-        <div className="text-sm animate-pulse" style={{ color: "var(--color-ash)" }}>Проверка авторизации...</div>
-      </main>
-    );
-  }
+  if (status === "loading") return null;
 
   // ── Not authenticated ──────────────────────────────────────────────────────
   if (!session?.user) {
@@ -99,7 +93,7 @@ export default function UploadPage() {
               Чтобы публиковать пресеты, необходимо войти через Discord.
             </p>
             <button
-              onClick={() => signIn("discord")}
+              onClick={() => setRole("user")}
               className="rc-btn w-full flex items-center justify-center gap-2"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">

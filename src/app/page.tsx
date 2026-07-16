@@ -1,19 +1,18 @@
+"use client";
+
 import Link from "next/link";
 // PLACEHOLDER-DB (2026-07-15): unused while DB call below is placeholdered — restore with the query.
 // import { prisma } from "@/lib/prisma";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { useDevSession } from "@/app/components/DevAuthProvider";
 import { GraduationCap, Zap, Globe, Palette, Wrench, Download, Gamepad2, Sparkles, Lightbulb, BookOpen, Brain, ArrowRight, ShieldCheck } from "lucide-react";
 
-export const revalidate = 0;
-
-export default async function Home() {
+export default function Home() {
   // PLACEHOLDER-DB (2026-07-15): DATABASE_URL absent in this dev env, real query crashes SSR.
   // Original: const discordSetting = await prisma.appSetting.findUnique({ where: { key: "discordUrl" } });
   // const discordUrl = discordSetting?.value || "https://dsc.gg/lexis";
   const discordUrl = "https://dsc.gg/lexis";
 
-  const session = await getServerSession(authOptions);
+  const { data: session } = useDevSession();
   const isPremium = (session?.user as any)?.isPremium || false;
 
   return (

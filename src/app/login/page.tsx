@@ -1,16 +1,20 @@
 "use client";
 
-import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useDevAuth } from "@/app/components/DevAuthProvider";
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const { setRole } = useDevAuth();
+  const router = useRouter();
 
   const handleDiscordLogin = () => {
     setIsLoading(true);
-    signIn("discord", { callbackUrl: "/" });
+    setRole("user");
+    router.push("/");
   };
 
   return (

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { SERVERS, PROJECTS } from "../api/assistant/serverLaws";
+import { SERVERS, PROJECTS } from "@/lib/serverLaws";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Sparkles, AlertTriangle, X } from "lucide-react";

@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { useDevSession } from "@/app/components/DevAuthProvider";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, CheckCircle2, XCircle, DownloadCloud, Rocket } from "lucide-react";
 
 export default function AdminReleasesPage() {
-  const { data: session, status } = useSession();
+  const { data: session, status } = useDevSession();
   const router = useRouter();
 
   const [version, setVersion] = useState("");
@@ -28,7 +28,9 @@ export default function AdminReleasesPage() {
   };
 
   useEffect(() => {
-    if (status === "unauthenticated" || (session?.user as any)?.role !== "admin" && (session?.user as any)?.role !== "developer") {
+    if (status === "loading") return;
+    const isAdmin = (session?.user as any)?.role === "admin" || (session?.user as any)?.role === "developer";
+    if (status === "unauthenticated" || !isAdmin) {
       router.push("/");
     }
   }, [status, session, router]);
@@ -90,6 +92,7 @@ export default function AdminReleasesPage() {
   };
 
   if (status === "loading") return <div className="p-8 text-[var(--color-pure-white)]">Загрузка...</div>;
+
 
   return (
     <div className="min-h-screen bg-[var(--color-void-black)] text-[var(--color-pure-white)] p-4 sm:p-8 relative overflow-hidden z-0">

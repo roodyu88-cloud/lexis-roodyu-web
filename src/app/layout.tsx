@@ -5,24 +5,22 @@ import Link from "next/link";
 import Navbar from "@/app/components/Navbar";
 import Providers from "@/app/components/Providers";
 import GlobalBanCheck from "@/app/components/GlobalBanCheck";
+import DevRoleToggle from "@/app/components/DevRoleToggle";
 import { Sparkles } from "lucide-react";
 
 const inter = Inter({ subsets: ["latin", "cyrillic"], variable: "--font-inter-loaded" });
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono-loaded" });
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export const metadata: Metadata = {
   title: "Lexis Web | База пресетов",
   description: "Официальный сайт и база пресетов для справочника Lexis (GTA 5 RP)",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession(authOptions);
   return (
     <html lang="ru" suppressHydrationWarning className={`${inter.variable} ${geistMono.variable}`}>
       <head>
@@ -41,13 +39,14 @@ export default async function RootLayout({
         <Providers>
           <GlobalBanCheck />
           <div className="flex-1 flex flex-col w-full">
-            <Navbar session={session} />
+            <Navbar />
             <div className="pt-20 flex-1">
               {children}
             </div>
           </div>
+          <DevRoleToggle />
         </Providers>
-        
+
         {/* Premium footer */}
         <footer
           className="w-full py-8 px-6 mt-16 relative"

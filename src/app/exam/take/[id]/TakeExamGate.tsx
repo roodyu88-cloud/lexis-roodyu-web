@@ -2,22 +2,20 @@
 
 import { useDevSession } from "@/app/components/DevAuthProvider";
 import LoginRequiredCard from "@/app/components/LoginRequiredCard";
-import ExamClient from "./ExamClient";
+import TakeExamClient from "./TakeExamClient";
 
-export default function ExamPage() {
+export default function TakeExamGate({ id }: { id: string }) {
   const { data: session, status } = useDevSession();
 
   if (status === "loading") return null;
 
   if (!session?.user) {
-    return <LoginRequiredCard message="Тренажер экзаменов доступен только авторизованным пользователям." />;
+    return <LoginRequiredCard />;
   }
-
-  const isPremium = (session.user as any).isPremium || false;
 
   return (
     <div className="min-h-screen text-[var(--color-pure-white)]">
-      <ExamClient isPremium={isPremium} />
+      <TakeExamClient examId={id} user={session.user} />
     </div>
   );
 }

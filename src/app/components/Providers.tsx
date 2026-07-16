@@ -1,7 +1,7 @@
 "use client";
 
-import { SessionProvider } from "next-auth/react";
+import { DevAuthProvider } from "./DevAuthProvider";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
-  return <SessionProvider>{children}</SessionProvider>;
+  return <DevAuthProvider>{children}</DevAuthProvider>;
 }

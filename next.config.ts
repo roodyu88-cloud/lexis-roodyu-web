@@ -1,9 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-    outputFileTracingIncludes: {
-        '/api/assistant': ['./majesticrp/**/*', './crystalrp/**/*', './public/**/*']
-    }
+    output: "export",
+    basePath: "/lexis-roodyu-web",
+    images: {
+        unoptimized: true,
+    },
 };
 
 export default nextConfig;

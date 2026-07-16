@@ -1,26 +1,32 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { redirect } from "next/navigation";
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useDevSession } from "@/app/components/DevAuthProvider";
 // PLACEHOLDER-DB (2026-07-15): unused while DB calls below are placeholdered — restore with the query.
 // import { prisma } from "@/lib/prisma";
 import AdminDashboard from "./AdminDashboard";
 import { ShieldCheck } from "lucide-react";
 
-export const revalidate = 0;
+export default function AdminPage() {
+  const { data: session, status } = useDevSession();
+  const router = useRouter();
+  const [checked, setChecked] = useState(false);
 
-export default async function AdminPage() {
-  const session = await getServerSession(authOptions);
-  
-  if (!session?.user) {
-    redirect("/");
-  }
+  const discordId = session?.user ? (session.user as any).id : null;
+  const role = session?.user ? (session.user as any).role : null;
+  const isAuthorized = role === "admin" || role === "developer" || discordId === "546005790864048140";
 
-  const discordId = (session.user as any).id;
-  const role = (session.user as any).role;
+  useEffect(() => {
+    if (status === "unauthenticated" || (status === "authenticated" && !isAuthorized)) {
+      router.push("/");
+    } else if (status === "authenticated" && isAuthorized) {
+      setChecked(true);
+    }
+  }, [status, isAuthorized, router]);
 
-  // Authorize only admin/developer role or the hardcoded discord ID
-  if (role !== "admin" && role !== "developer" && discordId !== "546005790864048140") {
-    redirect("/");
+  if (!checked) {
+    return <div className="min-h-screen flex items-center justify-center text-sm animate-pulse" style={{ color: "var(--color-ash)" }}>Проверка доступа...</div>;
   }
 
   // PLACEHOLDER-DB (2026-07-15): DATABASE_URL absent in this dev env, real queries crash SSR.

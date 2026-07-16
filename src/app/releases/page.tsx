@@ -1,13 +1,14 @@
+"use client";
+
 // PLACEHOLDER-DB (2026-07-15): unused while DB call below is placeholdered — restore with the query.
 // import { prisma } from "@/lib/prisma";
 import Link from "next/link";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]/route";
+import { useDevSession } from "@/app/components/DevAuthProvider";
 import ReleaseAdminActions from "./ReleaseAdminActions";
 import { Plus, ShieldCheck, Download } from "lucide-react";
 
-export default async function ReleasesPage() {
-  const session = await getServerSession(authOptions);
+export default function ReleasesPage() {
+  const { data: session } = useDevSession();
   const isAdmin = (session?.user as any)?.role === "admin" || (session?.user as any)?.role === "developer";
 
   // PLACEHOLDER-DB (2026-07-15): DATABASE_URL absent in this dev env, real query crashes SSR.
