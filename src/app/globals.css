@@ -306,6 +306,233 @@ html.theme-glass .rc-hero-beams {
 }
 
 /* ============================================================
+   Pinned scroll transition (Void-referenced): the hero stays fixed
+   in the viewport for an extra scroll run while the next section
+   rises over it with a rounded, elevated leading edge. Pure CSS —
+   position: sticky inside a taller-than-viewport wrapper — no JS,
+   so it degrades gracefully and costs nothing for reduced-motion.
+   ============================================================ */
+.rc-hero-pin {
+  position: relative;
+  height: 140vh;
+  height: 140svh;
+}
+
+.rc-hero-pin .rc-hero {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  padding-top: 0;
+  padding-bottom: 0;
+  justify-content: center;
+}
+
+.rc-hero-reveal {
+  position: relative;
+  z-index: 10;
+  background: var(--color-void-black);
+  border-radius: 28px 28px 0 0;
+  margin-top: -34vh;
+  box-shadow: 0 -50px 90px rgba(0, 0, 0, 0.55);
+}
+
+@media (max-width: 768px) {
+  .rc-hero-pin {
+    height: 118vh;
+    height: 118svh;
+  }
+  .rc-hero-reveal {
+    margin-top: -14vh;
+    border-radius: 20px 20px 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rc-hero-pin,
+  .rc-hero-pin .rc-hero {
+    height: auto;
+  }
+  .rc-hero-pin .rc-hero {
+    position: relative;
+  }
+  .rc-hero-reveal {
+    margin-top: 0;
+  }
+}
+
+/* ============================================================
+   Void-referenced accordion: strict hierarchy, numbered rows,
+   hard hairline dividers, bold contrast on expand — reuses the
+   existing coral accent + minimal radius tokens, never Void's
+   own black/white palette or square corners.
+   ============================================================ */
+.rc-accordion {
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  background: var(--color-ink);
+}
+
+.rc-accordion-item {
+  border-bottom: 1px solid var(--color-hairline);
+}
+
+.rc-accordion-item:last-child {
+  border-bottom: none;
+}
+
+.rc-accordion-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 22px 24px;
+  text-align: left;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.rc-accordion-trigger:hover {
+  background: var(--overlay-soft);
+}
+
+.rc-accordion-num {
+  font-family: var(--font-geist-mono);
+  font-size: 13px;
+  color: var(--color-smoke);
+  letter-spacing: 0.5px;
+  min-width: 28px;
+}
+
+.rc-accordion-item.is-open .rc-accordion-num {
+  color: var(--color-coral-text);
+}
+
+.rc-accordion-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-obsidian);
+  border: 1px solid var(--color-hairline);
+  color: var(--color-coral-text);
+  flex-shrink: 0;
+}
+
+.rc-accordion-title {
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--color-pure-white);
+  flex: 1;
+}
+
+.rc-accordion-chevron {
+  color: var(--color-ash);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+}
+
+.rc-accordion-item.is-open .rc-accordion-chevron {
+  transform: rotate(180deg);
+  color: var(--color-pure-white);
+}
+
+.rc-accordion-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.rc-accordion-item.is-open .rc-accordion-panel {
+  grid-template-rows: 1fr;
+}
+
+.rc-accordion-panel-inner {
+  overflow: hidden;
+}
+
+.rc-accordion-panel-content {
+  padding: 0 24px 24px 72px;
+  color: var(--color-ash);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+@media (max-width: 640px) {
+  .rc-accordion-panel-content {
+    padding: 0 20px 20px 20px;
+  }
+  .rc-accordion-trigger {
+    padding: 18px 16px;
+    gap: 14px;
+  }
+  .rc-accordion-icon {
+    width: 34px;
+    height: 34px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rc-accordion-chevron,
+  .rc-accordion-panel {
+    transition: none !important;
+  }
+}
+
+/* ============================================================
+   Admin dashboard nav — glassmorphism side rail with a sliding
+   active indicator; falls back to the horizontal pill bar on
+   narrow viewports where a sidebar would eat the content width.
+   ============================================================ */
+.rc-admin-nav {
+  background: color-mix(in srgb, var(--color-ink) 65%, transparent);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-2xl);
+}
+
+.rc-admin-nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 13.5px;
+  transition: color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+}
+
+.rc-admin-nav-item:active {
+  transform: scale(0.97);
+}
+
+.rc-admin-nav-item.is-active {
+  color: var(--color-iron);
+}
+
+.rc-admin-card {
+  position: relative;
+  background: color-mix(in srgb, var(--color-ink) 80%, transparent);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-2xl);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.rc-admin-card:hover {
+  transform: translateY(-2px);
+  border-color: #4a4b4d;
+  box-shadow: var(--shadow-key);
+}
+
+/* ============================================================
    Legacy design system (glassmorphism blurple/cyan) — still in
    use by pages not yet migrated to the Raycast system above.
    ============================================================ */

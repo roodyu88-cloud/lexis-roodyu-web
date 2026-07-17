@@ -271,9 +271,9 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
 
   return (
     <div className="space-y-6">
-      {/* Tabs Menu */}
-      <div className="rc-card-edge bg-[var(--color-ink)] p-2">
-        <div className="flex gap-2 overflow-x-auto no-scrollbar">
+      {/* Tabs Menu — glassmorphism rail, sliding pill highlight on the active item */}
+      <div className="rc-admin-nav p-2">
+        <div className="flex gap-1.5 overflow-x-auto no-scrollbar">
           {TABS.map(tab => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -281,8 +281,8 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
               <button
                 key={tab.id}
                 onClick={() => { setActiveTab(tab.id); setSelectedUser(null); }}
-                className={`shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all cursor-pointer ${isActive
-                    ? "bg-[var(--color-mist)] text-[var(--color-iron)] shadow-[var(--shadow-button-lift)]"
+                className={`rc-admin-nav-item shrink-0 px-4 py-2.5 rounded-[var(--radius-lg)] cursor-pointer ${isActive
+                    ? "is-active bg-[var(--color-mist)] shadow-[var(--shadow-button-lift)]"
                     : "text-[var(--color-ash)] hover:text-[var(--color-pure-white)] hover:bg-[var(--overlay-soft)]"
                   }`}
               >
@@ -826,7 +826,7 @@ function StatsAdminTab({ stats }: { stats: any }) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         
         {/* AI Stats */}
-        <div className="rounded-2xl p-6" style={{ background: "var(--overlay-soft)", border: "1px solid var(--color-hairline)" }}>
+        <div className="rc-admin-card p-6">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: "var(--color-obsidian)", color: "var(--color-coral-text)" }}>
               <Bot className="w-6 h-6" strokeWidth={2} />
@@ -834,7 +834,7 @@ function StatsAdminTab({ stats }: { stats: any }) {
             <h3 className="text-xl font-bold text-[var(--color-pure-white)]">ИИ-Ассистент</h3>
           </div>
           <div className="grid grid-cols-2 gap-4 font-data">
-            <div className="bg-[var(--color-obsidian)] p-4 rounded-xl text-center">
+            <div className="bg-[var(--color-obsidian)] p-4 rounded-xl text-center transition-transform duration-200 hover:-translate-y-0.5">
               <span className="block text-[var(--color-ash)] text-sm mb-1">За 24 часа</span>
               <strong className="text-3xl text-[var(--color-pure-white)] font-black">{stats.ai.day}</strong>
             </div>
@@ -862,7 +862,7 @@ function StatsAdminTab({ stats }: { stats: any }) {
             <h3 className="text-xl font-bold text-[var(--color-pure-white)]">Экзамены</h3>
           </div>
           <div className="grid grid-cols-2 gap-4 font-data">
-            <div className="bg-[var(--color-obsidian)] p-4 rounded-xl text-center">
+            <div className="bg-[var(--color-obsidian)] p-4 rounded-xl text-center transition-transform duration-200 hover:-translate-y-0.5">
               <span className="block text-[var(--color-ash)] text-sm mb-1">За 24 часа</span>
               <strong className="text-3xl text-[var(--color-pure-white)] font-black">{stats.exams.day}</strong>
             </div>
@@ -886,7 +886,7 @@ function StatsAdminTab({ stats }: { stats: any }) {
       {stats.visits && (
         <>
           {/* Visits Stats */}
-          <div className="rounded-2xl p-6" style={{ background: "var(--overlay-soft)", border: "1px solid var(--color-hairline)" }}>
+          <div className="rc-admin-card p-6">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: "var(--color-obsidian)", color: "var(--color-coral-text)" }}>
                 <Activity className="w-6 h-6" strokeWidth={2} />
@@ -915,7 +915,7 @@ function StatsAdminTab({ stats }: { stats: any }) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Top Pages */}
-            <div className="rounded-2xl p-6" style={{ background: "var(--overlay-soft)", border: "1px solid var(--color-hairline)" }}>
+            <div className="rc-admin-card p-6">
               <div className="flex items-center gap-3 mb-5">
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "var(--color-obsidian)", color: "var(--color-coral-text)" }}>
                   <Eye className="w-5 h-5" strokeWidth={2} />
@@ -933,7 +933,7 @@ function StatsAdminTab({ stats }: { stats: any }) {
             </div>
 
             {/* Top Locations */}
-            <div className="rounded-2xl p-6" style={{ background: "var(--overlay-soft)", border: "1px solid var(--color-hairline)" }}>
+            <div className="rc-admin-card p-6">
               <div className="flex items-center gap-3 mb-5">
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "var(--color-obsidian)", color: "var(--color-coral-text)" }}>
                   <MapPin className="w-5 h-5" strokeWidth={2} />
