@@ -423,7 +423,8 @@ export default function AssistantClient({ isAuthenticated = false, isPremium = f
       {/* Mobile Drawer Backdrop */}
       {isMobileSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-xs z-40 md:hidden animate-fade-in"
+          className="fixed inset-0 z-40 md:hidden animate-fade-in"
+          style={{ background: "color-mix(in srgb, var(--color-void-black) 70%, transparent)", backdropFilter: "blur(8px)" }}
           onClick={() => setIsMobileSidebarOpen(false)}
         />
       )}
@@ -497,7 +498,7 @@ export default function AssistantClient({ isAuthenticated = false, isPremium = f
                 </svg>
               </div>
 
-              <h1 className="text-3xl font-bold text-[var(--color-pure-white)] mb-6 text-center">Чем могу помочь?</h1>
+              <h1 className="text-heading-sm font-bold text-[var(--color-pure-white)] mb-6 text-center">Чем могу помочь?</h1>
 
               <div className="flex flex-wrap justify-center gap-2 w-full max-w-2xl mt-2 px-4">
                 {[
@@ -812,9 +813,13 @@ export default function AssistantClient({ isAuthenticated = false, isPremium = f
 
       {/* Premium Modal */}
       {premiumModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-fade-in" onClick={() => setPremiumModal(false)}>
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-fade-in"
+          style={{ background: "color-mix(in srgb, var(--color-void-black) 70%, transparent)", backdropFilter: "blur(8px)" }}
+          onClick={() => setPremiumModal(false)}
+        >
           <div
-            className="rounded-2xl p-6 w-full max-w-md shadow-2xl shadow-amber-900/20 relative border"
+            className="rc-card-edge p-6 w-full max-w-md shadow-2xl shadow-amber-900/20 relative animate-scale-up"
             style={{ background: "var(--color-ink)", borderColor: "rgba(245, 158, 11, 0.3)" }}
             onClick={e => e.stopPropagation()}
           >
@@ -832,7 +837,7 @@ export default function AssistantClient({ isAuthenticated = false, isPremium = f
             <div className="flex gap-3">
               <button
                 onClick={() => setPremiumModal(false)}
-                className="flex-1 py-3 bg-[var(--overlay-soft)] hover:bg-[var(--overlay-soft-strong)] text-[var(--color-pure-white)] rounded-xl font-semibold transition-colors cursor-pointer"
+                className="rc-btn-ghost flex-1 py-3 font-semibold"
               >
                 Закрыть
               </button>
@@ -849,9 +854,13 @@ export default function AssistantClient({ isAuthenticated = false, isPremium = f
 
       {/* Limit Rate Modal */}
       {limitResetTimeMs && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-md z-[100] flex items-center justify-center p-4 animate-fade-in" onClick={() => { }}>
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-fade-in"
+          style={{ background: "color-mix(in srgb, var(--color-void-black) 70%, transparent)", backdropFilter: "blur(8px)" }}
+          onClick={() => { }}
+        >
           <div
-            className="rounded-3xl p-6 w-full max-w-md shadow-[0_10px_40px_rgba(0,0,0,0.5)] relative animate-scale-up overflow-hidden border border-[var(--color-hairline)]"
+            className="rc-card-edge p-6 w-full max-w-md relative animate-scale-up overflow-hidden"
             style={{ background: "var(--color-ink)" }}
             onClick={e => e.stopPropagation()}
           >
@@ -880,7 +889,7 @@ export default function AssistantClient({ isAuthenticated = false, isPremium = f
               <div className="flex flex-col sm:flex-row gap-3">
                 <a
                   href="/"
-                  className="flex-1 py-3 bg-[var(--overlay-soft)] hover:bg-[var(--overlay-soft-strong)] border border-[var(--color-hairline)] text-[var(--color-pure-white)] text-center rounded-xl font-semibold transition-all active:scale-95 cursor-pointer"
+                  className="rc-btn-ghost flex-1 py-3 text-center font-semibold"
                 >
                   В главное меню
                 </a>
@@ -898,8 +907,12 @@ export default function AssistantClient({ isAuthenticated = false, isPremium = f
 
       {/* Quote Modal */}
       {quoteModal.isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in" onClick={() => setQuoteModal({ ...quoteModal, isOpen: false })}>
-          <div className="rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl animate-scale-up border border-[var(--color-hairline)]" style={{ background: "var(--color-ink)" }} onClick={e => e.stopPropagation()}>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in"
+          style={{ background: "color-mix(in srgb, var(--color-void-black) 70%, transparent)", backdropFilter: "blur(8px)" }}
+          onClick={() => setQuoteModal({ ...quoteModal, isOpen: false })}
+        >
+          <div className="rc-card-edge max-w-lg w-full overflow-hidden !p-0 animate-scale-up" style={{ background: "var(--color-ink)" }} onClick={e => e.stopPropagation()}>
             <div className="flex justify-between items-center p-4 border-b border-[var(--color-hairline)] bg-[var(--overlay-soft)]">
               <div className="flex flex-col">
                 <span className="text-[10px] text-[var(--color-smoke)] uppercase font-semibold">Цитата</span>
@@ -917,7 +930,7 @@ export default function AssistantClient({ isAuthenticated = false, isPremium = f
             <div className="p-4 pt-0 flex justify-end">
               <button
                 onClick={handleCopyQuote}
-                className="flex items-center gap-2 px-4 py-2 bg-[var(--overlay-soft)] hover:bg-[var(--overlay-soft-strong)] text-[var(--color-pure-white)] text-xs font-semibold rounded-lg transition-colors border border-[var(--color-hairline)] cursor-pointer"
+                className="rc-btn-ghost flex items-center gap-2 px-4 py-2 text-xs"
               >
                 {copied ? (
                   <>

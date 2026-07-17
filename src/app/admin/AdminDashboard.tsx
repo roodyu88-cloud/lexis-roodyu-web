@@ -854,9 +854,9 @@ function StatsAdminTab({ stats }: { stats: any }) {
         </div>
 
         {/* Exams Stats */}
-        <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-6">
+        <div className="rc-admin-card p-6">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: "var(--color-obsidian)", color: "var(--color-coral-text)" }}>
               <FileText className="w-6 h-6" strokeWidth={2} />
             </div>
             <h3 className="text-xl font-bold text-[var(--color-pure-white)]">Экзамены</h3>

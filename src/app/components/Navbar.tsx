@@ -116,7 +116,7 @@ export default function Navbar() {
               <Link
                 href="/upload"
                 title="Загрузить пресет"
-                className="p-1.5 rounded-full hover:bg-[var(--overlay-soft)] text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors group"
+                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[var(--overlay-soft)] text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors group"
               >
                 <Upload className="w-5 h-5 group-hover:-translate-y-0.5 transition-transform" strokeWidth={1.75} />
               </Link>
@@ -125,7 +125,7 @@ export default function Navbar() {
               <div className="relative" ref={notificationsRef}>
                 <button
                   onClick={() => setShowNotifications(!showNotifications)}
-                  className="relative p-1.5 rounded-full hover:bg-[var(--overlay-soft)] text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors focus:outline-none"
+                  className="relative w-8 h-8 flex items-center justify-center rounded-full hover:bg-[var(--overlay-soft)] text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors focus:outline-none"
                   aria-label="Уведомления"
                 >
                   <Bell className="w-5 h-5" strokeWidth={1.75} />
@@ -204,7 +204,7 @@ export default function Navbar() {
             <Link
               href="/upload"
               title="Загрузить пресет"
-              className="p-1.5 rounded-full hover:bg-[var(--overlay-soft)] text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors"
+              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[var(--overlay-soft)] text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors"
             >
               <Upload className="w-5 h-5" strokeWidth={1.75} />
             </Link>
@@ -213,7 +213,7 @@ export default function Navbar() {
             <div className="relative" ref={notificationsRef}>
               <button
                 onClick={() => setShowNotifications(!showNotifications)}
-                className="relative p-1.5 rounded-full hover:bg-[var(--overlay-soft)] text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors focus:outline-none"
+                className="relative w-8 h-8 flex items-center justify-center rounded-full hover:bg-[var(--overlay-soft)] text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors focus:outline-none"
               >
                 <Bell className="w-5 h-5" strokeWidth={1.75} />
                 {unreadCount > 0 && (

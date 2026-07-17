@@ -45,7 +45,7 @@ export default function PresetsList({ presets, servers, userMap, badgeFiles, bad
             placeholder="Поиск по названию или автору..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-[var(--color-obsidian)] border border-[var(--color-hairline)] rounded-xl px-4 py-3 pl-12 text-[var(--color-pure-white)] focus:outline-none focus:border-[var(--color-pure-white)] transition-all duration-300"
+            className="rc-input w-full rounded-xl px-4 py-3 pl-12 transition-all duration-300"
             style={{ boxShadow: "var(--shadow-key)" }}
           />
           <div className="absolute left-4 top-3.5 text-[var(--color-smoke)]">

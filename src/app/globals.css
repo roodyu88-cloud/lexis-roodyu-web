@@ -181,6 +181,23 @@ html.theme-glass {
   transform: scale(0.96);
 }
 
+/* Ghost buttons need a translucent glass fill wherever they sit over the
+   hero's beam gradient — a bare hairline border reads as a messy, barely
+   visible outline against a non-flat background. Scoped to the hero only;
+   ghost buttons elsewhere stay on the flat void-black surface where the
+   plain hairline already reads fine. */
+.rc-hero .rc-btn-ghost {
+  background: color-mix(in srgb, var(--color-ink) 55%, transparent);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border-color: color-mix(in srgb, var(--color-pure-white) 14%, transparent);
+}
+
+.rc-hero .rc-btn-ghost:hover {
+  background: color-mix(in srgb, var(--color-ink) 72%, transparent);
+  border-color: color-mix(in srgb, var(--color-pure-white) 26%, transparent);
+}
+
 .rc-card {
   border-radius: var(--radius-2xl);
   padding: 24px;
@@ -314,6 +331,10 @@ html.theme-glass .rc-hero-beams {
    ============================================================ */
 .rc-hero-pin {
   position: relative;
+  /* Cancel the shared layout's pt-20 nav-clearance spacer so the hero's
+     gradient background reaches the true viewport top instead of leaving
+     a flat black band above it (the nav stays fixed/floating either way). */
+  margin-top: -5rem;
   height: 140vh;
   height: 140svh;
 }

@@ -94,7 +94,7 @@ export default function EditPresetForm({ preset, servers }: EditPresetFormProps)
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full bg-[var(--color-obsidian)] border border-[var(--color-hairline)] rounded-lg px-4 py-2.5 text-[var(--color-pure-white)] focus:outline-none focus:border-[var(--color-pure-white)] transition-colors"
+              className="rc-input w-full rounded-lg px-4 py-2.5 transition-colors"
               placeholder="Например: Законы Majestic RP"
               required
             />
@@ -105,7 +105,7 @@ export default function EditPresetForm({ preset, servers }: EditPresetFormProps)
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full bg-[var(--color-obsidian)] border border-[var(--color-hairline)] rounded-lg px-4 py-2.5 text-[var(--color-pure-white)] focus:outline-none focus:border-[var(--color-pure-white)] h-28 resize-none transition-colors"
+              className="rc-input w-full rounded-lg px-4 py-2.5 h-28 resize-none transition-colors"
               placeholder="Версия, для какого сервера, что внутри..."
             />
           </div>
@@ -115,7 +115,7 @@ export default function EditPresetForm({ preset, servers }: EditPresetFormProps)
             <button
               type="button"
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="w-full bg-[var(--color-obsidian)] border border-[var(--color-hairline)] rounded-lg px-4 py-2.5 text-[var(--color-pure-white)] flex items-center justify-between text-left focus:outline-none focus:border-[var(--color-pure-white)] cursor-pointer transition-colors"
+              className="rc-input w-full rounded-lg px-4 py-2.5 flex items-center justify-between text-left cursor-pointer transition-colors"
             >
               <div className="flex items-center gap-2">
                 {selectedProject ? (

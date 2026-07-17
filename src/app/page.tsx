@@ -6,7 +6,8 @@ import Link from "next/link";
 import { useDevSession } from "@/app/components/DevAuthProvider";
 import Reveal from "@/app/components/Reveal";
 import AdvantagesAccordion from "@/app/components/AdvantagesAccordion";
-import { GraduationCap, Wrench, Download, Gamepad2, Sparkles, Lightbulb, BookOpen, ShieldCheck } from "lucide-react";
+import FAQAccordion from "@/app/components/FAQAccordion";
+import { GraduationCap, Download, ShieldCheck } from "lucide-react";
 
 export default function Home() {
   // PLACEHOLDER-DB (2026-07-15): DATABASE_URL absent in this dev env, real query crashes SSR.
@@ -128,57 +129,7 @@ export default function Home() {
         {/* FAQ Section */}
         <Reveal className="w-full mt-24 mb-16 text-left">
           <h2 className="text-heading font-bold mb-8 text-center text-[var(--color-pure-white)]">Частые вопросы (FAQ)</h2>
-
-          <div className="space-y-4">
-            <div className="rc-card-edge bg-[var(--color-ink)]">
-              <h3 className="text-body-lg font-semibold text-[var(--color-pure-white)] mb-2 flex items-center gap-2">
-                <Wrench className="w-4 h-4 text-[var(--color-ash)]" /> Как установить Lexis?
-              </h3>
-              <p className="text-body text-[var(--color-ash)] leading-relaxed">
-                1. Нажмите кнопку <b className="text-[var(--color-pure-white)]">«Скачать Lexis»</b> на главной странице.<br />
-                2. Распакуйте скачанный архив в любую удобную папку (<b className="text-[var(--color-pure-white)]">важно:</b> не запускайте программу прямо внутри архива!).<br />
-                3. Запустите файл <b className="text-[var(--color-pure-white)]">Lexis.exe</b>. Приложение откроется и свернется в системный трей (возле часов).
-              </p>
-              <div className="rounded-lg border p-3 mt-3" style={{ borderColor: "var(--color-hairline)", background: "var(--color-obsidian)" }}>
-                <span className="inline-flex items-center gap-1.5 font-medium text-body" style={{ color: "var(--color-coral-text)" }}>
-                  <Lightbulb className="w-4 h-4" /> Заметка:
-                </span>{" "}
-                <span className="text-body text-[var(--color-ash)]">Если Windows SmartScreen заблокирует запуск, нажмите «Подробнее» → «Выполнить в любом случае». Это нормально для новых программ без платной цифровой подписи.</span>
-              </div>
-            </div>
-
-            <div className="rc-card-edge bg-[var(--color-ink)]">
-              <h3 className="text-body-lg font-semibold text-[var(--color-pure-white)] mb-2 flex items-center gap-2">
-                <Download className="w-4 h-4 text-[var(--color-ash)]" /> Как загрузить закон (пресет) с сайта?
-              </h3>
-              <p className="text-body text-[var(--color-ash)] leading-relaxed mb-3">
-                Перейдите в раздел <b className="text-[var(--color-pure-white)]">«База Пресетов»</b>. Найдите нужный вам сервер и закон. У вас есть два пути:
-              </p>
-              <ul className="text-body text-[var(--color-ash)] leading-relaxed list-disc list-inside space-y-1">
-                <li><b className="text-[var(--color-pure-white)]">Автоматически (Рекомендуется):</b> Просто нажмите кнопку «Импортировать в приложение» на сайте. Откроется Lexis, и пресет установится сам!</li>
-                <li><b className="text-[var(--color-pure-white)]">Вручную:</b> Скачайте `.json` файл пресета с сайта. Затем в приложении Lexis зайдите во вкладку «Профили», нажмите «Импорт» и выберите скачанный файл.</li>
-              </ul>
-            </div>
-
-            <div className="rc-card-edge bg-[var(--color-ink)]">
-              <h3 className="text-body-lg font-semibold text-[var(--color-pure-white)] mb-2 flex items-center gap-2">
-                <Gamepad2 className="w-4 h-4 text-[var(--color-ash)]" /> Почему оверлей не открывается в игре по кнопке F9?
-              </h3>
-              <p className="text-body text-[var(--color-ash)] leading-relaxed">
-                Для корректной работы оверлея поверх игры, ваша GTA 5 (или любая другая игра) должна быть запущена в режиме <span className="text-[var(--color-pure-white)] font-medium">«В окне без рамок» (Windowed Borderless)</span> или <span className="text-[var(--color-pure-white)] font-medium">«Оконный» (Windowed)</span>.
-                В полноэкранном (Fullscreen) режиме операционная система Windows жестко блокирует отрисовку сторонних окон поверх игры.
-              </p>
-            </div>
-
-            <div className="rc-card-edge bg-[var(--color-ink)]">
-              <h3 className="text-body-lg font-semibold text-[var(--color-pure-white)] mb-2 flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-[var(--color-ash)]" /> Как добавить свои собственные статьи?
-              </h3>
-              <p className="text-body text-[var(--color-ash)] leading-relaxed">
-                Вы можете добавлять статьи вручную по одной во вкладке <b className="text-[var(--color-pure-white)]">«Редактор»</b>, либо использовать наш <b className="text-[var(--color-pure-white)]">Умный Парсер</b>. Просто скопируйте весь текст законодательной базы прямо с форума проекта, вставьте его в парсер, и приложение само разобьет текст на статьи, вытащит названия, определит наказания и расставит звездочки приоритета розыска!
-              </p>
-            </div>
-          </div>
+          <FAQAccordion />
         </Reveal>
 
       </div>

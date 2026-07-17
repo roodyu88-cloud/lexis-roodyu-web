@@ -63,10 +63,10 @@ export default function DashboardClient({ examId }: { examId: string }) {
     <div className="max-w-5xl mx-auto px-4 py-12 min-h-[80vh]">
       <div className="flex justify-between items-end mb-8">
         <div>
-          <Link href="/exam" className="text-[var(--color-pure-white)] hover:underline text-sm font-bold mb-4 inline-flex items-center gap-2">
+          <Link href="/exam" className="rc-link mb-4 inline-flex items-center gap-2">
             <ArrowLeft className="w-4 h-4" /> Назад к созданию
           </Link>
-          <h1 className="text-3xl font-bold text-[var(--color-pure-white)] mb-2">
+          <h1 className="text-heading-sm font-bold text-[var(--color-pure-white)] mb-2">
             Экзамен {exam.faction} <span className="text-[var(--color-smoke)] text-lg">({exam.difficulty === 'easy' ? 'Легко' : exam.difficulty === 'hard' ? 'Сложно' : 'Средне'})</span>
           </h1>
           <p className="text-[var(--color-ash)]">Создан: {new Date(exam.createdAt).toLocaleString()}</p>
@@ -74,19 +74,17 @@ export default function DashboardClient({ examId }: { examId: string }) {
       </div>
 
       <div className="rc-card-edge bg-[var(--color-ink)] mb-8">
-        <h3 className="text-sm font-bold text-[var(--color-ash)] uppercase tracking-wider mb-4">Ссылка для кандидатов</h3>
-        <div className="flex gap-4">
+        <h3 className="rc-eyebrow mb-4" style={{ color: "var(--color-coral-text)" }}>Ссылка для кандидатов</h3>
+        <div className="flex flex-col sm:flex-row gap-4">
           <input
             type="text"
             readOnly
             value={examLink}
-            className="flex-1 rounded-lg px-4 py-3 text-[var(--color-pure-white)] outline-none border border-[var(--color-hairline)]"
-            style={{ background: "var(--color-obsidian)" }}
+            className="rc-input flex-1 rounded-lg px-4 py-3"
           />
           <button
             onClick={copyLink}
-            className={`px-8 py-3 rounded-lg font-bold transition-all shadow-lg ${copied ? 'bg-green-500 text-white' : 'hover:opacity-90'}`}
-            style={copied ? undefined : { background: "var(--color-mist)", color: "var(--color-iron)" }}
+            className={copied ? "rc-btn px-8" : "rc-btn-ghost px-8"}
           >
             {copied ? 'Скопировано!' : 'Копировать'}
           </button>
@@ -96,7 +94,7 @@ export default function DashboardClient({ examId }: { examId: string }) {
         </p>
       </div>
 
-      <h2 className="text-2xl font-bold text-[var(--color-pure-white)] mb-6">Результаты кандидатов ({results.length})</h2>
+      <h2 className="text-heading-sm font-bold text-[var(--color-pure-white)] mb-6">Результаты кандидатов ({results.length})</h2>
 
       {results.length === 0 ? (
         <div className="rc-card-edge bg-[var(--color-ink)] border-dashed p-12 text-center text-[var(--color-ash)]">
@@ -143,15 +141,19 @@ export default function DashboardClient({ examId }: { examId: string }) {
       )}
 
       {selectedCandidate && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={() => setSelectedCandidate(null)}>
-          <div className="rounded-3xl w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl border border-[var(--color-hairline)]" style={{ background: "var(--color-ink)" }} onClick={e => e.stopPropagation()}>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in"
+          style={{ background: "color-mix(in srgb, var(--color-void-black) 70%, transparent)", backdropFilter: "blur(8px)" }}
+          onClick={() => setSelectedCandidate(null)}
+        >
+          <div className="rc-card-edge w-full max-w-3xl max-h-[90vh] overflow-y-auto !p-0 animate-scale-up" style={{ background: "var(--color-ink)" }} onClick={e => e.stopPropagation()}>
             <div className="sticky top-0 border-b border-[var(--color-hairline)] p-6 flex justify-between items-center z-10" style={{ background: "var(--color-ink)" }}>
               <div>
-                <h3 className="text-xl font-bold text-[var(--color-pure-white)]">Ответы: {selectedCandidate.candidateName}</h3>
+                <h3 className="text-subheading font-bold text-[var(--color-pure-white)]">Ответы: {selectedCandidate.candidateName}</h3>
                 <p className="text-sm text-[var(--color-ash)]">Балл: <span className="font-data">{selectedCandidate.score} / {selectedCandidate.totalQuestions}</span></p>
               </div>
-              <button onClick={() => setSelectedCandidate(null)} className="w-10 h-10 bg-[var(--overlay-soft)] hover:bg-[var(--overlay-soft-strong)] rounded-full flex items-center justify-center text-[var(--color-pure-white)]">
-                <X className="w-5 h-5" />
+              <button onClick={() => setSelectedCandidate(null)} className="w-9 h-9 rounded-full flex items-center justify-center text-[var(--color-ash)] hover:text-[var(--color-pure-white)] hover:bg-[var(--overlay-soft)] transition-colors cursor-pointer">
+                <X className="w-4 h-4" strokeWidth={2.5} />
               </button>
             </div>
 

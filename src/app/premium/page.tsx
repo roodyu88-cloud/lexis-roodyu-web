@@ -59,10 +59,10 @@ export default function PremiumPage() {
         <div className="inline-block px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-xs font-bold text-amber-400 uppercase tracking-widest mb-4 font-data">
           Premium доступ
         </div>
-        <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-4" style={{ color: "var(--color-pure-white)" }}>
+        <h1 className="text-heading-lg font-extrabold tracking-tight mb-4" style={{ color: "var(--color-pure-white)" }}>
           Lexis <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600">Premium</span>
         </h1>
-        <p className="text-xl max-w-2xl mx-auto" style={{ color: "var(--color-ash)" }}>
+        <p className="text-body-lg max-w-2xl mx-auto" style={{ color: "var(--color-ash)" }}>
           Расширьте возможности вашего ИИ-Ассистента с продвинутыми ролями и аналитикой.
         </p>
       </div>

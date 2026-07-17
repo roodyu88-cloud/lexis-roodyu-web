@@ -17,10 +17,10 @@ export default function GuidePage() {
           <div className="rc-eyebrow inline-block px-4 py-1.5 rounded-full mb-4 shadow-xl" style={{ border: "1px solid var(--color-hairline)", background: "var(--overlay-soft)" }}>
             Официальное руководство
           </div>
-          <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-tight" style={{ color: "var(--color-pure-white)" }}>
+          <h1 className="text-heading-lg font-black tracking-tighter leading-tight" style={{ color: "var(--color-pure-white)" }}>
             Как использовать Lexis
           </h1>
-          <p className="text-xl max-w-2xl mx-auto font-medium" style={{ color: "var(--color-ash)" }}>
+          <p className="text-body-lg max-w-2xl mx-auto font-medium" style={{ color: "var(--color-ash)" }}>
             Полный гайд по функционалу, интеграции с игрой и правильной настройке приложения без лишних мучений.
           </p>
         </div>
@@ -30,7 +30,7 @@ export default function GuidePage() {
           <div className="absolute top-0 right-0 p-6 opacity-10 transform rotate-12 transition-transform group-hover:scale-110 group-hover:rotate-6">
             <Download className="w-16 h-16 md:w-20 md:h-20" style={{ color: "var(--color-coral-text)" }} strokeWidth={1.5} />
           </div>
-          <h2 className="text-3xl font-bold mb-6 flex items-center gap-3" style={{ color: "var(--color-pure-white)" }}>
+          <h2 className="text-heading-sm font-bold mb-6 flex items-center gap-3" style={{ color: "var(--color-pure-white)" }}>
             <span className="w-10 h-10 rounded-xl flex items-center justify-center text-lg shadow-[inset_0_1px_2px_rgba(255,255,255,0.2)]" style={{ background: "var(--color-coral-pulse)", color: "var(--color-on-coral)" }}>1</span>
             Импорт законов (ВАЖНО!)
           </h2>
@@ -60,7 +60,7 @@ export default function GuidePage() {
           <div className="absolute top-0 right-0 p-6 opacity-10 transform -rotate-12 transition-transform group-hover:scale-110 group-hover:-rotate-6">
             <Brain className="w-16 h-16 md:w-20 md:h-20" style={{ color: "var(--color-coral-text)" }} strokeWidth={1.5} />
           </div>
-          <h2 className="text-3xl font-bold mb-6 flex items-center gap-3" style={{ color: "var(--color-pure-white)" }}>
+          <h2 className="text-heading-sm font-bold mb-6 flex items-center gap-3" style={{ color: "var(--color-pure-white)" }}>
             <span className="w-10 h-10 rounded-xl flex items-center justify-center text-lg shadow-[inset_0_1px_2px_rgba(255,255,255,0.2)]" style={{ background: "var(--color-coral-pulse)", color: "var(--color-on-coral)" }}>2</span>
             ИИ-Ассистент (Юрист)
           </h2>
@@ -81,7 +81,7 @@ export default function GuidePage() {
           <div className="absolute top-0 right-0 p-6 opacity-10 transform rotate-12 transition-transform group-hover:scale-110 group-hover:rotate-6">
             <Target className="w-16 h-16 md:w-20 md:h-20" style={{ color: "var(--color-coral-text)" }} strokeWidth={1.5} />
           </div>
-          <h2 className="text-3xl font-bold mb-6 flex items-center gap-3" style={{ color: "var(--color-pure-white)" }}>
+          <h2 className="text-heading-sm font-bold mb-6 flex items-center gap-3" style={{ color: "var(--color-pure-white)" }}>
             <span className="w-10 h-10 rounded-xl flex items-center justify-center text-lg shadow-[inset_0_1px_2px_rgba(255,255,255,0.2)]" style={{ background: "var(--color-coral-pulse)", color: "var(--color-on-coral)" }}>3</span>
             Игровой Оверлей
           </h2>

@@ -87,7 +87,7 @@ export default function TakeExamClient({ examId, user }: { examId: string, user:
   if (error) return (
     <div className="flex flex-col items-center justify-center min-h-[80vh] px-4 text-center">
       <Ban className="w-10 h-10 mb-4 text-red-400" />
-      <h2 className="text-2xl font-bold text-[var(--color-pure-white)] mb-4">Ошибка</h2>
+      <h2 className="text-heading-sm font-bold text-[var(--color-pure-white)] mb-4">Ошибка</h2>
       <p className="text-red-400 mb-8">{error}</p>
       <Link href="/" className="rc-btn-ghost">На главную</Link>
     </div>
@@ -100,7 +100,7 @@ export default function TakeExamClient({ examId, user }: { examId: string, user:
           <div className="rc-icon-container w-20 h-20 mb-6 mx-auto" style={{ boxShadow: "var(--shadow-key)" }}>
             <FileText className="w-9 h-9 text-[var(--color-coral-text)]" />
           </div>
-          <h1 className="text-3xl font-bold text-[var(--color-pure-white)] mb-2">Экзамен {examData.faction}</h1>
+          <h1 className="text-heading-sm font-bold text-[var(--color-pure-white)] mb-2">Экзамен {examData.faction}</h1>
           <p className="text-[var(--color-ash)] mb-6">Сложность: {examData.difficulty === 'easy' ? 'Легко' : examData.difficulty === 'hard' ? 'Сложно' : 'Средне'}</p>
 
           <div className="rounded-xl border border-[var(--color-hairline)] p-4 mb-8 text-left" style={{ background: "var(--color-obsidian)" }}>
@@ -128,7 +128,7 @@ export default function TakeExamClient({ examId, user }: { examId: string, user:
     return (
       <div className="flex flex-col items-center justify-center min-h-[80vh] px-4 py-12">
         <div className="rc-card-edge w-full max-w-2xl bg-[var(--color-ink)] text-center">
-          <h2 className="text-3xl font-bold text-[var(--color-pure-white)] mb-2">Экзамен завершен</h2>
+          <h2 className="text-heading-sm font-bold text-[var(--color-pure-white)] mb-2">Экзамен завершен</h2>
 
           <div className="my-10">
             <div className={`text-6xl font-black mb-2 font-data ${passed ? 'text-green-400' : 'text-red-400'}`}>
@@ -201,7 +201,7 @@ export default function TakeExamClient({ examId, user }: { examId: string, user:
            </span>
         </div>
 
-        <h2 className="text-xl md:text-2xl font-bold text-[var(--color-pure-white)] mb-8 leading-relaxed">
+        <h2 className="text-subheading md:text-heading-sm font-bold text-[var(--color-pure-white)] mb-8 leading-relaxed">
           {currentQ.question}
         </h2>
 

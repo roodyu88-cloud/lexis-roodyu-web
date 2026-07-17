@@ -28,7 +28,7 @@ export default function PromoRulesPage() {
 
                 <div className="space-y-10 text-[var(--color-ash)] max-w-[75ch] mx-auto">
                     <section className="group">
-                        <h2 className="text-2xl md:text-3xl font-bold text-[var(--color-pure-white)] mb-4 flex items-center transition-transform group-hover:translate-x-1 duration-300">
+                        <h2 className="text-heading-sm md:text-heading font-bold text-[var(--color-pure-white)] mb-4 flex items-center transition-transform group-hover:translate-x-1 duration-300">
                             <span className="text-[var(--color-coral-text)] mr-4 text-4xl opacity-80 font-data">01</span>
                             Суть акции
                         </h2>
@@ -40,7 +40,7 @@ export default function PromoRulesPage() {
                     </section>
 
                     <section className="group">
-                        <h2 className="text-2xl md:text-3xl font-bold text-[var(--color-pure-white)] mb-4 flex items-center transition-transform group-hover:translate-x-1 duration-300">
+                        <h2 className="text-heading-sm md:text-heading font-bold text-[var(--color-pure-white)] mb-4 flex items-center transition-transform group-hover:translate-x-1 duration-300">
                             <span className="text-[var(--color-coral-text)] mr-4 text-4xl opacity-80 font-data">02</span>
                             Ограничения
                         </h2>
@@ -54,7 +54,7 @@ export default function PromoRulesPage() {
                     </section>
 
                     <section className="group">
-                        <h2 className="text-2xl md:text-3xl font-bold text-[var(--color-pure-white)] mb-4 flex items-center transition-transform group-hover:translate-x-1 duration-300">
+                        <h2 className="text-heading-sm md:text-heading font-bold text-[var(--color-pure-white)] mb-4 flex items-center transition-transform group-hover:translate-x-1 duration-300">
                             <span className="text-red-400 mr-4 text-4xl opacity-80 font-data">03</span>
                             Аннулирование бонуса
                         </h2>
