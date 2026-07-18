@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ChevronDown, BookOpen, Brain, GraduationCap, Gamepad2, Zap, Globe, Palette } from "lucide-react";
+import { ChevronDown, BookOpen, Brain, GraduationCap, Gamepad2, Zap, Globe } from "lucide-react";
 
 interface Item {
   href?: string;
@@ -32,7 +32,7 @@ const ITEMS: Item[] = [
     icon: GraduationCap,
     title: "Тренажер экзаменов",
     desc: "Автогенерация тестов на знание кодекса перед приемом на фракцию, с историей попыток.",
-    tags: ["Экзамены", "PRO"],
+    tags: ["Экзамены", "PREMIUM"],
   },
   {
     href: "/guide",
@@ -52,12 +52,6 @@ const ITEMS: Item[] = [
     title: "Облако Пресетов",
     desc: "Делитесь своими законами и скачивайте пресеты других серверов в один клик.",
     tags: ["Облако", "Шеринг"],
-  },
-  {
-    icon: Palette,
-    title: "Умный Дизайн",
-    desc: "Темная тема, подсветка синтаксиса и никаких артефактов поверх вашего геймплея.",
-    tags: ["Тема", "UI"],
   },
 ];
 
@@ -94,8 +88,8 @@ export default function AdvantagesAccordion() {
                     {item.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="text-xs font-semibold px-2.5 py-1 rounded-full"
-                        style={{ background: "var(--overlay-soft)", color: "var(--color-ash)", border: "1px solid var(--color-hairline)" }}
+                        className="text-[11px] font-bold uppercase tracking-wider px-2 py-1 rounded-md"
+                        style={{ background: "color-mix(in srgb, var(--color-coral-pulse) 12%, transparent)", color: "var(--color-coral-text)" }}
                       >
                         {tag}
                       </span>

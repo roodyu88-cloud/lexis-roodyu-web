@@ -6,11 +6,12 @@ import Link from "next/link";
 // import { notFound } from "next/navigation";
 import { useDevSession } from "@/app/components/DevAuthProvider";
 import { useEffect, useState } from "react";
-import { ArrowLeft, Rocket, Pencil } from "lucide-react";
+import { ArrowLeft, Rocket, Pencil, BookOpen, ChevronDown } from "lucide-react";
 import DeletePresetButton from "./DeletePresetButton";
 
 export default function PresetDetailsClient({ id }: { id: string }) {
   const [domain, setDomain] = useState("");
+  const [openChapter, setOpenChapter] = useState<number | null>(0);
   useEffect(() => {
     setDomain(window.location.origin);
   }, []);
@@ -159,23 +160,45 @@ export default function PresetDetailsClient({ id }: { id: string }) {
       </div>
 
       <h2 className="text-heading-sm font-bold text-[var(--color-pure-white)] mb-6">Предпросмотр структуры</h2>
-      <div className="space-y-4">
-        {rawArray.map((cat: any, idx: number) => (
-          <div key={idx} className="rc-card-edge bg-[var(--color-ink)]">
-            <h3 className="text-subheading font-bold text-[var(--color-pure-white)] mb-4">{cat.name || "Без названия"}</h3>
-            <div className="space-y-2 pl-4 border-l-2 border-[var(--color-hairline)]">
-              {cat.articles && cat.articles.length > 0 ? (
-                cat.articles.map((art: any, i: number) => (
-                  <div key={i} className="text-[var(--color-ash)]">
-                    <span className="font-semibold text-[var(--color-pure-white)]">{art.title}</span>
+      <div className="rc-accordion">
+        {rawArray.map((cat: any, idx: number) => {
+          const isOpen = openChapter === idx;
+          const num = String(idx + 1).padStart(2, "0");
+          return (
+            <div key={idx} className={`rc-accordion-item ${isOpen ? "is-open" : ""}`}>
+              <button
+                type="button"
+                className="rc-accordion-trigger"
+                onClick={() => setOpenChapter(isOpen ? null : idx)}
+                aria-expanded={isOpen}
+              >
+                <span className="rc-accordion-num">{num}</span>
+                <span className="rc-accordion-icon">
+                  <BookOpen className="w-[18px] h-[18px]" strokeWidth={2} />
+                </span>
+                <span className="rc-accordion-title">{cat.name || "Без названия"}</span>
+                <ChevronDown className="rc-accordion-chevron w-5 h-5" />
+              </button>
+              <div className="rc-accordion-panel">
+                <div className="rc-accordion-panel-inner">
+                  <div className="rc-accordion-panel-content">
+                    {cat.articles && cat.articles.length > 0 ? (
+                      <div className="space-y-2 pl-4 border-l-2 border-[var(--color-hairline)]">
+                        {cat.articles.map((art: any, i: number) => (
+                          <div key={i} className="text-[var(--color-ash)]">
+                            <span className="font-semibold text-[var(--color-pure-white)]">{art.title}</span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-[var(--color-smoke)] italic">Нет статей</div>
+                    )}
                   </div>
-                ))
-              ) : (
-                <div className="text-[var(--color-smoke)] italic">Нет статей</div>
-              )}
+                </div>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </main>
   );

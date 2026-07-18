@@ -331,12 +331,13 @@ html.theme-glass .rc-hero-beams {
    ============================================================ */
 .rc-hero-pin {
   position: relative;
-  /* Cancel the shared layout's pt-20 nav-clearance spacer so the hero's
-     gradient background reaches the true viewport top instead of leaving
-     a flat black band above it (the nav stays fixed/floating either way). */
-  margin-top: -5rem;
-  height: 140vh;
-  height: 140svh;
+  /* Cancel the shared layout's pt-28 nav-clearance spacer (nav pill + promo
+     strip) so the hero's gradient background reaches the true viewport top
+     instead of leaving a flat black band above it (the nav stays
+     fixed/floating either way). */
+  margin-top: -7rem;
+  height: 210vh;
+  height: 210svh;
 }
 
 .rc-hero-pin .rc-hero {
@@ -350,22 +351,26 @@ html.theme-glass .rc-hero-beams {
   justify-content: center;
 }
 
+/* The reveal rises the full viewport height so it covers the pinned hero
+   all the way to the top before real content starts — a partial cover (the
+   old -34vh) left the button row visibly half-clipped mid-scroll instead of
+   reading as a deliberate reveal. */
 .rc-hero-reveal {
   position: relative;
   z-index: 10;
   background: var(--color-void-black);
   border-radius: 28px 28px 0 0;
-  margin-top: -34vh;
+  margin-top: -100vh;
+  margin-top: -100svh;
   box-shadow: 0 -50px 90px rgba(0, 0, 0, 0.55);
 }
 
 @media (max-width: 768px) {
   .rc-hero-pin {
-    height: 118vh;
-    height: 118svh;
+    height: 200vh;
+    height: 200svh;
   }
   .rc-hero-reveal {
-    margin-top: -14vh;
     border-radius: 20px 20px 0 0;
   }
 }
@@ -415,10 +420,6 @@ html.theme-glass .rc-hero-beams {
   border: none;
   cursor: pointer;
   transition: background 0.2s ease;
-}
-
-.rc-accordion-trigger:hover {
-  background: var(--overlay-soft);
 }
 
 .rc-accordion-num {
@@ -944,10 +945,150 @@ html.theme-glass .smart-dropdown {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.005) 100%), var(--card-bg);
   backdrop-filter: blur(45px) saturate(240%);
   -webkit-backdrop-filter: blur(45px) saturate(240%);
-  box-shadow: 
+  box-shadow:
     inset 0 1.5px 2.5px rgba(255, 255, 255, 0.25),
     inset 0 16px 32px rgba(255, 255, 255, 0.02),
     0 1px 2px rgba(0, 0, 0, 0.45),
     0 35px 70px -15px rgba(0, 0, 0, 0.85);
+}
+
+/* ============================================================
+   Admin dashboard v3 — sidebar-shell restructure (2026-07-18)
+   Replaces the horizontal-tabs + flat-cards arrangement with a
+   persistent left rail (icon + label + active accent bar) and a
+   distinct row-list pattern for tables, plus stat-card chips with
+   real number/label hierarchy. Same rc-* tokens, new structure.
+   ============================================================ */
+.rc-admin-sidebar {
+  background: color-mix(in srgb, var(--color-ink) 65%, transparent);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-2xl);
+  padding: 8px;
+}
+
+.rc-admin-sidebar-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 13.5px;
+  padding: 10px 14px;
+  border-radius: var(--radius-lg);
+  white-space: nowrap;
+  transition: color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+}
+
+.rc-admin-sidebar-item:active {
+  transform: scale(0.97);
+}
+
+.rc-admin-sidebar-item::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 50%;
+  width: 3px;
+  height: 0%;
+  border-radius: 999px;
+  background: var(--color-coral-pulse);
+  transform: translateY(-50%);
+  transition: height 0.2s ease;
+}
+
+.rc-admin-sidebar-item.is-active {
+  color: var(--color-pure-white);
+  background: var(--overlay-soft-strong);
+}
+
+.rc-admin-sidebar-item.is-active::before {
+  height: 60%;
+}
+
+.rc-admin-panel {
+  background: color-mix(in srgb, var(--color-ink) 80%, transparent);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-2xl);
+}
+
+.rc-admin-panel-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--color-hairline);
+}
+
+.rc-admin-panel-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: color-mix(in srgb, var(--color-coral-pulse) 14%, var(--color-obsidian));
+  color: var(--color-coral-text);
+}
+
+.rc-admin-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  border-radius: var(--radius-lg);
+  transition: background 0.15s ease;
+}
+
+.rc-admin-row:hover {
+  background: var(--overlay-soft);
+}
+
+.rc-admin-row + .rc-admin-row {
+  border-top: 1px solid var(--color-hairline);
+}
+
+.rc-admin-stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px;
+  border-radius: var(--radius-2xl);
+  background: color-mix(in srgb, var(--color-ink) 80%, transparent);
+  border: 1px solid var(--color-hairline);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+}
+
+.rc-admin-stat-card:hover {
+  transform: translateY(-2px);
+  border-color: #4a4b4d;
+}
+
+.rc-admin-stat-chip {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--color-coral-pulse) 14%, var(--color-obsidian));
+  color: var(--color-coral-text);
+}
+
+.rc-admin-stat-value {
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1.1;
+  color: var(--color-pure-white);
+}
+
+.rc-admin-stat-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-smoke);
 }
 

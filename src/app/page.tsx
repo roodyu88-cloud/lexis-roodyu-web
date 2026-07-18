@@ -7,7 +7,7 @@ import { useDevSession } from "@/app/components/DevAuthProvider";
 import Reveal from "@/app/components/Reveal";
 import AdvantagesAccordion from "@/app/components/AdvantagesAccordion";
 import FAQAccordion from "@/app/components/FAQAccordion";
-import { GraduationCap, Download, ShieldCheck } from "lucide-react";
+import { GraduationCap, Download, ShieldCheck, Upload } from "lucide-react";
 
 export default function Home() {
   // PLACEHOLDER-DB (2026-07-15): DATABASE_URL absent in this dev env, real query crashes SSR.
@@ -61,8 +61,14 @@ export default function Home() {
               <Link href="/exam" className="rc-btn-ghost">
                 <GraduationCap className="w-4 h-4" />
                 Тренажер
-                <span className="rc-badge" style={{ background: "var(--color-coral-pulse)", color: "var(--color-on-coral)" }}>PRO</span>
+                <span className="rc-badge" style={{ background: "var(--color-coral-pulse)", color: "var(--color-on-coral)" }}>PREMIUM</span>
               </Link>
+              {session?.user && (
+                <Link href="/upload" className="rc-btn-ghost">
+                  <Upload className="w-4 h-4" />
+                  Загрузить пресет
+                </Link>
+              )}
             </div>
           </div>
         </section>

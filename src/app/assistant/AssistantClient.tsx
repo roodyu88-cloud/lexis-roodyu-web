@@ -328,7 +328,7 @@ export default function AssistantClient({ isAuthenticated = false, isPremium = f
                 className={`w-full text-left flex items-center justify-between px-4 py-2.5 text-sm hover:bg-[var(--overlay-soft-strong)] transition-colors cursor-pointer ${mode === 'judge' ? 'text-[var(--color-pure-white)] bg-[var(--overlay-soft)] font-semibold' : 'text-[var(--color-ash)]'}`}
               >
                 <span className="flex items-center gap-2"><Scale className="w-4 h-4 flex-shrink-0" /> Судья</span>
-                {!isPremium && <span className="text-[10px] bg-amber-500/20 text-amber-500 px-1.5 py-0.5 rounded">PRO</span>}
+                {!isPremium && <span className="text-[10px] bg-amber-500/20 text-amber-500 px-1.5 py-0.5 rounded">PREMIUM</span>}
               </button>
 
               <button
@@ -342,7 +342,7 @@ export default function AssistantClient({ isAuthenticated = false, isPremium = f
                 className={`w-full text-left flex items-center justify-between px-4 py-2.5 text-sm hover:bg-[var(--overlay-soft-strong)] transition-colors cursor-pointer ${mode === 'lawyer' ? 'text-[var(--color-pure-white)] bg-[var(--overlay-soft)] font-semibold' : 'text-[var(--color-ash)]'}`}
               >
                 <span className="flex items-center gap-2"><Briefcase className="w-4 h-4 flex-shrink-0" /> Адвокат</span>
-                {!isPremium && <span className="text-[10px] bg-amber-500/20 text-amber-500 px-1.5 py-0.5 rounded">PRO</span>}
+                {!isPremium && <span className="text-[10px] bg-amber-500/20 text-amber-500 px-1.5 py-0.5 rounded">PREMIUM</span>}
               </button>
 
               <button
@@ -356,7 +356,7 @@ export default function AssistantClient({ isAuthenticated = false, isPremium = f
                 className={`w-full text-left flex items-center justify-between px-4 py-2.5 text-sm hover:bg-[var(--overlay-soft-strong)] transition-colors cursor-pointer ${mode === 'prosecutor' ? 'text-[var(--color-pure-white)] bg-[var(--overlay-soft)] font-semibold' : 'text-[var(--color-ash)]'}`}
               >
                 <span className="flex items-center gap-2"><Siren className="w-4 h-4 flex-shrink-0" /> Прокурор</span>
-                {!isPremium && <span className="text-[10px] bg-amber-500/20 text-amber-500 px-1.5 py-0.5 rounded">PRO</span>}
+                {!isPremium && <span className="text-[10px] bg-amber-500/20 text-amber-500 px-1.5 py-0.5 rounded">PREMIUM</span>}
               </button>
 
               {isAdmin && (

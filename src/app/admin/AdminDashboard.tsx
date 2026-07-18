@@ -28,6 +28,9 @@ import {
   MapPin,
   Eye,
   Activity,
+  Clock,
+  CalendarDays,
+  CalendarRange,
 } from "lucide-react";
 
 interface User {
@@ -271,80 +274,77 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
 
   return (
     <div className="space-y-6">
-      {/* Tabs Menu — glassmorphism rail, sliding pill highlight on the active item */}
-      <div className="rc-admin-nav p-2">
-        <div className="flex gap-1.5 overflow-x-auto no-scrollbar">
-          {TABS.map(tab => {
-            const Icon = tab.icon;
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => { setActiveTab(tab.id); setSelectedUser(null); }}
-                className={`rc-admin-nav-item shrink-0 px-4 py-2.5 rounded-[var(--radius-lg)] cursor-pointer ${isActive
-                    ? "is-active bg-[var(--color-mist)] shadow-[var(--shadow-button-lift)]"
-                    : "text-[var(--color-ash)] hover:text-[var(--color-pure-white)] hover:bg-[var(--overlay-soft)]"
-                  }`}
-              >
-                <Icon className="w-4 h-4" strokeWidth={2.25} />
-                <span>{tab.label}</span>
-                {typeof tab.count === "number" && (
-                  <span className={`font-data text-xs px-1.5 py-0.5 rounded-full ${isActive ? "bg-black/15" : "bg-[var(--overlay-soft)] text-[var(--color-smoke)]"}`}>
-                    {tab.count}
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </div>
-      </div>
+      {/* Main Shell: persistent left rail navigation + right content panel.
+          On narrow viewports the rail collapses into a horizontal scroller
+          above the content instead of a stacked column. */}
+      <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-6 items-start">
 
-      {/* Main Content Area */}
+        {/* Sidebar Nav */}
+        <nav className="rc-admin-sidebar lg:sticky lg:top-6 shrink-0">
+          <div className="flex lg:flex-col gap-1 overflow-x-auto lg:overflow-visible no-scrollbar">
+            {TABS.map(tab => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => { setActiveTab(tab.id); setSelectedUser(null); }}
+                  className={`rc-admin-sidebar-item shrink-0 cursor-pointer ${isActive
+                      ? "is-active"
+                      : "text-[var(--color-ash)] hover:text-[var(--color-pure-white)] hover:bg-[var(--overlay-soft)]"
+                    }`}
+                >
+                  <Icon className="w-4 h-4 shrink-0" strokeWidth={2.25} />
+                  <span className="flex-1 text-left">{tab.label}</span>
+                  {typeof tab.count === "number" && (
+                    <span className={`font-data text-[11px] px-1.5 py-0.5 rounded-full ${isActive ? "bg-[var(--overlay-soft-strong)] text-[var(--color-pure-white)]" : "bg-[var(--overlay-soft)] text-[var(--color-smoke)]"}`}>
+                      {tab.count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </nav>
+
+      {/* Content Area */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
         {/* Table / List list (Left / Two-thirds width) */}
         <div className={`${selectedUser ? "lg:col-span-2" : "lg:col-span-3"} transition-all`}>
           {activeTab === "users" ? (
-            <div className="rc-card-edge bg-[var(--color-ink)] overflow-hidden p-6">
-              <h2 className="text-xl font-bold text-[var(--color-pure-white)] mb-4">Список пользователей</h2>
-              <div className="overflow-x-auto no-scrollbar">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="border-b text-sm" style={{ borderColor: "var(--color-hairline)", color: "var(--color-ash)" }}>
-                      <th className="py-3 px-3">Пользователь</th>
-                      <th className="py-3 px-3">Discord ID</th>
-                      <th className="py-3 px-3">Роль</th>
-                      <th className="py-3 px-3">Бейджи</th>
-                      <th className="py-3 px-3 text-right">Действия</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[var(--color-hairline)]">
-                    {users.map(u => (
-                      <tr key={u.id} className="hover:bg-[var(--overlay-soft)] transition-colors">
-                        <td className="py-3 px-3 flex items-center gap-3">
-                          <img
-                            src={u.avatar || "/img/window.svg"}
-                            alt={u.username}
-                            className="w-8 h-8 rounded-full border"
-                            style={{ borderColor: "var(--color-hairline)" }}
-                          />
-                          <span className="font-semibold text-[var(--color-pure-white)]">{u.username}</span>
-                        </td>
-                        <td className="py-3 px-3 text-xs font-data text-[var(--color-ash)]">{u.discordId}</td>
-                        <td className="py-3 px-3">
-                          <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${u.role === "admin"
-                              ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
-                              : u.role === "developer"
-                                ? "bg-blue-500/20 text-blue-300 border border-blue-500/30"
-                                : u.role === "moderator"
-                                  ? "bg-purple-500/20 text-purple-300 border border-purple-500/30"
-                                  : "bg-[var(--overlay-soft)] text-[var(--color-ash)]"
-                            }`}>
-                            {u.role === "admin" ? "Администратор" : u.role === "developer" ? "Разработчик" : u.role === "moderator" ? "Модератор" : "Юзер"}
-                          </span>
-                        </td>
-                        <td className="py-3 px-3">
-                          <div className="flex gap-1.5 items-center">
+            <div className="rc-admin-panel overflow-hidden">
+              <div className="rc-admin-panel-head">
+                <div className="rc-admin-panel-icon"><User className="w-4 h-4" strokeWidth={2.25} /></div>
+                <h2 className="text-lg font-bold text-[var(--color-pure-white)]">Список пользователей</h2>
+              </div>
+              <div className="p-3 divide-y-0">
+                {users.map(u => (
+                  <div key={u.id} className="rc-admin-row">
+                    <img
+                      src={u.avatar || "/img/window.svg"}
+                      alt={u.username}
+                      className="w-10 h-10 rounded-full border shrink-0"
+                      style={{ borderColor: "var(--color-hairline)" }}
+                    />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-semibold text-[var(--color-pure-white)] truncate">{u.username}</span>
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold shrink-0 ${u.role === "admin"
+                            ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
+                            : u.role === "developer"
+                              ? "bg-blue-500/20 text-blue-300 border border-blue-500/30"
+                              : u.role === "moderator"
+                                ? "bg-purple-500/20 text-purple-300 border border-purple-500/30"
+                                : "bg-[var(--overlay-soft)] text-[var(--color-ash)]"
+                          }`}>
+                          {u.role === "admin" ? "Администратор" : u.role === "developer" ? "Разработчик" : u.role === "moderator" ? "Модератор" : "Юзер"}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 mt-1 flex-wrap">
+                        <span className="text-xs font-data text-[var(--color-smoke)]">{u.discordId}</span>
+                        {u.badges.length > 0 && (
+                          <div className="flex gap-1 items-center">
                             {u.badges.map(b => {
                               const badgeInfo = AVAILABLE_BADGES.find(ab => ab.id === b);
                               if (!badgeInfo) return null;
@@ -354,31 +354,31 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
                                   src={`/img/${badgeInfo.file}`}
                                   alt={badgeInfo.label}
                                   title={badgeInfo.label}
-                                  className="h-5 w-auto"
+                                  className="h-4 w-auto"
                                 />
                               );
                             })}
-                            {u.badges.length === 0 && <span className="text-xs text-[var(--color-smoke)]">-</span>}
                           </div>
-                        </td>
-                        <td className="py-3 px-3 text-right">
-                          <button
-                            onClick={() => handleSelectUser(u)}
-                            className="rc-btn-ghost text-sm px-2.5 py-1.5"
-                          >
-                            Редактировать
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                        )}
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => handleSelectUser(u)}
+                      className="rc-btn-ghost text-sm px-2.5 py-1.5 shrink-0"
+                    >
+                      Редактировать
+                    </button>
+                  </div>
+                ))}
               </div>
             </div>
           ) : activeTab === "presets" ? (
-            <div className="rc-card-edge bg-[var(--color-ink)] overflow-hidden p-6">
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
-                <h2 className="text-xl font-bold text-[var(--color-pure-white)]">Управление пресетами</h2>
+            <div className="rc-admin-panel overflow-hidden">
+              <div className="rc-admin-panel-head flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="rc-admin-panel-icon"><FolderOpen className="w-4 h-4" strokeWidth={2.25} /></div>
+                  <h2 className="text-lg font-bold text-[var(--color-pure-white)]">Управление пресетами</h2>
+                </div>
                 <div className="flex items-center gap-2 relative">
                   <label className="text-sm text-[var(--color-ash)] font-semibold">Фильтр по серверу:</label>
                   <div className="relative">
@@ -447,81 +447,87 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
                   </div>
                 </div>
               </div>
-              <div className="overflow-x-auto no-scrollbar">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="border-b text-sm" style={{ borderColor: "var(--color-hairline)", color: "var(--color-ash)" }}>
-                      <th className="py-3 px-3">Название</th>
-                      <th className="py-3 px-3">Автор</th>
-                      <th className="py-3 px-3">Загружен</th>
-                      <th className="py-3 px-3">Статус</th>
-                      <th className="py-3 px-3 text-right">Верификация</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[var(--color-hairline)]">
-                    {presets.filter(p => presetFilterServer === "all" || (presetFilterServer.startsWith("project_") ? p.serverProjectId === presetFilterServer.replace("project_", "") : p.serverId === presetFilterServer)).map(p => (
-                      <tr key={p.id} className="hover:bg-[var(--overlay-soft)] transition-colors">
-                        <td className="py-3 px-3">
-                          <Link href={`/presets/${p.id}`} className="font-semibold text-[var(--color-pure-white)] hover:text-[var(--color-coral-text)] transition-colors line-clamp-1">
-                            {p.name}
-                          </Link>
-                        </td>
-                        <td className="py-3 px-3 text-[var(--color-ash)] text-sm">{p.author}</td>
-                        <td className="py-3 px-3 text-sm text-[var(--color-ash)] font-data">
-                          {new Date(p.createdAt).toLocaleDateString("ru-RU")}
-                        </td>
-                        <td className="py-3 px-3">
-                          {p.isVerified ? (
-                            <span className="flex items-center gap-1 text-emerald-400 text-xs font-semibold">
-                              <img src="/img/Verified.png" alt="Verified" className="h-4 w-auto" />
-                              Верифицирован
-                            </span>
-                          ) : (
-                            <span className="text-[var(--color-smoke)] text-xs">Обычный</span>
-                          )}
-                        </td>
-                        <td className="py-3 px-3 text-right">
-                          <button
-                            onClick={() => handleToggleVerify(p.id, p.isVerified)}
-                            disabled={verifyingPresetId === p.id}
-                            className={`text-xs px-3 py-1.5 rounded-lg font-bold border transition-all cursor-pointer ${p.isVerified
-                                ? "bg-red-500/10 border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white"
-                                : "bg-emerald-500/10 border-emerald-500/30 text-emerald-400 hover:bg-emerald-500 hover:text-white"
-                              }`}
-                          >
-                            {verifyingPresetId === p.id
-                              ? "Загрузка..."
-                              : p.isVerified
-                                ? "Снять галку"
-                                : "Верифицировать"
-                            }
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+              <div className="p-3">
+                {presets.filter(p => presetFilterServer === "all" || (presetFilterServer.startsWith("project_") ? p.serverProjectId === presetFilterServer.replace("project_", "") : p.serverId === presetFilterServer)).map(p => (
+                  <div key={p.id} className="rc-admin-row">
+                    <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: "var(--color-obsidian)", color: "var(--color-coral-text)" }}>
+                      <FolderOpen className="w-4 h-4" strokeWidth={2} />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <Link href={`/presets/${p.id}`} className="font-semibold text-[var(--color-pure-white)] hover:text-[var(--color-coral-text)] transition-colors line-clamp-1 block">
+                        {p.name}
+                      </Link>
+                      <div className="flex items-center gap-2 mt-0.5 flex-wrap text-xs">
+                        <span className="text-[var(--color-ash)]">{p.author}</span>
+                        <span className="text-[var(--color-smoke)] font-data">{new Date(p.createdAt).toLocaleDateString("ru-RU")}</span>
+                        {p.isVerified ? (
+                          <span className="flex items-center gap-1 text-emerald-400 font-semibold">
+                            <img src="/img/Verified.png" alt="Verified" className="h-3.5 w-auto" />
+                            Верифицирован
+                          </span>
+                        ) : (
+                          <span className="text-[var(--color-smoke)]">Обычный</span>
+                        )}
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => handleToggleVerify(p.id, p.isVerified)}
+                      disabled={verifyingPresetId === p.id}
+                      className={`shrink-0 text-xs px-3 py-1.5 rounded-lg font-bold border transition-all cursor-pointer ${p.isVerified
+                          ? "bg-red-500/10 border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white"
+                          : "bg-emerald-500/10 border-emerald-500/30 text-emerald-400 hover:bg-emerald-500 hover:text-white"
+                        }`}
+                    >
+                      {verifyingPresetId === p.id
+                        ? "Загрузка..."
+                        : p.isVerified
+                          ? "Снять галку"
+                          : "Верифицировать"
+                      }
+                    </button>
+                  </div>
+                ))}
               </div>
             </div>
           ) : activeTab === "servers" ? (
-            <div className="rc-card-edge bg-[var(--color-ink)] overflow-hidden p-6">
-              <h2 className="text-xl font-bold text-[var(--color-pure-white)] mb-4">Управление проектами серверов</h2>
-              <ServerAdminTab servers={servers} setServers={setServers} showToast={showToast} />
+            <div className="rc-admin-panel overflow-hidden">
+              <div className="rc-admin-panel-head">
+                <div className="rc-admin-panel-icon"><Gamepad2 className="w-4 h-4" strokeWidth={2.25} /></div>
+                <h2 className="text-lg font-bold text-[var(--color-pure-white)]">Управление проектами серверов</h2>
+              </div>
+              <div className="p-5">
+                <ServerAdminTab servers={servers} setServers={setServers} showToast={showToast} />
+              </div>
             </div>
           ) : activeTab === "promocodes" ? (
-            <div className="rc-card-edge bg-[var(--color-ink)] overflow-hidden p-6">
-              <h2 className="text-xl font-bold text-[var(--color-pure-white)] mb-4">Управление промокодами</h2>
-              <PromocodesAdminTab promocodes={promocodes} setPromocodes={setPromocodes} showToast={showToast} />
+            <div className="rc-admin-panel overflow-hidden">
+              <div className="rc-admin-panel-head">
+                <div className="rc-admin-panel-icon"><Tag className="w-4 h-4" strokeWidth={2.25} /></div>
+                <h2 className="text-lg font-bold text-[var(--color-pure-white)]">Управление промокодами</h2>
+              </div>
+              <div className="p-5">
+                <PromocodesAdminTab promocodes={promocodes} setPromocodes={setPromocodes} showToast={showToast} />
+              </div>
             </div>
           ) : activeTab === "stats" && initialStats ? (
-            <div className="rc-card-edge bg-[var(--color-ink)] overflow-hidden p-6">
-              <h2 className="text-xl font-bold text-[var(--color-pure-white)] mb-4">Глобальная статистика</h2>
-              <StatsAdminTab stats={initialStats.global} />
+            <div className="rc-admin-panel overflow-hidden">
+              <div className="rc-admin-panel-head">
+                <div className="rc-admin-panel-icon"><BarChart3 className="w-4 h-4" strokeWidth={2.25} /></div>
+                <h2 className="text-lg font-bold text-[var(--color-pure-white)]">Глобальная статистика</h2>
+              </div>
+              <div className="p-5">
+                <StatsAdminTab stats={initialStats.global} />
+              </div>
             </div>
           ) : (
-            <div className="rc-card-edge bg-[var(--color-ink)] overflow-hidden p-6">
-              <h2 className="text-xl font-bold text-[var(--color-pure-white)] mb-4">Глобальные настройки</h2>
-              <SettingsAdminTab initialSettings={initialSettings} showToast={showToast} />
+            <div className="rc-admin-panel overflow-hidden">
+              <div className="rc-admin-panel-head">
+                <div className="rc-admin-panel-icon"><Settings className="w-4 h-4" strokeWidth={2.25} /></div>
+                <h2 className="text-lg font-bold text-[var(--color-pure-white)]">Глобальные настройки</h2>
+              </div>
+              <div className="p-5">
+                <SettingsAdminTab initialSettings={initialSettings} showToast={showToast} />
+              </div>
             </div>
           )}
         </div>
@@ -788,6 +794,7 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
           </div>
         )}
       </div>
+      </div>
 
       {/* Premium Toast Notification */}
       {toast && (
@@ -818,133 +825,79 @@ export default function AdminDashboard({ initialUsers, initialPresets, initialSe
   );
 }
 
+function StatGroup({ icon: Icon, title, data }: { icon: React.ElementType; title: string; data: { day: number; month: number; year: number; total: number } }) {
+  const cells: { label: string; value: number; period: React.ElementType; isTotal?: boolean }[] = [
+    { label: "За 24 часа", value: data.day, period: Clock },
+    { label: "За месяц", value: data.month, period: CalendarDays },
+    { label: "За год", value: data.year, period: CalendarRange },
+    { label: "Всё время", value: data.total, period: Sparkles, isTotal: true },
+  ];
+  return (
+    <div className="rc-admin-panel p-6">
+      <div className="flex items-center gap-3 mb-5">
+        <div className="rc-admin-panel-icon w-11 h-11"><Icon className="w-5 h-5" strokeWidth={2} /></div>
+        <h3 className="text-lg font-bold text-[var(--color-pure-white)]">{title}</h3>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        {cells.map(c => (
+          <div key={c.label} className={`rc-admin-stat-card ${c.isTotal ? "!border-emerald-500/30" : ""}`}>
+            <div className={`rc-admin-stat-chip ${c.isTotal ? "!bg-emerald-500/15 !text-emerald-400" : ""}`}>
+              <c.period className="w-4 h-4" strokeWidth={2} />
+            </div>
+            <div>
+              <div className={`rc-admin-stat-value font-data ${c.isTotal ? "!text-emerald-400" : ""}`}>{c.value}</div>
+              <div className={`rc-admin-stat-label ${c.isTotal ? "!text-emerald-400/80" : ""}`}>{c.label}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function StatsAdminTab({ stats }: { stats: any }) {
   if (!stats) return null;
 
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        
-        {/* AI Stats */}
-        <div className="rc-admin-card p-6">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: "var(--color-obsidian)", color: "var(--color-coral-text)" }}>
-              <Bot className="w-6 h-6" strokeWidth={2} />
-            </div>
-            <h3 className="text-xl font-bold text-[var(--color-pure-white)]">ИИ-Ассистент</h3>
-          </div>
-          <div className="grid grid-cols-2 gap-4 font-data">
-            <div className="bg-[var(--color-obsidian)] p-4 rounded-xl text-center transition-transform duration-200 hover:-translate-y-0.5">
-              <span className="block text-[var(--color-ash)] text-sm mb-1">За 24 часа</span>
-              <strong className="text-3xl text-[var(--color-pure-white)] font-black">{stats.ai.day}</strong>
-            </div>
-            <div className="bg-[var(--color-obsidian)] p-4 rounded-xl text-center">
-              <span className="block text-[var(--color-ash)] text-sm mb-1">За месяц</span>
-              <strong className="text-3xl text-[var(--color-pure-white)] font-black">{stats.ai.month}</strong>
-            </div>
-            <div className="bg-[var(--color-obsidian)] p-4 rounded-xl text-center">
-              <span className="block text-[var(--color-ash)] text-sm mb-1">За год</span>
-              <strong className="text-3xl text-[var(--color-pure-white)] font-black">{stats.ai.year}</strong>
-            </div>
-            <div className="bg-[var(--color-obsidian)] p-4 rounded-xl text-center border border-emerald-500/30">
-              <span className="block text-emerald-400 text-sm mb-1 font-bold">Всё время</span>
-              <strong className="text-3xl text-emerald-400 font-black">{stats.ai.total}</strong>
-            </div>
-          </div>
-        </div>
-
-        {/* Exams Stats */}
-        <div className="rc-admin-card p-6">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: "var(--color-obsidian)", color: "var(--color-coral-text)" }}>
-              <FileText className="w-6 h-6" strokeWidth={2} />
-            </div>
-            <h3 className="text-xl font-bold text-[var(--color-pure-white)]">Экзамены</h3>
-          </div>
-          <div className="grid grid-cols-2 gap-4 font-data">
-            <div className="bg-[var(--color-obsidian)] p-4 rounded-xl text-center transition-transform duration-200 hover:-translate-y-0.5">
-              <span className="block text-[var(--color-ash)] text-sm mb-1">За 24 часа</span>
-              <strong className="text-3xl text-[var(--color-pure-white)] font-black">{stats.exams.day}</strong>
-            </div>
-            <div className="bg-[var(--color-obsidian)] p-4 rounded-xl text-center">
-              <span className="block text-[var(--color-ash)] text-sm mb-1">За месяц</span>
-              <strong className="text-3xl text-[var(--color-pure-white)] font-black">{stats.exams.month}</strong>
-            </div>
-            <div className="bg-[var(--color-obsidian)] p-4 rounded-xl text-center">
-              <span className="block text-[var(--color-ash)] text-sm mb-1">За год</span>
-              <strong className="text-3xl text-[var(--color-pure-white)] font-black">{stats.exams.year}</strong>
-            </div>
-            <div className="bg-[var(--color-obsidian)] p-4 rounded-xl text-center border border-emerald-500/30">
-              <span className="block text-emerald-400 text-sm mb-1 font-bold">Всё время</span>
-              <strong className="text-3xl text-emerald-400 font-black">{stats.exams.total}</strong>
-            </div>
-          </div>
-        </div>
-
+        <StatGroup icon={Bot} title="ИИ-Ассистент" data={stats.ai} />
+        <StatGroup icon={FileText} title="Экзамены" data={stats.exams} />
       </div>
 
       {stats.visits && (
         <>
           {/* Visits Stats */}
-          <div className="rc-admin-card p-6">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: "var(--color-obsidian)", color: "var(--color-coral-text)" }}>
-                <Activity className="w-6 h-6" strokeWidth={2} />
-              </div>
-              <h3 className="text-xl font-bold text-[var(--color-pure-white)]">Посещаемость сайта</h3>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 font-data">
-              <div className="bg-[var(--color-obsidian)] p-4 rounded-xl text-center">
-                <span className="block text-[var(--color-ash)] text-sm mb-1">За 24 часа</span>
-                <strong className="text-3xl text-[var(--color-pure-white)] font-black">{stats.visits.day}</strong>
-              </div>
-              <div className="bg-[var(--color-obsidian)] p-4 rounded-xl text-center">
-                <span className="block text-[var(--color-ash)] text-sm mb-1">За месяц</span>
-                <strong className="text-3xl text-[var(--color-pure-white)] font-black">{stats.visits.month}</strong>
-              </div>
-              <div className="bg-[var(--color-obsidian)] p-4 rounded-xl text-center">
-                <span className="block text-[var(--color-ash)] text-sm mb-1">За год</span>
-                <strong className="text-3xl text-[var(--color-pure-white)] font-black">{stats.visits.year}</strong>
-              </div>
-              <div className="bg-[var(--color-obsidian)] p-4 rounded-xl text-center border border-emerald-500/30">
-                <span className="block text-emerald-400 text-sm mb-1 font-bold">Всё время</span>
-                <strong className="text-3xl text-emerald-400 font-black">{stats.visits.total}</strong>
-              </div>
-            </div>
-          </div>
+          <StatGroup icon={Activity} title="Посещаемость сайта" data={stats.visits} />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Top Pages */}
-            <div className="rc-admin-card p-6">
+            <div className="rc-admin-panel p-6">
               <div className="flex items-center gap-3 mb-5">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "var(--color-obsidian)", color: "var(--color-coral-text)" }}>
-                  <Eye className="w-5 h-5" strokeWidth={2} />
-                </div>
+                <div className="rc-admin-panel-icon"><Eye className="w-4 h-4" strokeWidth={2} /></div>
                 <h3 className="text-lg font-bold text-[var(--color-pure-white)]">Страницы</h3>
               </div>
-              <div className="space-y-2 font-data">
+              <div className="space-y-1">
                 {stats.topPages.map((p: { path: string; views: number }) => (
-                  <div key={p.path} className="flex items-center justify-between bg-[var(--color-obsidian)] px-4 py-2.5 rounded-lg">
-                    <span className="text-sm text-[var(--color-ash)]">{p.path}</span>
-                    <strong className="text-sm text-[var(--color-pure-white)]">{p.views}</strong>
+                  <div key={p.path} className="rc-admin-row !px-3">
+                    <span className="text-sm text-[var(--color-ash)] flex-1 truncate">{p.path}</span>
+                    <strong className="text-sm text-[var(--color-pure-white)] font-data">{p.views}</strong>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Top Locations */}
-            <div className="rc-admin-card p-6">
+            <div className="rc-admin-panel p-6">
               <div className="flex items-center gap-3 mb-5">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "var(--color-obsidian)", color: "var(--color-coral-text)" }}>
-                  <MapPin className="w-5 h-5" strokeWidth={2} />
-                </div>
+                <div className="rc-admin-panel-icon"><MapPin className="w-4 h-4" strokeWidth={2} /></div>
                 <h3 className="text-lg font-bold text-[var(--color-pure-white)]">География</h3>
               </div>
-              <div className="space-y-2 font-data">
+              <div className="space-y-1">
                 {stats.topLocations.map((l: { country: string; city: string; count: number }) => (
-                  <div key={`${l.country}-${l.city}`} className="flex items-center justify-between bg-[var(--color-obsidian)] px-4 py-2.5 rounded-lg">
-                    <span className="text-sm text-[var(--color-ash)]">{l.city}, {l.country}</span>
-                    <strong className="text-sm text-[var(--color-pure-white)]">{l.count}</strong>
+                  <div key={`${l.country}-${l.city}`} className="rc-admin-row !px-3">
+                    <span className="text-sm text-[var(--color-ash)] flex-1 truncate">{l.city}, {l.country}</span>
+                    <strong className="text-sm text-[var(--color-pure-white)] font-data">{l.count}</strong>
                   </div>
                 ))}
               </div>
@@ -952,33 +905,25 @@ function StatsAdminTab({ stats }: { stats: any }) {
           </div>
 
           {/* Recent IPs */}
-          <div className="rounded-2xl p-6 overflow-x-auto" style={{ background: "var(--overlay-soft)", border: "1px solid var(--color-hairline)" }}>
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "var(--color-obsidian)", color: "var(--color-coral-text)" }}>
-                <Globe className="w-5 h-5" strokeWidth={2} />
-              </div>
+          <div className="rc-admin-panel overflow-hidden">
+            <div className="rc-admin-panel-head">
+              <div className="rc-admin-panel-icon"><Globe className="w-4 h-4" strokeWidth={2} /></div>
               <h3 className="text-lg font-bold text-[var(--color-pure-white)]">Последние посещения</h3>
             </div>
-            <table className="w-full text-sm font-data min-w-[500px]">
-              <thead>
-                <tr className="text-left text-[var(--color-smoke)] border-b" style={{ borderColor: "var(--color-hairline)" }}>
-                  <th className="pb-2 pr-4 font-medium">IP</th>
-                  <th className="pb-2 pr-4 font-medium">Местоположение</th>
-                  <th className="pb-2 pr-4 font-medium">Страница</th>
-                  <th className="pb-2 font-medium">Время</th>
-                </tr>
-              </thead>
-              <tbody>
-                {stats.recentVisits.map((v: { ip: string; location: string; page: string; time: string }, i: number) => (
-                  <tr key={i} className="border-b last:border-0" style={{ borderColor: "var(--color-hairline)" }}>
-                    <td className="py-2.5 pr-4 text-[var(--color-pure-white)]">{v.ip}</td>
-                    <td className="py-2.5 pr-4 text-[var(--color-ash)]">{v.location}</td>
-                    <td className="py-2.5 pr-4 text-[var(--color-ash)]">{v.page}</td>
-                    <td className="py-2.5 text-[var(--color-smoke)]">{v.time}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <div className="p-3">
+              {stats.recentVisits.map((v: { ip: string; location: string; page: string; time: string }, i: number) => (
+                <div key={i} className="rc-admin-row">
+                  <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: "var(--color-obsidian)", color: "var(--color-coral-text)" }}>
+                    <Globe className="w-4 h-4" strokeWidth={2} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-sm font-semibold text-[var(--color-pure-white)] font-data truncate">{v.ip}</div>
+                    <div className="text-xs text-[var(--color-ash)] truncate">{v.location} · {v.page}</div>
+                  </div>
+                  <span className="text-xs text-[var(--color-smoke)] shrink-0">{v.time}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </>
       )}
@@ -1598,50 +1543,40 @@ function PromocodesAdminTab({ promocodes, setPromocodes, showToast }: {
       </div>
 
       {/* List */}
-      <div className="overflow-x-auto no-scrollbar rounded-xl" style={{ border: "1px solid var(--color-hairline)" }}>
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="border-b text-sm" style={{ background: "var(--overlay-soft)", borderColor: "var(--color-hairline)", color: "var(--color-ash)" }}>
-              <th className="py-3 px-4">Промокод</th>
-              <th className="py-3 px-4">Длительность</th>
-              <th className="py-3 px-4">Активации</th>
-              <th className="py-3 px-4">Создан</th>
-              <th className="py-3 px-4 text-right">Действия</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[var(--color-hairline)] bg-[var(--color-obsidian)]">
+      <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--color-hairline)" }}>
+        {promocodes.length === 0 ? (
+          <div className="py-10 text-center">
+            <span className="text-[var(--color-smoke)] text-sm">Нет активных промокодов</span>
+          </div>
+        ) : (
+          <div className="p-2 bg-[var(--color-obsidian)]">
             {promocodes.map(p => (
-              <tr key={p.id} className="hover:bg-[var(--overlay-soft)] transition-colors">
-                <td className="py-3 px-4 font-data font-bold text-[var(--color-pure-white)] tracking-widest">{p.code}</td>
-                <td className="py-3 px-4 text-sm font-semibold font-data" style={{ color: "var(--color-pure-white)" }}>{p.days} дней</td>
-                <td className="py-3 px-4 text-sm text-[var(--color-ash)] font-data">
-                  <span className={p.uses >= p.maxUses ? "text-red-400 font-bold" : "text-emerald-400"}>
-                    {p.uses}
-                  </span> / {p.maxUses}
-                </td>
-                <td className="py-3 px-4 text-sm text-[var(--color-smoke)] font-data">
-                  {new Date(p.createdAt).toLocaleDateString("ru-RU")}
-                </td>
-                <td className="py-3 px-4 text-right">
-                  <button
-                    onClick={() => setDeleteConfirmId(p.id)}
-                    disabled={loading}
-                    className="text-red-400 hover:text-white hover:bg-red-500/20 px-2 py-1 rounded transition-colors text-xs"
-                  >
-                    Удалить
-                  </button>
-                </td>
-              </tr>
+              <div key={p.id} className="rc-admin-row">
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: "var(--color-graphite)", color: "var(--color-coral-text)" }}>
+                  <Tag className="w-4 h-4" strokeWidth={2} />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="font-data font-bold text-[var(--color-pure-white)] tracking-widest">{p.code}</div>
+                  <div className="flex items-center gap-2 mt-0.5 text-xs text-[var(--color-smoke)] font-data flex-wrap">
+                    <span>{p.days} дней</span>
+                    <span>·</span>
+                    <span className={p.uses >= p.maxUses ? "text-red-400 font-bold" : "text-emerald-400"}>{p.uses}</span>
+                    <span>/ {p.maxUses} активаций</span>
+                    <span>·</span>
+                    <span>{new Date(p.createdAt).toLocaleDateString("ru-RU")}</span>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setDeleteConfirmId(p.id)}
+                  disabled={loading}
+                  className="shrink-0 text-red-400 hover:text-white hover:bg-red-500/20 px-2.5 py-1.5 rounded-lg transition-colors text-xs font-semibold"
+                >
+                  Удалить
+                </button>
+              </div>
             ))}
-            {promocodes.length === 0 && (
-              <tr>
-                <td colSpan={5} className="py-10 text-center">
-                  <span className="text-[var(--color-smoke)] text-sm">Нет активных промокодов</span>
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+          </div>
+        )}
       </div>
 
       {/* Delete Confirmation Modal */}

@@ -6,7 +6,6 @@ import Navbar from "@/app/components/Navbar";
 import Providers from "@/app/components/Providers";
 import GlobalBanCheck from "@/app/components/GlobalBanCheck";
 import SettingsFab from "@/app/components/SettingsFab";
-import { Sparkles } from "lucide-react";
 
 const inter = Inter({ subsets: ["latin", "cyrillic"], variable: "--font-inter-loaded" });
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono-loaded" });
@@ -45,7 +44,7 @@ export default function RootLayout({
           <GlobalBanCheck />
           <div className="flex-1 flex flex-col w-full">
             <Navbar />
-            <div className="pt-20 flex-1">
+            <div className="pt-28 flex-1">
               {children}
             </div>
           </div>
@@ -62,14 +61,6 @@ export default function RootLayout({
               &copy; {new Date().getFullYear()} Lexis Web. Все права защищены.
             </div>
             <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
-              <Link
-                href="/promo"
-                className="inline-flex items-center gap-1.5 font-semibold transition-colors hover:text-[var(--color-coral-text)]"
-                style={{ color: "var(--color-pure-white)" }}
-              >
-                <Sparkles className="w-3.5 h-3.5" />
-                Акция LEXS
-              </Link>
               <Link href="/rules" className="transition-colors hover:text-[var(--color-pure-white)]">
                 Правила пресетов
               </Link>

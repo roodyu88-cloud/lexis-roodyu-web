@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useDevSession, useDevAuth } from "./DevAuthProvider";
 import { useState, useEffect, useRef } from "react";
-import { Brain, GraduationCap, DownloadCloud, BookOpen, ScrollText, Gem, Crown, LogOut, Bell, Upload, Menu, X } from "lucide-react";
+import { Brain, GraduationCap, DownloadCloud, BookOpen, ScrollText, Gem, Crown, LogOut, Bell, Menu, X, Sparkles } from "lucide-react";
 
 export default function Navbar() {
   const { data: session } = useDevSession();
@@ -68,7 +68,16 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="rc-nav fixed top-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-6xl z-50 px-4 sm:px-6 py-3 flex justify-between items-center">
+      <div className="fixed top-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-6xl z-50 flex flex-col gap-2">
+        <Link
+          href="/promo"
+          className="rc-nav flex items-center justify-center gap-2 px-4 py-1.5 text-xs font-semibold transition-colors hover:text-[var(--color-coral-text)]"
+          style={{ color: "var(--color-pure-white)" }}
+        >
+          <Sparkles className="w-3.5 h-3.5" style={{ color: "var(--color-coral-text)" }} />
+          Акция LEXS — узнать подробнее
+        </Link>
+        <nav className="rc-nav px-4 sm:px-6 py-3 flex justify-between items-center">
         <div className="flex items-center gap-4">
           <Link href="/" className="text-xl font-medium tracking-tight text-[var(--color-pure-white)] hover:text-[var(--color-ash)] transition-colors">
             Lex<span className="relative inline-block">
@@ -88,7 +97,7 @@ export default function Navbar() {
             <Brain className="w-4 h-4" strokeWidth={2} /> Ассистент
           </Link>
           <Link href="/exam" className="rc-link flex items-center gap-1.5">
-            <GraduationCap className="w-4 h-4" strokeWidth={2} /> Тренажер <span className="rc-badge">PRO</span>
+            <GraduationCap className="w-4 h-4" strokeWidth={2} /> Тренажер <span className="rc-badge">PREMIUM</span>
           </Link>
 
           <div className="flex items-center gap-1 ml-2 pl-4 border-l border-[var(--color-hairline)]">
@@ -112,15 +121,6 @@ export default function Navbar() {
 
           {session?.user ? (
             <div className="flex items-center gap-4">
-              {/* Upload Preset */}
-              <Link
-                href="/upload"
-                title="Загрузить пресет"
-                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[var(--overlay-soft)] text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors group"
-              >
-                <Upload className="w-5 h-5 group-hover:-translate-y-0.5 transition-transform" strokeWidth={1.75} />
-              </Link>
-
               {/* Notifications Bell */}
               <div className="relative" ref={notificationsRef}>
                 <button
@@ -201,15 +201,6 @@ export default function Navbar() {
         {/* Mobile Menu Toggle & Notifications */}
         <div className="flex md:hidden items-center gap-3">
           {session?.user && (
-            <Link
-              href="/upload"
-              title="Загрузить пресет"
-              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[var(--overlay-soft)] text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors"
-            >
-              <Upload className="w-5 h-5" strokeWidth={1.75} />
-            </Link>
-          )}
-          {session?.user && (
             <div className="relative" ref={notificationsRef}>
               <button
                 onClick={() => setShowNotifications(!showNotifications)}
@@ -255,10 +246,11 @@ export default function Navbar() {
           </button>
         </div>
       </nav>
+      </div>
 
       {/* Mobile Menu Dropdown */}
       {isMobileMenuOpen && (
-        <div className="rc-card-edge fixed top-20 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] z-40 !p-5 bg-[var(--color-ink)] md:hidden animate-fade-in flex flex-col gap-4">
+        <div className="rc-card-edge fixed top-32 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] z-40 !p-5 bg-[var(--color-ink)] md:hidden animate-fade-in flex flex-col gap-4">
           <Link href="/presets" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-medium text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors p-2 rounded-[var(--radius-lg)] hover:bg-[var(--overlay-soft)] flex items-center gap-2">
             <ScrollText className="w-4 h-4" strokeWidth={1.75} /> Пресеты
           </Link>
@@ -269,16 +261,11 @@ export default function Navbar() {
             <Brain className="w-4 h-4" strokeWidth={1.75} /> Ассистент
           </Link>
           <Link href="/exam" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-medium text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors p-2 rounded-[var(--radius-lg)] hover:bg-[var(--overlay-soft)] flex items-center gap-2">
-            <GraduationCap className="w-4 h-4" strokeWidth={1.75} /> Тренажер <span className="rc-badge">PRO</span>
+            <GraduationCap className="w-4 h-4" strokeWidth={1.75} /> Тренажер <span className="rc-badge">PREMIUM</span>
           </Link>
           <Link href="/premium" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-medium text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors p-2 rounded-[var(--radius-lg)] hover:bg-[var(--overlay-soft)] flex items-center gap-2">
             <Gem className="w-4 h-4" strokeWidth={1.75} /> Premium
           </Link>
-          {session?.user && (
-            <Link href="/upload" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-medium text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors p-2 rounded-[var(--radius-lg)] hover:bg-[var(--overlay-soft)] flex items-center gap-2">
-              <Upload className="w-4 h-4" strokeWidth={1.75} /> Загрузить пресет
-            </Link>
-          )}
           {(session?.user?.role === "admin" || session?.user?.role === "developer") && (
             <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-medium text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors p-2 rounded-[var(--radius-lg)] hover:bg-[var(--overlay-soft)] flex items-center gap-2">
               <Crown className="w-4 h-4" strokeWidth={1.75} /> Панель управления
