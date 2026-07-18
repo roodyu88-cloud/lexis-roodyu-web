@@ -12,16 +12,13 @@ export default function PromoRulesPage() {
 
             <div className="rc-card-edge max-w-4xl w-full p-8 md:p-12 relative z-10" style={{ background: "var(--color-ink)" }}>
                 <div className="text-center mb-12">
-                    <span
-                        className="rc-eyebrow inline-block px-4 py-1.5 rounded-full text-sm font-bold tracking-wider uppercase mb-4 border"
-                        style={{ background: "var(--color-coral-pulse)", color: "var(--color-on-coral)", borderColor: "var(--color-coral-pulse)" }}
-                    >
-                        Специальная Акция
+                    <span className="rc-eyebrow" style={{ color: "var(--color-coral-text)" }}>
+                        Специальная акция
                     </span>
-                    <h1 className="text-heading md:text-heading-lg font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-pure-white)] to-[var(--color-ash)]">
+                    <h1 className="text-heading md:text-heading-lg font-normal mt-3 mb-4 leading-[var(--leading-heading-lg)] tracking-[var(--tracking-heading-lg)] text-[var(--color-pure-white)]">
                         Правила акции LEXS
                     </h1>
-                    <p className="mt-6 text-lg md:text-xl text-[var(--color-ash)] max-w-2xl mx-auto font-light">
+                    <p className="text-body-lg max-w-2xl mx-auto text-[var(--color-ash)]">
                         Условия получения бонусной Premium-подписки за поддержку нашего сообщества.
                     </p>
                 </div>

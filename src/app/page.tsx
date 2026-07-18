@@ -40,7 +40,7 @@ export default function Home() {
 
             {/* Action Buttons */}
             <div className="flex flex-col lg:flex-row gap-3 mt-4 flex-wrap justify-center">
-              <Link href="/releases/latest" className="rc-btn whitespace-nowrap">
+              <Link href="/releases" className="rc-btn whitespace-nowrap">
                 <Download className="w-4 h-4" />
                 Скачать Lexis
               </Link>

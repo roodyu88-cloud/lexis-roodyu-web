@@ -13,7 +13,8 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [notifications, setNotifications] = useState<any[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
-  const notificationsRef = useRef<HTMLDivElement>(null);
+  const notificationsDesktopRef = useRef<HTMLDivElement>(null);
+  const notificationsMobileRef = useRef<HTMLDivElement>(null);
 
   // Fetch notifications if logged in
   useEffect(() => {
@@ -38,7 +39,10 @@ export default function Navbar() {
   // Close notifications dropdown on click outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (notificationsRef.current && !notificationsRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      const insideDesktop = notificationsDesktopRef.current?.contains(target);
+      const insideMobile = notificationsMobileRef.current?.contains(target);
+      if (!insideDesktop && !insideMobile) {
         setShowNotifications(false);
       }
     }
@@ -124,7 +128,7 @@ export default function Navbar() {
           <div className="flex items-center gap-4">
             {/* Notifications Bell — always shown, guests included, so the
                 pinned promo announcement below reaches everyone. */}
-            <div className="relative" ref={notificationsRef}>
+            <div className="relative" ref={notificationsDesktopRef}>
               <button
                 onClick={() => setShowNotifications(!showNotifications)}
                 className="relative w-8 h-8 flex items-center justify-center rounded-full hover:bg-[var(--overlay-soft)] text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors focus:outline-none"
@@ -209,7 +213,7 @@ export default function Navbar() {
 
         {/* Mobile Menu Toggle & Notifications */}
         <div className="flex md:hidden items-center gap-3">
-          <div className="relative" ref={notificationsRef}>
+          <div className="relative" ref={notificationsMobileRef}>
             <button
               onClick={() => setShowNotifications(!showNotifications)}
               className="relative w-8 h-8 flex items-center justify-center rounded-full hover:bg-[var(--overlay-soft)] text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors focus:outline-none"

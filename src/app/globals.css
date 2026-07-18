@@ -379,6 +379,20 @@ html.theme-glass .rc-hero-beams {
   }
 }
 
+/* The floating nav pill sits fixed above the hero; the pin's own
+   margin-top: -7rem intentionally lets the hero background reach the true
+   viewport top, but centered hero content could still start flush against
+   the nav's bottom edge on tall mobile content stacks (5 hero buttons).
+   Force clearance below the nav instead of relying on vertical centering
+   to happen to land low enough. Declared after .rc-hero-pin .rc-hero's
+   own padding-top: 0 so it wins the cascade at equal specificity. */
+@media (max-width: 640px) {
+  .rc-hero-pin .rc-hero {
+    padding-top: 6.5rem;
+    justify-content: flex-start;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .rc-hero-pin,
   .rc-hero-pin .rc-hero {

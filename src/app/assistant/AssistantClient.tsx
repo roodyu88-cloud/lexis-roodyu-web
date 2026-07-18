@@ -417,7 +417,9 @@ export default function AssistantClient({ isAuthenticated = false, isPremium = f
     <>
       <style>{`
         footer { display: none !important; }
-        body { overflow: hidden; }
+        @media (min-width: 768px) {
+          body { overflow: hidden; }
+        }
       `}</style>
 
       {/* Mobile Drawer Backdrop */}
@@ -440,7 +442,7 @@ export default function AssistantClient({ isAuthenticated = false, isPremium = f
         {renderSidebarContent()}
       </div>
 
-      <div className="flex h-[calc(100dvh-80px)] w-full max-w-[1400px] mx-auto px-2 md:px-6 relative flex-col md:flex-row">
+      <div className="flex h-auto md:h-[calc(100dvh-80px)] min-h-[calc(100dvh-112px)] md:min-h-0 w-full max-w-[1400px] mx-auto px-2 md:px-6 relative flex-col md:flex-row">
         {/* Mobile Header Bar */}
         <div className="w-full flex items-center justify-between py-2 px-3 border-b border-[var(--color-hairline)] bg-black/20 md:hidden z-30">
           <button
@@ -491,7 +493,7 @@ export default function AssistantClient({ isAuthenticated = false, isPremium = f
           )}
 
           {messages.length === 0 ? (
-            <div className="flex-1 flex flex-col items-center justify-center w-full animate-fade-in pb-20 relative">
+            <div className="flex-1 flex flex-col items-center justify-center w-full animate-fade-in pb-56 md:pb-20 relative overflow-y-auto">
               <div className="w-12 h-12 mb-4 text-[var(--color-coral-text)]">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-full h-full">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />

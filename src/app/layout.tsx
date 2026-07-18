@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
+import { Sparkles } from "lucide-react";
 import Navbar from "@/app/components/Navbar";
 import Providers from "@/app/components/Providers";
 import GlobalBanCheck from "@/app/components/GlobalBanCheck";
@@ -56,20 +57,30 @@ export default function RootLayout({
           className="w-full py-8 px-6 mt-16 relative"
           style={{ borderTop: "1px solid var(--color-hairline)", background: "var(--color-ink)" }}
         >
-          <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-body" style={{ color: "var(--color-smoke)" }}>
-            <div className="rc-eyebrow">
-              &copy; {new Date().getFullYear()} Lexis Web. Все права защищены.
-            </div>
-            <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
-              <Link href="/rules" className="transition-colors hover:text-[var(--color-pure-white)]">
-                Правила пресетов
-              </Link>
-              <Link href="/tos" className="transition-colors hover:text-[var(--color-pure-white)]">
-                Пользовательское соглашение
-              </Link>
-              <Link href="/privacy" className="transition-colors hover:text-[var(--color-pure-white)]">
-                Политика конфиденциальности
-              </Link>
+          <div className="max-w-6xl mx-auto flex flex-col gap-6">
+            <Link
+              href="/promo"
+              className="flex items-center justify-center gap-2 py-3 px-4 rounded-[var(--radius-lg)] border text-sm font-medium transition-colors hover:bg-[var(--overlay-soft-strong)]"
+              style={{ borderColor: "color-mix(in srgb, var(--color-coral-pulse) 35%, var(--color-hairline))", background: "color-mix(in srgb, var(--color-coral-pulse) 8%, var(--overlay-soft))", color: "var(--color-pure-white)" }}
+            >
+              <Sparkles className="w-4 h-4 shrink-0" style={{ color: "var(--color-coral-text)" }} />
+              Акция LEXS — узнать подробнее
+            </Link>
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-body" style={{ color: "var(--color-smoke)" }}>
+              <div className="rc-eyebrow">
+                &copy; {new Date().getFullYear()} Lexis Web. Все права защищены.
+              </div>
+              <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
+                <Link href="/rules" className="transition-colors hover:text-[var(--color-pure-white)]">
+                  Правила пресетов
+                </Link>
+                <Link href="/tos" className="transition-colors hover:text-[var(--color-pure-white)]">
+                  Пользовательское соглашение
+                </Link>
+                <Link href="/privacy" className="transition-colors hover:text-[var(--color-pure-white)]">
+                  Политика конфиденциальности
+                </Link>
+              </div>
             </div>
           </div>
         </footer>
