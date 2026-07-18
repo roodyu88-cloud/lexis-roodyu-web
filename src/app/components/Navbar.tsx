@@ -25,6 +25,16 @@ export default function Navbar() {
     }
   }, [session]);
 
+  // Auto-expand the notifications dropdown once per browser tab so the
+  // pinned promo announcement is seen without requiring a click — but only
+  // once per session, not on every page navigation.
+  useEffect(() => {
+    if (!sessionStorage.getItem("lexis-promo-notif-seen")) {
+      setShowNotifications(true);
+      sessionStorage.setItem("lexis-promo-notif-seen", "1");
+    }
+  }, []);
+
   // Close notifications dropdown on click outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -69,14 +79,6 @@ export default function Navbar() {
   return (
     <>
       <div className="fixed top-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-6xl z-50 flex flex-col gap-2">
-        <Link
-          href="/promo"
-          className="rc-nav flex items-center justify-center gap-2 px-4 py-1.5 text-xs font-semibold transition-colors hover:text-[var(--color-coral-text)]"
-          style={{ color: "var(--color-pure-white)" }}
-        >
-          <Sparkles className="w-3.5 h-3.5" style={{ color: "var(--color-coral-text)" }} />
-          Акция LEXS — узнать подробнее
-        </Link>
         <nav className="rc-nav px-4 sm:px-6 py-3 flex justify-between items-center">
         <div className="flex items-center gap-4">
           <Link href="/" className="text-xl font-medium tracking-tight text-[var(--color-pure-white)] hover:text-[var(--color-ash)] transition-colors">
@@ -119,64 +121,71 @@ export default function Navbar() {
           )}
 
 
-          {session?.user ? (
-            <div className="flex items-center gap-4">
-              {/* Notifications Bell */}
-              <div className="relative" ref={notificationsRef}>
-                <button
-                  onClick={() => setShowNotifications(!showNotifications)}
-                  className="relative w-8 h-8 flex items-center justify-center rounded-full hover:bg-[var(--overlay-soft)] text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors focus:outline-none"
-                  aria-label="Уведомления"
-                >
-                  <Bell className="w-5 h-5" strokeWidth={1.75} />
-                  {unreadCount > 0 && (
-                    <span className="absolute top-1.5 right-1.5 flex h-2.5 w-2.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-coral-pulse)] opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[var(--color-coral-pulse)]"></span>
-                    </span>
-                  )}
-                </button>
+          <div className="flex items-center gap-4">
+            {/* Notifications Bell — always shown, guests included, so the
+                pinned promo announcement below reaches everyone. */}
+            <div className="relative" ref={notificationsRef}>
+              <button
+                onClick={() => setShowNotifications(!showNotifications)}
+                className="relative w-8 h-8 flex items-center justify-center rounded-full hover:bg-[var(--overlay-soft)] text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors focus:outline-none"
+                aria-label="Уведомления"
+              >
+                <Bell className="w-5 h-5" strokeWidth={1.75} />
+                <span className="absolute top-1.5 right-1.5 flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-coral-pulse)] opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[var(--color-coral-pulse)]"></span>
+                </span>
+              </button>
 
-                {/* Notifications Dropdown */}
-                {showNotifications && (
-                  <div className="rc-card-edge absolute right-0 mt-3 w-80 !p-4 bg-[var(--color-ink)] z-50 text-left max-h-96 overflow-y-auto animate-fade-in">
-                    <div className="flex justify-between items-center mb-3 pb-2 border-b border-[var(--color-hairline)]">
-                      <h4 className="font-medium text-[var(--color-pure-white)] text-sm">Уведомления</h4>
-                      {unreadCount > 0 && (
-                        <button
-                          onClick={markAllAsRead}
-                          className="text-xs text-[var(--color-ash)] hover:text-[var(--color-pure-white)] hover:underline"
-                        >
-                          Прочитать все
-                        </button>
-                      )}
-                    </div>
-                    {notifications.length === 0 ? (
-                      <p className="text-sm text-[var(--color-smoke)] text-center py-4">Нет уведомлений</p>
-                    ) : (
-                      <div className="space-y-3">
-                        {notifications.map((n) => (
-                          <div
-                            key={n.id}
-                            className={`p-3 rounded-[var(--radius-lg)] border text-xs transition-colors ${
-                              n.read
-                                ? "bg-[var(--overlay-soft)] border-[var(--color-hairline)] text-[var(--color-smoke)]"
-                                : "bg-[var(--overlay-soft-strong)] border-[var(--color-hairline)] text-[var(--color-pure-white)]"
-                            }`}
-                          >
-                            <p className="leading-relaxed">{n.message}</p>
-                            <span className="block text-[10px] text-[var(--color-smoke)] mt-1.5">
-                              {new Date(n.createdAt).toLocaleString("ru-RU")}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
+              {/* Notifications Dropdown */}
+              {showNotifications && (
+                <div className="rc-card-edge absolute right-0 mt-3 w-80 !p-4 bg-[var(--color-ink)] z-50 text-left max-h-96 overflow-y-auto animate-fade-in">
+                  <div className="flex justify-between items-center mb-3 pb-2 border-b border-[var(--color-hairline)]">
+                    <h4 className="font-medium text-[var(--color-pure-white)] text-sm">Уведомления</h4>
+                    {unreadCount > 0 && (
+                      <button
+                        onClick={markAllAsRead}
+                        className="text-xs text-[var(--color-ash)] hover:text-[var(--color-pure-white)] hover:underline"
+                      >
+                        Прочитать все
+                      </button>
                     )}
                   </div>
-                )}
-              </div>
 
-              {/* User Profile Info */}
+                  <div className="space-y-3">
+                    {/* Pinned announcement — always on top, never dismissible or
+                        marked read, visible to guests and logged-in users alike. */}
+                    <Link
+                      href="/promo"
+                      onClick={() => setShowNotifications(false)}
+                      className="flex items-start gap-2.5 p-3 rounded-[var(--radius-lg)] border text-xs transition-colors hover:bg-[var(--overlay-soft-strong)]"
+                      style={{ borderColor: "color-mix(in srgb, var(--color-coral-pulse) 35%, var(--color-hairline))", background: "color-mix(in srgb, var(--color-coral-pulse) 8%, var(--overlay-soft))" }}
+                    >
+                      <Sparkles className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: "var(--color-coral-text)" }} />
+                      <span className="leading-relaxed font-medium text-[var(--color-pure-white)]">Акция LEXS — узнать подробнее</span>
+                    </Link>
+
+                    {session?.user && notifications.map((n) => (
+                      <div
+                        key={n.id}
+                        className={`p-3 rounded-[var(--radius-lg)] border text-xs transition-colors ${
+                          n.read
+                            ? "bg-[var(--overlay-soft)] border-[var(--color-hairline)] text-[var(--color-smoke)]"
+                            : "bg-[var(--overlay-soft-strong)] border-[var(--color-hairline)] text-[var(--color-pure-white)]"
+                        }`}
+                      >
+                        <p className="leading-relaxed">{n.message}</p>
+                        <span className="block text-[10px] text-[var(--color-smoke)] mt-1.5">
+                          {new Date(n.createdAt).toLocaleString("ru-RU")}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {session?.user ? (
               <div className="flex items-center gap-3">
                 <img src={session.user.image || ""} alt="Avatar" className="w-8 h-8 rounded-full border border-[var(--color-hairline)]" />
                 <span className="text-sm font-medium text-[var(--color-pure-white)]">{session.user.name}</span>
@@ -187,56 +196,58 @@ export default function Navbar() {
                   Выйти
                 </button>
               </div>
-            </div>
-          ) : (
-            <button
-              onClick={handleLogin}
-              className="rc-btn cursor-pointer"
-            >
-              Войти (Discord)
-            </button>
-          )}
+            ) : (
+              <button
+                onClick={handleLogin}
+                className="rc-btn cursor-pointer"
+              >
+                Войти (Discord)
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Mobile Menu Toggle & Notifications */}
         <div className="flex md:hidden items-center gap-3">
-          {session?.user && (
-            <div className="relative" ref={notificationsRef}>
-              <button
-                onClick={() => setShowNotifications(!showNotifications)}
-                className="relative w-8 h-8 flex items-center justify-center rounded-full hover:bg-[var(--overlay-soft)] text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors focus:outline-none"
-              >
-                <Bell className="w-5 h-5" strokeWidth={1.75} />
-                {unreadCount > 0 && (
-                  <span className="absolute top-1.5 right-1.5 flex h-2.5 w-2.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-coral-pulse)] opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[var(--color-coral-pulse)]"></span>
-                  </span>
-                )}
-              </button>
-              {showNotifications && (
-                <div className="rc-card-edge absolute right-0 mt-3 w-72 !p-4 bg-[var(--color-ink)] z-50 text-left max-h-80 overflow-y-auto animate-fade-in">
-                  <div className="flex justify-between items-center mb-3 pb-2 border-b border-[var(--color-hairline)]">
-                    <h4 className="font-medium text-[var(--color-pure-white)] text-sm">Уведомления</h4>
-                    {unreadCount > 0 && (
-                      <button onClick={markAllAsRead} className="text-xs text-[var(--color-ash)] hover:text-[var(--color-pure-white)]">Прочитать</button>
-                    )}
-                  </div>
-                  {notifications.length === 0 ? (
-                    <p className="text-sm text-[var(--color-smoke)] text-center py-4">Нет уведомлений</p>
-                  ) : (
-                    <div className="space-y-3">
-                      {notifications.map((n) => (
-                        <div key={n.id} className={`p-3 rounded-[var(--radius-lg)] border text-xs transition-colors ${n.read ? "bg-[var(--overlay-soft)] border-[var(--color-hairline)] text-[var(--color-smoke)]" : "bg-[var(--overlay-soft-strong)] border-[var(--color-hairline)] text-[var(--color-pure-white)]"}`}>
-                          <p>{n.message}</p>
-                        </div>
-                      ))}
-                    </div>
+          <div className="relative" ref={notificationsRef}>
+            <button
+              onClick={() => setShowNotifications(!showNotifications)}
+              className="relative w-8 h-8 flex items-center justify-center rounded-full hover:bg-[var(--overlay-soft)] text-[var(--color-ash)] hover:text-[var(--color-pure-white)] transition-colors focus:outline-none"
+            >
+              <Bell className="w-5 h-5" strokeWidth={1.75} />
+              <span className="absolute top-1.5 right-1.5 flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-coral-pulse)] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[var(--color-coral-pulse)]"></span>
+              </span>
+            </button>
+            {showNotifications && (
+              <div className="rc-card-edge absolute right-0 mt-3 w-72 !p-4 bg-[var(--color-ink)] z-50 text-left max-h-80 overflow-y-auto animate-fade-in">
+                <div className="flex justify-between items-center mb-3 pb-2 border-b border-[var(--color-hairline)]">
+                  <h4 className="font-medium text-[var(--color-pure-white)] text-sm">Уведомления</h4>
+                  {unreadCount > 0 && (
+                    <button onClick={markAllAsRead} className="text-xs text-[var(--color-ash)] hover:text-[var(--color-pure-white)]">Прочитать</button>
                   )}
                 </div>
-              )}
-            </div>
-          )}
+                <div className="space-y-3">
+                  <Link
+                    href="/promo"
+                    onClick={() => setShowNotifications(false)}
+                    className="flex items-start gap-2.5 p-3 rounded-[var(--radius-lg)] border text-xs transition-colors hover:bg-[var(--overlay-soft-strong)]"
+                    style={{ borderColor: "color-mix(in srgb, var(--color-coral-pulse) 35%, var(--color-hairline))", background: "color-mix(in srgb, var(--color-coral-pulse) 8%, var(--overlay-soft))" }}
+                  >
+                    <Sparkles className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: "var(--color-coral-text)" }} />
+                    <span className="leading-relaxed font-medium text-[var(--color-pure-white)]">Акция LEXS — узнать подробнее</span>
+                  </Link>
+
+                  {session?.user && notifications.map((n) => (
+                    <div key={n.id} className={`p-3 rounded-[var(--radius-lg)] border text-xs transition-colors ${n.read ? "bg-[var(--overlay-soft)] border-[var(--color-hairline)] text-[var(--color-smoke)]" : "bg-[var(--overlay-soft-strong)] border-[var(--color-hairline)] text-[var(--color-pure-white)]"}`}>
+                      <p>{n.message}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
 
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}

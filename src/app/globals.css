@@ -312,10 +312,14 @@ html.theme-glass .rc-hero-beams {
 
 /* Mobile: the wash/beams read as loud, hard-edged stripes rather than an
    ambient glow at phone viewing distance/size — dial back so text and
-   buttons stay legible over them. */
+   buttons stay legible over them. The glow is also recentered lower and
+   widened: on mobile the 5-button stack runs tall enough that the last
+   button ("Загрузить пресет") fell past the original glow falloff and
+   read as a flat, darker button than the ones above it. */
 @media (max-width: 640px) {
   .rc-hero-wash {
     opacity: 0.6;
+    background: radial-gradient(circle at 50% 55%, rgba(20, 60, 163, 0.5), transparent 75%);
   }
   .rc-hero-beams {
     opacity: 0.45;

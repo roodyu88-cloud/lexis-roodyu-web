@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useDevSession } from "@/app/components/DevAuthProvider";
 import Link from "next/link";
-import { Scale, Briefcase, Siren, Crown, Lock, ChevronDown } from "lucide-react";
+import { Scale, Briefcase, Siren, Crown, Lock, ChevronDown, LifeBuoy, Rocket, BarChart3, Palette } from "lucide-react";
 
 interface RoleItem {
   icon: React.ElementType;
@@ -26,6 +26,35 @@ const ROLES: RoleItem[] = [
     icon: Siren,
     title: "Роль: Прокурор",
     desc: "ИИ выявляет все возможные составы преступлений, ищет доказательства вины и подбирает самые строгие статьи УК для обвинения.",
+  },
+];
+
+interface BenefitItem {
+  icon: React.ElementType;
+  title: string;
+  desc: string;
+}
+
+const BENEFITS: BenefitItem[] = [
+  {
+    icon: LifeBuoy,
+    title: "Приоритетная поддержка",
+    desc: "Ваши обращения в Discord-тикетах рассматриваются вне очереди, отдельным каналом для Premium-пользователей.",
+  },
+  {
+    icon: Rocket,
+    title: "Ранний доступ к обновлениям",
+    desc: "Новые роли ассистента, режимы тренажера и функции оверлея сначала попадают к Premium, затем — всем остальным.",
+  },
+  {
+    icon: BarChart3,
+    title: "Аналитика тренажера",
+    desc: "Подробная статистика по попыткам экзамена: слабые темы, динамика результатов, сравнение с прошлыми попытками.",
+  },
+  {
+    icon: Palette,
+    title: "Кастомизация оверлея",
+    desc: "Дополнительные темы и акцентные цвета оверлея, скрытые для базовой версии Lexis.",
   },
 ];
 
@@ -86,8 +115,79 @@ export default function PremiumPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full items-start">
-        {/* Roles accordion */}
+      {/* Status + promo code: side by side up top so account state and
+          activation are the first thing visible, not buried below the roles. */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+        <div className="rc-card-edge !p-8 flex flex-col justify-center bg-[var(--color-ink)]">
+          {isPremium ? (
+            <div className="text-center space-y-4">
+              <div className="inline-block p-4 rounded-full mb-2" style={{ background: "var(--overlay-soft)", border: "1px solid var(--color-hairline)" }}>
+                <Crown className="w-8 h-8" style={{ color: "var(--color-coral-text)" }} />
+              </div>
+              <h2 className="text-2xl font-bold text-[var(--color-pure-white)]">У вас активен Premium!</h2>
+              <p className="text-sm text-[var(--color-ash)]">
+                {hasPremiumBadge
+                  ? "У вас вечная подписка за особые заслуги."
+                  : premiumUntil
+                    ? `Подписка действительна до ${new Date(premiumUntil).toLocaleDateString("ru-RU")}`
+                    : "Вы являетесь премиум-пользователем."
+                }
+              </p>
+              <Link href="/assistant" className="rc-btn w-full mt-6">
+                Перейти в Ассистент
+              </Link>
+            </div>
+          ) : (
+            <div className="text-center space-y-4">
+              <div className="inline-block p-4 rounded-full mb-2 opacity-50" style={{ background: "var(--overlay-soft)", border: "1px solid var(--color-hairline)" }}>
+                <Lock className="w-8 h-8" style={{ color: "var(--color-ash)" }} />
+              </div>
+              <h2 className="text-2xl font-bold text-[var(--color-pure-white)]">Premium не активен</h2>
+              <p className="text-sm text-[var(--color-ash)]">
+                На данный момент премиум-функции активируются промокодом.
+                <br /><br />
+                <span className="font-medium text-[var(--color-pure-white)]">Для приобретения подписки необходимо создать тикет в нашем официальном Discord-сервере.</span>
+              </p>
+            </div>
+          )}
+        </div>
+
+        <div className="rc-card-edge !p-6 bg-[var(--color-ink)] flex flex-col justify-center">
+          <h3 className="text-lg font-bold mb-4 text-[var(--color-pure-white)]">Активация промокода</h3>
+          <form onSubmit={handleRedeem} className="space-y-4">
+            <input
+              type="text"
+              value={code}
+              onChange={(e) => setCode(e.target.value.toUpperCase())}
+              placeholder="ВВЕДИТЕ ПРОМОКОД"
+              className="rc-input w-full text-center font-mono font-bold text-lg"
+            />
+
+            {message && (
+              <div
+                className="p-3 rounded-lg text-sm font-semibold border"
+                style={message.type === "success"
+                  ? { background: "rgba(16, 185, 129, 0.1)", borderColor: "rgba(16, 185, 129, 0.3)", color: "#34d399" }
+                  : { background: "rgba(239, 68, 68, 0.1)", borderColor: "rgba(239, 68, 68, 0.3)", color: "#f87171" }}
+              >
+                {message.text}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading || !code}
+              className="rc-btn w-full disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {loading ? "Проверка..." : "Активировать"}
+            </button>
+          </form>
+        </div>
+      </div>
+
+      {/* Roles accordion */}
+      <div className="mb-10">
+        <h2 className="text-heading-sm font-bold mb-4 text-[var(--color-pure-white)]">Роли ИИ-ассистента</h2>
         <div className="rc-accordion">
           {ROLES.map((role, i) => {
             const Icon = role.icon;
@@ -119,76 +219,26 @@ export default function PremiumPage() {
             );
           })}
         </div>
+      </div>
 
-        {/* Subscription / Promocode Column */}
-        <div className="space-y-6 flex flex-col">
-
-          <div className="rc-card-edge !p-8 flex-1 flex flex-col justify-center bg-[var(--color-ink)]">
-            {isPremium ? (
-              <div className="text-center space-y-4">
-                <div className="inline-block p-4 rounded-full mb-2" style={{ background: "var(--overlay-soft)", border: "1px solid var(--color-hairline)" }}>
-                  <Crown className="w-8 h-8" style={{ color: "var(--color-coral-text)" }} />
+      {/* Additional benefits */}
+      <div>
+        <h2 className="text-heading-sm font-bold mb-4 text-[var(--color-pure-white)]">Дополнительные преимущества</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {BENEFITS.map((b) => {
+            const Icon = b.icon;
+            return (
+              <div key={b.title} className="rc-card-edge !p-6 bg-[var(--color-ink)] flex gap-4">
+                <div className="shrink-0 w-10 h-10 rounded-[var(--radius-lg)] flex items-center justify-center" style={{ background: "var(--overlay-soft)", border: "1px solid var(--color-hairline)" }}>
+                  <Icon className="w-5 h-5" style={{ color: "var(--color-coral-text)" }} strokeWidth={1.75} />
                 </div>
-                <h2 className="text-2xl font-bold text-[var(--color-pure-white)]">У вас активен Premium!</h2>
-                <p className="text-sm text-[var(--color-ash)]">
-                  {hasPremiumBadge
-                    ? "У вас вечная подписка за особые заслуги."
-                    : premiumUntil
-                      ? `Подписка действительна до ${new Date(premiumUntil).toLocaleDateString("ru-RU")}`
-                      : "Вы являетесь премиум-пользователем."
-                  }
-                </p>
-                <Link href="/assistant" className="rc-btn w-full mt-6">
-                  Перейти в Ассистент
-                </Link>
+                <div>
+                  <h3 className="font-bold text-[var(--color-pure-white)] mb-1.5">{b.title}</h3>
+                  <p className="text-sm text-[var(--color-ash)] leading-relaxed">{b.desc}</p>
+                </div>
               </div>
-            ) : (
-              <div className="text-center space-y-4">
-                <div className="inline-block p-4 rounded-full mb-2 opacity-50" style={{ background: "var(--overlay-soft)", border: "1px solid var(--color-hairline)" }}>
-                  <Lock className="w-8 h-8" style={{ color: "var(--color-ash)" }} />
-                </div>
-                <h2 className="text-2xl font-bold text-[var(--color-pure-white)]">Premium не активен</h2>
-                <p className="text-sm text-[var(--color-ash)]">
-                  На данный момент премиум-функции активируются промокодом.
-                  <br /><br />
-                  <span className="font-medium text-[var(--color-pure-white)]">Для приобретения подписки необходимо создать тикет в нашем официальном Discord-сервере.</span>
-                </p>
-              </div>
-            )}
-          </div>
-
-          <div className="rc-card-edge !p-6 bg-[var(--color-ink)]">
-            <h3 className="text-lg font-bold mb-4 text-[var(--color-pure-white)]">Активация промокода</h3>
-            <form onSubmit={handleRedeem} className="space-y-4">
-              <input
-                type="text"
-                value={code}
-                onChange={(e) => setCode(e.target.value.toUpperCase())}
-                placeholder="ВВЕДИТЕ ПРОМОКОД"
-                className="rc-input w-full text-center font-mono font-bold text-lg"
-              />
-
-              {message && (
-                <div
-                  className="p-3 rounded-lg text-sm font-semibold border"
-                  style={message.type === "success"
-                    ? { background: "rgba(16, 185, 129, 0.1)", borderColor: "rgba(16, 185, 129, 0.3)", color: "#34d399" }
-                    : { background: "rgba(239, 68, 68, 0.1)", borderColor: "rgba(239, 68, 68, 0.3)", color: "#f87171" }}
-                >
-                  {message.text}
-                </div>
-              )}
-
-              <button
-                type="submit"
-                disabled={loading || !code}
-                className="rc-btn w-full disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {loading ? "Проверка..." : "Активировать"}
-              </button>
-            </form>
-          </div>
-
+            );
+          })}
         </div>
       </div>
     </main>

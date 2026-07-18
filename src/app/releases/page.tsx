@@ -25,7 +25,8 @@ export default function ReleasesPage() {
 
       <div className="max-w-4xl mx-auto z-10 relative">
         <header className="mb-16 text-center relative">
-          <h1 className="text-heading-lg font-bold mb-4 tracking-[var(--tracking-heading-lg)] text-[var(--color-pure-white)]">
+          <span className="rc-eyebrow" style={{ color: "var(--color-coral-text)" }}>Релизы</span>
+          <h1 className="text-heading-lg font-normal mt-3 mb-4 leading-[var(--leading-heading-lg)] tracking-[var(--tracking-heading-lg)] text-[var(--color-pure-white)]">
             История обновлений
           </h1>
           <p className="text-body-lg max-w-xl mx-auto text-[var(--color-ash)]">
